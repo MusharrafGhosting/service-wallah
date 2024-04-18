@@ -7,7 +7,6 @@ import {
   Button,
   IconButton,
   List,
-  Input,
   ListItem,
   Menu,
   MenuHandler,
@@ -53,30 +52,28 @@ const services = [
 function ServicesList() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const renderItems = services.map(
-    ({ title, icon, link }, key) => (
-      <Link href={link} key={key}>
-        <MenuItem className="flex items-center justify-between gap-3 rounded-lg ">
-          <div>
-            <Typography
-              variant="h6"
-              color="blue-gray"
-              className="flex items-center text-sm font-bold"
-            >
-              {title}
-            </Typography>
-          </div>
-          <div className="flex items-center justify-center rounded-lg !bg-blue-gray-50 p-2 ">
-            {" "}
-            {React.createElement(icon, {
-              strokeWidth: 2,
-              className: "h-6 text-gray-900 w-6",
-            })}
-          </div>
-        </MenuItem>
-      </Link>
-    )
-  );
+  const renderItems = services.map(({ title, icon, link }, key) => (
+    <Link href={link} key={key}>
+      <MenuItem className="flex items-center justify-between gap-3 rounded-lg ">
+        <div>
+          <Typography
+            variant="h6"
+            color="blue-gray"
+            className="flex items-center text-sm font-bold"
+          >
+            {title}
+          </Typography>
+        </div>
+        <div className="flex items-center justify-center rounded-lg !bg-blue-gray-50 p-2 ">
+          {" "}
+          {React.createElement(icon, {
+            strokeWidth: 2,
+            className: "h-6 text-gray-900 w-6",
+          })}
+        </div>
+      </MenuItem>
+    </Link>
+  ));
   return (
     <>
       <Menu
@@ -105,9 +102,7 @@ function ServicesList() {
                   }`}
               />
             </ListItem>
-
           </Typography>
-
         </MenuHandler>
         <MenuList className="hidden max-w-screen-xl rounded lg:block">
           <ul className="grid grid-cols-1 gap-y-2 outline-none outline-0">
@@ -123,7 +118,6 @@ function ServicesList() {
 }
 
 function NavList() {
-
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
 
@@ -133,12 +127,13 @@ function NavList() {
     <List className="mt-4 mb-6 p-0 lg:mt-0 lg:mb-0 lg:flex-row lg:p-1 md:gap-4">
       <ServicesList />
       <div className="flex gap-2 justify-evenly">
+
         <button onClick={handleOpen} variant="gradient" className="flex gap-2 w-full border border-gray-300 hover:bg-gray-200 shadow py-2 px-4 rounded-md justify-center items-center" >
+
           Location
           <FaLocationDot
             size={18}
             color="#F44336"
-          // className={`h-6 w-6 text-gray-500 text-[#F44336;] `}
           />
         </button>
         <Dialog
@@ -151,7 +146,7 @@ function NavList() {
         >
           <DialogHeader>Find Location</DialogHeader>
           <DialogBody>
-            <input type="text" placeholder="Enter your location" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500" />
+            <input type="text" placeholder="Enter your location" className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500" />
 
           </DialogBody>
           <DialogFooter>
@@ -168,6 +163,7 @@ function NavList() {
             </Button>
           </DialogFooter>
         </Dialog>
+
 
         <button onClick={handleOpen2} variant="gradient" className="flex gap-2 border border-gray-300 hover:bg-gray-200 shadow py-2 px-3 rounded-full justify-center items-center" >
           <FaSearch
@@ -211,19 +207,17 @@ export default function Nav() {
     );
   }, []);
 
-
   return (
     <Navbar className="mx-auto max-w-full px-4 py-2 rounded-none">
       <div className="flex items-center justify-between text-blue-gray-900">
-        <Link href={"/"} className="mr-4 cursor-pointer font-extrabold py-1.5 lg:ml-2">
-
+        <Link
+          href={"/"}
+          className="mr-4 cursor-pointer font-extrabold py-1.5 lg:ml-2"
+        >
           Service Wallah
-
         </Link>
-
         <div className="hidden gap-2 lg:flex lg:items-center">
           <NavList />
-
           <button
             variant="gradient"
             className="flex gap-1 border border-gray-300 shadow py-2 px-4 rounded-md hover:bg-[#393737bf] h-11 justify-center items-center text-white text-sm bg-[#000000BF]"

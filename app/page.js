@@ -1,3 +1,4 @@
+import { Button } from "../material/Button";
 import Nav from "../components/Nav";
 
 import { RxDoubleArrowRight } from "react-icons/rx";
