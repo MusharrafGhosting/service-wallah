@@ -351,17 +351,6 @@ function NavList() {
       <ServicesList />
       <ResourcessList />
       <ActionssList />
-      {/* <Typography
-          as="a"
-          href="#"
-          variant="small"
-          color="blue-gray"
-          className="font-medium"
-        >
-          <ListItem className="flex items-center gap-2 py-2 pr-4">
-            Contact Us
-          </ListItem>
-        </Typography> */}
     </List>
   );
 }
@@ -385,7 +374,7 @@ export default function Nav() {
             variant="h6"
             className="mr-4 cursor-pointer py-1.5 lg:ml-2"
           >
-            Education webApp
+            Service Wallah
           </Typography>
         </Link>
         <div className="hidden lg:block">
