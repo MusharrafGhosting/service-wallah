@@ -7,6 +7,7 @@ import {
   Button,
   IconButton,
   List,
+  Input,
   ListItem,
   Menu,
   MenuHandler,
@@ -132,7 +133,7 @@ function NavList() {
     <List className="mt-4 mb-6 p-0 lg:mt-0 lg:mb-0 lg:flex-row lg:p-1 md:gap-4">
       <ServicesList />
       <div className="flex gap-2 justify-evenly">
-        <button onClick={handleOpen} variant="gradient" className="flex gap-2 w-full border border-gray-300 shadow py-2 px-4 rounded-md justify-center items-center" >
+        <button onClick={handleOpen} variant="gradient" className="flex gap-2 w-full border border-gray-300 hover:bg-gray-200 shadow py-2 px-4 rounded-md justify-center items-center" >
           Location
           <FaLocationDot
             size={18}
@@ -148,12 +149,10 @@ function NavList() {
             unmount: { scale: 0.9, y: -100 },
           }}
         >
-          <DialogHeader>Its a simple dialog.</DialogHeader>
+          <DialogHeader>Find Location</DialogHeader>
           <DialogBody>
-            The key to more success is to have a lot of pillows. Put it this way,
-            it took me twenty five years to get these plants, twenty five years of
-            blood sweat and tears, and I&apos;m never giving up, I&apos;m just
-            getting started. I&apos;m up to something. Fan luv.
+            <input type="text" placeholder="Enter your location" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500" />
+
           </DialogBody>
           <DialogFooter>
             <Button
@@ -170,9 +169,8 @@ function NavList() {
           </DialogFooter>
         </Dialog>
 
-        <button onClick={handleOpen2} variant="gradient" className="flex gap-2 border border-gray-300 shadow py-2 px-3 rounded-full justify-center items-center" >
+        <button onClick={handleOpen2} variant="gradient" className="flex gap-2 border border-gray-300 hover:bg-gray-200 shadow py-2 px-3 rounded-full justify-center items-center" >
           <FaSearch
-
             className={`  text-[#582FFF;] `}
           />
         </button>
@@ -184,26 +182,19 @@ function NavList() {
             unmount: { scale: 0.9, y: -100 },
           }}
         >
-          <DialogHeader>Its a simple  .</DialogHeader>
           <DialogBody>
-            The key to more success is to have a lot of pillows. Put it this way,
-            it took me twenty five years to get these plants, twenty five years of
-            blood sweat and tears, and I&apos;m never giving up, I&apos;m just
-            getting started. I&apos;m up to something. Fan luv.
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search"
+                className="w-full px-4 py-2 pl-10 rounded-lg border border-gray-300 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+              />
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 ">
+                <FaSearch className="  cursor-pointer text-[#582FFF;]" />
+              </div>
+            </div>
           </DialogBody>
-          <DialogFooter>
-            <Button
-              variant="text"
-              color="red"
-              onClick={handleOpen2}
-              className="mr-1"
-            >
-              <span>Cancel</span>
-            </Button>
-            <Button variant="gradient" color="green" onClick={handleOpen2}>
-              <span>Confirm</span>
-            </Button>
-          </DialogFooter>
+
         </Dialog>
       </div>
     </List>
@@ -235,7 +226,7 @@ export default function Nav() {
 
           <button
             variant="gradient"
-            className="flex gap-1 border border-gray-300 shadow py-2 px-4 rounded-md h-11 justify-center items-center text-white text-sm bg-[#000000BF]"
+            className="flex gap-1 border border-gray-300 shadow py-2 px-4 rounded-md hover:bg-[#393737bf] h-11 justify-center items-center text-white text-sm bg-[#000000BF]"
             size="sm"
           >
             Log In <BiLogIn size={18} />
@@ -259,7 +250,7 @@ export default function Nav() {
 
         <div className="flex w-full flex-nowrap items-center gap-2 lg:hidden">
           <Button variant="gradient" size="sm" fullWidth>
-          Log In
+            Log In
           </Button>
         </div>
       </Collapse>
