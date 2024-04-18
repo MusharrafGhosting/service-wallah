@@ -12,68 +12,50 @@ import {
   MenuHandler,
   MenuList,
   MenuItem,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
 } from "@material-tailwind/react";
 import {
   ChevronDownIcon,
   Bars3Icon,
   XMarkIcon,
-  AcademicCapIcon,
-  UserPlusIcon,
-  CubeIcon,
-  RectangleStackIcon,
-  BanknotesIcon,
+  HomeIcon,
+  WrenchScrewdriverIcon,
+  BookOpenIcon,
 } from "@heroicons/react/24/outline";
-import {
-  Bars4Icon,
-  SquaresPlusIcon,
-  UserGroupIcon,
-} from "@heroicons/react/24/solid";
+
+import { FaSearch } from "react-icons/fa";
+import { FaLocationDot } from "react-icons/fa6";
 import { BiLogIn } from "react-icons/bi";
-import { IoMdImages } from "react-icons/io";
-import { GiBrain } from "react-icons/gi";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
 const services = [
   {
-    title: "Courses",
-    description: "Find the perfect solution for your needs.",
-    icon: RectangleStackIcon,
+    title: "Home",
+    icon: HomeIcon,
     link: "/courses",
   },
   {
-    title: "About Us",
-    description: "Know and learn about our dedication",
-    icon: UserGroupIcon,
+    title: "All Services",
+    icon: WrenchScrewdriverIcon,
     link: "/about",
   },
   {
-    title: "Facilities",
-    description: "Know more about our facilities",
-    icon: Bars4Icon,
+    title: "About",
+    icon: BookOpenIcon,
     link: "/facilites",
-  },
-  {
-    title: "Gallery",
-    description: "Take a look on us.",
-    icon: IoMdImages,
-    link: "/gallery",
   },
 ];
 function ServicesList() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const renderItems = services.map(
-    ({ icon, title, description, link }, key) => (
+    ({ title, icon, link }, key) => (
       <Link href={link} key={key}>
-        <MenuItem className="flex items-center gap-3 rounded-lg">
-          <div className="flex items-center justify-center rounded-lg !bg-blue-gray-50 p-2 ">
-            {" "}
-            {React.createElement(icon, {
-              strokeWidth: 2,
-              className: "h-6 text-gray-900 w-6",
-            })}
-          </div>
+        <MenuItem className="flex items-center justify-between gap-3 rounded-lg ">
           <div>
             <Typography
               variant="h6"
@@ -82,18 +64,18 @@ function ServicesList() {
             >
               {title}
             </Typography>
-            <Typography
-              variant="paragraph"
-              className="text-xs !font-medium text-blue-gray-500"
-            >
-              {description}
-            </Typography>
+          </div>
+          <div className="flex items-center justify-center rounded-lg !bg-blue-gray-50 p-2 ">
+            {" "}
+            {React.createElement(icon, {
+              strokeWidth: 2,
+              className: "h-6 text-gray-900 w-6",
+            })}
           </div>
         </MenuItem>
       </Link>
     )
   );
-
   return (
     <>
       <Menu
@@ -106,25 +88,25 @@ function ServicesList() {
         <MenuHandler>
           <Typography as="div" variant="small" className="font-medium">
             <ListItem
-              className="flex items-center gap-2 py-2 pr-4 font-medium text-gray-900"
+              className="flex items-center gap-2 py-2 pr-4 font-medium text-gray-900 bg-white border h-full border-gray-300 rounded-md shadow-md"
               selected={isMenuOpen || isMobileMenuOpen}
               onClick={() => setIsMobileMenuOpen((cur) => !cur)}
             >
-              Services
+              Go to
               <ChevronDownIcon
-                strokeWidth={2.5}
-                className={`hidden h-3 w-3 transition-transform lg:block ${
-                  isMenuOpen ? "rotate-180" : ""
-                }`}
+                strokeWidth={3.5}
+                className={`hidden h-3 w-3 transition-transform lg:block text-[#582FFF]  ${isMenuOpen ? "rotate-180" : ""
+                  }`}
               />
               <ChevronDownIcon
                 strokeWidth={2.5}
-                className={`block h-3 w-3 transition-transform lg:hidden ${
-                  isMobileMenuOpen ? "rotate-180" : ""
-                }`}
+                className={`block h-3 w-3 transition-transform lg:hidden ${isMobileMenuOpen ? "rotate-180" : ""
+                  }`}
               />
             </ListItem>
+
           </Typography>
+
         </MenuHandler>
         <MenuList className="hidden max-w-screen-xl rounded lg:block">
           <ul className="grid grid-cols-1 gap-y-2 outline-none outline-0">
@@ -138,230 +120,92 @@ function ServicesList() {
     </>
   );
 }
-const resources = [
-  {
-    title: "Content / Notes",
-    description: "Find the Notes and content for your excellence.",
-    icon: SquaresPlusIcon,
-    link: "/content",
-  },
-  {
-    title: "Results",
-    description: "Know your progress",
-    icon: AcademicCapIcon,
-    link: "/result",
-  },
-  {
-    title: "Leaderboard",
-    description: "See where you are and where to go.",
-    icon: CubeIcon,
-    link: "/leaderboard",
-  },
-];
-function ResourcessList() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const renderItems = resources.map(
-    ({ icon, title, description, link }, key) => (
-      <Link href={link} key={key}>
-        <MenuItem className="flex items-center gap-3 rounded-lg">
-          <div className="flex items-center justify-center rounded-lg !bg-blue-gray-50 p-2 ">
-            {" "}
-            {React.createElement(icon, {
-              strokeWidth: 2,
-              className: "h-6 text-gray-900 w-6",
-            })}
-          </div>
-          <div>
-            <Typography
-              variant="h6"
-              color="blue-gray"
-              className="flex items-center text-sm font-bold"
-            >
-              {title}
-            </Typography>
-            <Typography
-              variant="paragraph"
-              className="text-xs !font-medium text-blue-gray-500"
-            >
-              {description}
-            </Typography>
-          </div>
-        </MenuItem>
-      </Link>
-    )
-  );
-
-  return (
-    <div>
-      <Menu
-        open={isMenuOpen}
-        handler={setIsMenuOpen}
-        offset={{ mainAxis: 20 }}
-        placement="bottom"
-        allowHover={true}
-      >
-        <MenuHandler>
-          <Typography as="div" variant="small" className="font-medium">
-            <ListItem
-              className="flex items-center gap-2 py-2 pr-4 font-medium text-gray-900"
-              selected={isMenuOpen || isMobileMenuOpen}
-              onClick={() => setIsMobileMenuOpen((cur) => !cur)}
-            >
-              Resources
-              <ChevronDownIcon
-                strokeWidth={2.5}
-                className={`hidden h-3 w-3 transition-transform lg:block ${
-                  isMenuOpen ? "rotate-180" : ""
-                }`}
-              />
-              <ChevronDownIcon
-                strokeWidth={2.5}
-                className={`block h-3 w-3 transition-transform lg:hidden ${
-                  isMobileMenuOpen ? "rotate-180" : ""
-                }`}
-              />
-            </ListItem>
-          </Typography>
-        </MenuHandler>
-        <MenuList className="hidden max-w-screen-xl rounded lg:block">
-          <ul className="grid grid-cols-1 gap-y-2 outline-none outline-0">
-            {renderItems}
-          </ul>
-        </MenuList>
-      </Menu>
-      <div className="block lg:hidden">
-        <Collapse open={isMobileMenuOpen}>{renderItems}</Collapse>
-      </div>
-    </div>
-  );
-}
-const actions = [
-  {
-    title: "Take Admission",
-    description: "We help to acheive your Goals.",
-    icon: UserPlusIcon,
-    link: "/take-admission",
-  },
-  {
-    title: "Pay Fee",
-    description: "Pay fee for smooth work.",
-    icon: BanknotesIcon,
-    link: "/pay-fee",
-  },
-  {
-    title: "PLay Quiz",
-    description: "Sharp your brain.",
-    icon: GiBrain,
-    link: "/quiz",
-  },
-];
-function ActionssList() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const renderItems = actions.map(({ icon, title, description, link }, key) => (
-    <Link href={link} key={key}>
-      <MenuItem className="flex items-center gap-3 rounded-lg">
-        <div className="flex items-center justify-center rounded-lg !bg-blue-gray-50 p-2 ">
-          {" "}
-          {React.createElement(icon, {
-            strokeWidth: 2,
-            className: "h-6 text-gray-900 w-6",
-          })}
-        </div>
-        <div>
-          <Typography
-            variant="h6"
-            color="blue-gray"
-            className="flex items-center text-sm font-bold"
-          >
-            {title}
-          </Typography>
-          <Typography
-            variant="paragraph"
-            className="text-xs !font-medium text-blue-gray-500"
-          >
-            {description}
-          </Typography>
-        </div>
-      </MenuItem>
-    </Link>
-  ));
-
-  return (
-    <div>
-      <Menu
-        open={isMenuOpen}
-        handler={setIsMenuOpen}
-        offset={{ mainAxis: 20 }}
-        placement="bottom"
-        allowHover={true}
-      >
-        <MenuHandler>
-          <Typography as="div" variant="small" className="font-medium">
-            <ListItem
-              className="flex items-center gap-2 py-2 pr-4 font-medium text-gray-900"
-              selected={isMenuOpen || isMobileMenuOpen}
-              onClick={() => setIsMobileMenuOpen((cur) => !cur)}
-            >
-              Actions
-              <ChevronDownIcon
-                strokeWidth={2.5}
-                className={`hidden h-3 w-3 transition-transform lg:block ${
-                  isMenuOpen ? "rotate-180" : ""
-                }`}
-              />
-              <ChevronDownIcon
-                strokeWidth={2.5}
-                className={`block h-3 w-3 transition-transform lg:hidden ${
-                  isMobileMenuOpen ? "rotate-180" : ""
-                }`}
-              />
-            </ListItem>
-          </Typography>
-        </MenuHandler>
-        <MenuList className="hidden max-w-screen-xl rounded lg:block">
-          <ul className="grid grid-cols-1 gap-y-2 outline-none outline-0">
-            {renderItems}
-          </ul>
-        </MenuList>
-      </Menu>
-      <div className="block lg:hidden">
-        <Collapse open={isMobileMenuOpen}>{renderItems}</Collapse>
-      </div>
-    </div>
-  );
-}
 
 function NavList() {
+
+  const [open, setOpen] = React.useState(false);
+  const [open2, setOpen2] = React.useState(false);
+
+  const handleOpen = () => setOpen(!open);
+  const handleOpen2 = () => setOpen2(!open2);
   return (
-    <List className="mt-4 mb-6 p-0 lg:mt-0 lg:mb-0 lg:flex-row lg:p-1">
-      <Link href={"/"}>
-        <Typography
-          as="a"
-          variant="small"
-          color="blue-gray"
-          className="font-medium"
-        >
-          <ListItem className="flex items-center gap-2 py-2 pr-4">
-            Home
-          </ListItem>
-        </Typography>
-      </Link>
+    <List className="mt-4 mb-6 p-0 lg:mt-0 lg:mb-0 lg:flex-row lg:p-1 md:gap-4">
       <ServicesList />
-      <ResourcessList />
-      <ActionssList />
-      {/* <Typography
-          as="a"
-          href="#"
-          variant="small"
-          color="blue-gray"
-          className="font-medium"
+      <div className="flex gap-2 justify-evenly">
+        <button onClick={handleOpen} variant="gradient" className="flex gap-2 w-full border border-gray-300 shadow py-2 px-4 rounded-md justify-center items-center" >
+          Location
+          <FaLocationDot
+            size={18}
+            color="#F44336"
+          // className={`h-6 w-6 text-gray-500 text-[#F44336;] `}
+          />
+        </button>
+        <Dialog
+          open={open}
+          handler={handleOpen}
+          animate={{
+            mount: { scale: 1, y: 0 },
+            unmount: { scale: 0.9, y: -100 },
+          }}
         >
-          <ListItem className="flex items-center gap-2 py-2 pr-4">
-            Contact Us
-          </ListItem>
-        </Typography> */}
+          <DialogHeader>Its a simple dialog.</DialogHeader>
+          <DialogBody>
+            The key to more success is to have a lot of pillows. Put it this way,
+            it took me twenty five years to get these plants, twenty five years of
+            blood sweat and tears, and I&apos;m never giving up, I&apos;m just
+            getting started. I&apos;m up to something. Fan luv.
+          </DialogBody>
+          <DialogFooter>
+            <Button
+              variant="text"
+              color="red"
+              onClick={handleOpen}
+              className="mr-1"
+            >
+              <span>Cancel</span>
+            </Button>
+            <Button variant="gradient" color="green" onClick={handleOpen}>
+              <span>Confirm</span>
+            </Button>
+          </DialogFooter>
+        </Dialog>
+
+        <button onClick={handleOpen2} variant="gradient" className="flex gap-2 border border-gray-300 shadow py-2 px-3 rounded-full justify-center items-center" >
+          <FaSearch
+
+            className={`  text-[#582FFF;] `}
+          />
+        </button>
+        <Dialog
+          open={open2}
+          handler={handleOpen2}
+          animate={{
+            mount: { scale: 1, y: 0 },
+            unmount: { scale: 0.9, y: -100 },
+          }}
+        >
+          <DialogHeader>Its a simple  .</DialogHeader>
+          <DialogBody>
+            The key to more success is to have a lot of pillows. Put it this way,
+            it took me twenty five years to get these plants, twenty five years of
+            blood sweat and tears, and I&apos;m never giving up, I&apos;m just
+            getting started. I&apos;m up to something. Fan luv.
+          </DialogBody>
+          <DialogFooter>
+            <Button
+              variant="text"
+              color="red"
+              onClick={handleOpen2}
+              className="mr-1"
+            >
+              <span>Cancel</span>
+            </Button>
+            <Button variant="gradient" color="green" onClick={handleOpen2}>
+              <span>Confirm</span>
+            </Button>
+          </DialogFooter>
+        </Dialog>
+      </div>
     </List>
   );
 }
@@ -376,32 +220,26 @@ export default function Nav() {
     );
   }, []);
 
+
   return (
     <Navbar className="mx-auto max-w-full px-4 py-2 rounded-none">
       <div className="flex items-center justify-between text-blue-gray-900">
-        <Link href={"/"}>
-          <Typography
-            as="a"
-            variant="h6"
-            className="mr-4 cursor-pointer py-1.5 lg:ml-2"
-          >
-            Education webApp
-          </Typography>
+        <Link href={"/"} className="mr-4 cursor-pointer font-extrabold py-1.5 lg:ml-2">
+
+          Service Wallah
+
         </Link>
-        <div className="hidden lg:block">
+
+        <div className="hidden gap-2 lg:flex lg:items-center">
           <NavList />
-        </div>
-        <div className="hidden gap-2 lg:flex">
-          <Button variant="text" size="sm" color="blue-gray">
-            Register
-          </Button>
-          <Button
+
+          <button
             variant="gradient"
-            className="flex justify-center gap-1 items-center"
+            className="flex gap-1 border border-gray-300 shadow py-2 px-4 rounded-md h-11 justify-center items-center text-white text-sm bg-[#000000BF]"
             size="sm"
           >
             Log In <BiLogIn size={18} />
-          </Button>
+          </button>
         </div>
         <IconButton
           variant="text"
@@ -418,12 +256,10 @@ export default function Nav() {
       </div>
       <Collapse open={openNav}>
         <NavList />
+
         <div className="flex w-full flex-nowrap items-center gap-2 lg:hidden">
-          <Button variant="outlined" size="sm" color="blue-gray" fullWidth>
-            Log In
-          </Button>
           <Button variant="gradient" size="sm" fullWidth>
-            Sign In
+          Log In
           </Button>
         </div>
       </Collapse>
