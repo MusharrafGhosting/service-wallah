@@ -8,7 +8,7 @@ export const metadata = {
   description: "Find the best service at Service Wallah",
   icons: {
     icon: '/icon.ico',
-  },
+  }
 };
 
 export default function RootLayout({ children }) {
