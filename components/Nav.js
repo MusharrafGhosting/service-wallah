@@ -25,6 +25,24 @@ import {
   WrenchScrewdriverIcon,
   BookOpenIcon,
 } from "@heroicons/react/24/outline";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Input,
+  Tabs,
+  TabsHeader,
+  TabsBody,
+  Tab,
+  TabPanel,
+  Select,
+  Option,
+} from "@material-tailwind/react";
+import {
+  BanknotesIcon,
+  CreditCardIcon,
+  LockClosedIcon,
+} from "@heroicons/react/24/solid";
 
 import { FaSearch } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
@@ -199,6 +217,7 @@ function NavList() {
 
 export default function Nav() {
   const [openNav, setOpenNav] = useState(false);
+  const [open3, setOpen3] = React.useState(false);
 
   useEffect(() => {
     window.addEventListener(
@@ -207,6 +226,36 @@ export default function Nav() {
     );
   }, []);
 
+  function formatCardNumber(value) {
+    const val = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
+    const matches = val.match(/\d{4,16}/g);
+    const match = (matches && matches[0]) || "";
+    const parts = [];
+
+    for (let i = 0, len = match.length; i < len; i += 4) {
+      parts.push(match.substring(i, i + 4));
+    }
+
+    if (parts.length) {
+      return parts.join(" ");
+    } else {
+      return value;
+    }
+  }
+  function formatExpires(value) {
+    return value
+      .replace(/[^0-9]/g, "")
+      .replace(/^([2-9])$/g, "0$1")
+      .replace(/^(1{1})([3-9]{1})$/g, "0$1/$2")
+      .replace(/^0{1,}/g, "0")
+      .replace(/^([0-1]{1}[0-9]{1})([0-9]{1,2}).*/g, "$1/$2");
+  }
+  const handleOpen3 = () => setOpen3(!open3);
+  const [type, setType] = React.useState("card");
+  const [cardNumber, setCardNumber] = React.useState("");
+  const [cardExpires, setCardExpires] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const onChange = ({ target }) => setEmail(target.value);
   return (
     <Navbar className="mx-auto max-w-full px-4 py-2 rounded-none">
       <div className="flex items-center justify-between text-blue-gray-900">
@@ -218,13 +267,111 @@ export default function Nav() {
         </Link>
         <div className="hidden gap-2 lg:flex lg:items-center">
           <NavList />
-          <button
+          <button onClick={handleOpen3}
             variant="gradient"
             className="flex gap-1 border border-gray-300 shadow py-2 px-4 rounded-md hover:bg-[#393737bf] h-11 justify-center items-center text-white text-sm bg-[#000000BF]"
             size="sm"
           >
             Log In <BiLogIn size={18} />
           </button>
+          <Dialog
+            open={open3}
+            handler={handleOpen3}
+            animate={{
+              mount: { scale: 1, y: 0 },
+              unmount: { scale: 0.9, y: -100 },
+            }}
+          >
+            <DialogBody>
+              <Card className="w-full max-w-full">
+                <CardBody>
+                  <Tabs value={type} className="overflow-visible">
+                    <TabsHeader className="relative z-0 ">
+                      <Tab value="card" onClick={() => setType("card")}>
+                        LogIn
+                      </Tab>
+                      <Tab value="paypal" onClick={() => setType("paypal")}>
+                        Register Now
+                      </Tab>
+                    </TabsHeader>
+                    <TabsBody
+                      className="!overflow-x-hidden !overflow-y-visible"
+                      animate={{
+                        initial: {
+                          x: type === "card" ? 400 : -400,
+                        },
+                        mount: {
+                          x: 0,
+                        },
+                        unmount: {
+                          x: type === "card" ? 400 : -400,
+                        },
+                      }}
+                    >
+                      <TabPanel value="card" className="p-0">
+                        <form className="mt-12 flex flex-col gap-4">
+                        <div className="w-full">
+                            <Input type="tel" label="Phone Number" />
+                          </div>
+                          <div className="w-full">
+                            <Input type="password" label="Password" />
+                          </div>
+                          
+                          <Button size="lg">LogIn Now</Button>
+                        </form>
+                      </TabPanel>
+                      <TabPanel value="paypal" className="p-0">
+                        <form className="mt-12 flex flex-col gap-4">
+                          <div className="w-full">
+                            <Input label="Username" />
+                          </div>
+                          <div className="w-full">
+                            <Input type="tel" label="Phone Number" />
+                          </div>
+                          <div className="relative flex w-full max-w-full">
+                            <Input
+                              type="email"
+                              label="Email Address"
+                              value={email}
+                              onChange={onChange}
+                              className="pr-20"
+                              containerProps={{
+                                className: "min-w-0",
+                              }}
+                            />
+                          </div>
+                          <div className="w-full">
+                            <Input type="password" label="Password" />
+                            <Typography
+                              variant="small"
+                              color="gray"
+                              className="mt-2 flex items-center gap-1 font-normal"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="-mt-px h-4 w-4"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                              Use at least 8 characters, one uppercase, one lowercase and one number.
+                            </Typography>
+                          </div>
+                          <Button size="lg">Register Now</Button>
+                        </form>
+                      </TabPanel>
+                    </TabsBody>
+                  </Tabs>
+                </CardBody>
+              </Card>
+            </DialogBody>
+
+          </Dialog>
         </div>
         <IconButton
           variant="text"
