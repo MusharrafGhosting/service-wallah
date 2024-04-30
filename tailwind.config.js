@@ -21,6 +21,7 @@ module.exports = withMT({
         junge: ["Junge", "cursive"],
         julius: ["Julius Sans One", "sans-serif"],
         cookie: ["Cookie", "cursive"],
+        itim: ["Itim", "cursive"],
       },
     },
   },

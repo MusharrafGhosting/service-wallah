@@ -35,7 +35,7 @@ import {
 
 import { FaSearch, FaTools } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
-import { IoIosInformationCircle, IoMdReturnRight } from "react-icons/io";
+import { IoIosInformationCircle } from "react-icons/io";
 import { AiFillHome } from "react-icons/ai";
 import { BiLogIn } from "react-icons/bi";
 import Link from "next/link";
@@ -96,7 +96,7 @@ function ServicesList() {
         <MenuHandler>
           <Typography as="div" variant="small" className="font-medium">
             <ListItem
-              className="flex items-center gap-2 py-2 pr-4 font-medium text-gray-900 bg-white border h-full border-gray-300 rounded-md shadow-md"
+              className="flex items-center gap-2 py-2 pr-4 font-medium text-gray-900 bg-white border h-full border-gray-300 rounded-md shadow"
               selected={isMenuOpen || isMobileMenuOpen}
               onClick={() => setIsMobileMenuOpen((cur) => !cur)}
             >
@@ -142,7 +142,7 @@ function NavList() {
         <button
           onClick={handleOpen}
           variant="gradient"
-          className="flex gap-2 w-full border border-gray-300 hover:bg-gray-200 shadow py-2 px-4 rounded-md justify-center items-center"
+          className="flex gap-2 w-full border bg-white border-gray-300 hover:bg-gray-200 shadow py-2 px-4 rounded-md justify-center items-center"
         >
           Location
           <FaLocationDot size={18} color="#F44336" />
@@ -181,7 +181,7 @@ function NavList() {
         <button
           onClick={handleOpen2}
           variant="gradient"
-          className="flex gap-2 border border-gray-300 hover:bg-gray-200 shadow py-2 px-3 rounded-full justify-center items-center"
+          className="flex gap-2 border bg-white border-gray-300 hover:bg-gray-200 shadow py-2 px-3 rounded-full justify-center items-center"
         >
           <FaSearch className={`  text-[#582FFF;] `} />
         </button>
@@ -215,7 +215,12 @@ export default function Nav() {
   const [openNav, setOpenNav] = useState(false);
   const [open3, setOpen3] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState({
+    image: {
+      url: "",
+      name: "",
+    },
+  });
   const gettingUser = async () => {
     const response = await fetch("/api/users/user", {
       method: "POST",
@@ -225,7 +230,7 @@ export default function Nav() {
       body: JSON.stringify({ id: localStorage.getItem("token") }),
     });
     const data = await response.json();
-    console.log({ data });
+    // console.log(data);
     setUser(data);
   };
   const [registerData, setRegisterData] = useState({
@@ -241,13 +246,10 @@ export default function Nav() {
   const [errorMessage, setErrorMessage] = useState("");
   useEffect(() => {
     const token = localStorage.getItem("token");
+    gettingUser();
     if (token) {
       setIsAuthenticated(true);
     }
-  }, []);
-  useEffect(() => {
-    gettingUser();
-    console.log(localStorage.getItem("token"));
   }, []);
 
   async function handleLogin(e) {
@@ -257,15 +259,19 @@ export default function Nav() {
       return;
     }
     try {
-      const response = await fetch("/api/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        "/api/users/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(loginData),
         },
-        body: JSON.stringify(loginData),
-      });
+        { cache: "no-store" }
+      );
       const data = await response.json();
-      console.log({ data });
+      // console.log({ data });
       if (data.status !== 400) {
         localStorage.setItem("token", data._id);
         setIsAuthenticated(true);
@@ -294,15 +300,19 @@ export default function Nav() {
       return;
     }
     try {
-      const response = await fetch("/api/users/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        "/api/users/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(registerData),
         },
-        body: JSON.stringify(registerData),
-      });
+        { cache: "no-store" }
+      );
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       if (response.ok) {
         setOpen3(false);
         setLoginData({
@@ -324,8 +334,8 @@ export default function Nav() {
   const [type, setType] = React.useState("card");
 
   return (
-    <Navbar className="mx-auto max-w-full px-4 py-2 rounded-none shadow-none bprder-none bg-none">
-      <div className="flex items-center justify-between text-blue-gray-900">
+    <div className="mx-auto max-w-full px-4 py-2 rounded-none shadow-none bprder-none bg-transparent">
+      <div className="flex items-center justify-between text-blue-gray-900 bg-transparent">
         <Link
           href={"/"}
           className="mr-4 cursor-pointer font-extrabold py-1.5 lg:ml-2"
@@ -335,10 +345,39 @@ export default function Nav() {
         <div className="hidden gap-2 lg:flex lg:items-center">
           <NavList />
           {isAuthenticated ? (
-            <button
-              variant="gradient"
-              className="w-12 h-12 rounded-full bg-gray-400"
-            >M</button>
+            <Menu allowHover={true} placement="bottom-start">
+              <MenuHandler>
+                {user.image.url ? (
+                  <img
+                    src={user.image.url}
+                    alt={user.name}
+                    className="w-12 h-12 rounded-full object-cover cursor-pointer"
+                  />
+                ) : (
+                  <div className="w-12 h-12 rounded-full font-junge bg-gray-400 cursor-pointer">
+                    {user.name && Array.from(user.name)[0].toUpperCase()}
+                  </div>
+                )}
+              </MenuHandler>
+              <MenuList>
+                <Link href={`/user-page/${user._id}`}>
+                  <MenuItem className="text-center">Profile</MenuItem>
+                </Link>
+                <Link href={`/user-history/${user._id}`}>
+                  <MenuItem className="text-center">History</MenuItem>
+                </Link>
+                <MenuItem
+                  className="text-red-400 text-center"
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                    setIsAuthenticated(false);
+                    window.location.reload();
+                  }}
+                >
+                  Logout
+                </MenuItem>
+              </MenuList>
+            </Menu>
           ) : (
             <button
               onClick={handleOpen3}
@@ -611,6 +650,6 @@ export default function Nav() {
           </Button>
         </div>
       </Collapse>
-    </Navbar>
+    </div>
   );
 }

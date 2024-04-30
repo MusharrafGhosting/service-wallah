@@ -6,6 +6,13 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    image: {
+      type: Object,
+      default: {
+        url: "",
+        name: "",
+      },
+    },
     email: {
       type: String,
     },
