@@ -73,6 +73,7 @@ const UserHistory = () => {
   return (
     <div className="userpage-bg min-h-screen">
       <Nav />
+      <h1 className="text-3xl font-junge font-bold text-indigo-500 py-4 text-center">Service History</h1>
       <div className="flex justify-center items-center">
         <table className="mt-4 w-10/12 table-auto text-left bg-white bg-opacity-5 backdrop-blur-sm rounded-md shadow px-6 py-4 outline outline-1 outline-gray-400 overflow-hidden">
           <thead>
@@ -160,13 +161,6 @@ const UserHistory = () => {
                       >
                         {date}
                       </Typography>
-                    </td>
-                    <td className={classes}>
-                      <Tooltip content="Edit User">
-                        <IconButton variant="text">
-                          <PencilIcon className="h-4 w-4" />
-                        </IconButton>
-                      </Tooltip>
                     </td>
                   </tr>
                 );

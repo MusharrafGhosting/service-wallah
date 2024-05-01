@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(request) {
   const { phoneNumber, password } = await request.json();
-  console.log(phoneNumber, password)
+  // console.log(phoneNumber, password)
   await connectMongoDB();
   const user = await User.findOne({phoneNumber})
   if (!user) {

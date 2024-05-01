@@ -6,7 +6,14 @@ import { useState, useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Button, Dialog, Input, DialogFooter } from "@material-tailwind/react";
+import {
+  Button,
+  Dialog,
+  Input,
+  DialogFooter,
+  Select,
+  Option,
+} from "@material-tailwind/react";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "@/firebase";
 
@@ -62,7 +69,10 @@ const UserPage = () => {
   const formattedDate = formatDate(user.createdAt);
   const [open, setOpen] = useState(false);
 
-  const handleOpen = () => setOpen(!open);
+  const handleOpen = () => {
+    gettingUser();
+    setOpen(!open);
+  };
   const [uploadedImageObject, setUploadedImageObject] = useState({
     url: user.image.url,
     name: user.image.name,
@@ -241,7 +251,21 @@ const UserPage = () => {
                         value={updateUser.email}
                         label="Email"
                       />
-                      <Input
+                      <Select
+                        label="Gender"
+                        value={updateUser.gender}
+                        onChange={(val) =>
+                          setUpdateUser({
+                            ...updateUser,
+                            gender: val,
+                          })
+                        }
+                      >
+                        <Option value="Unspecified">Unspecified</Option>
+                        <Option value="Male">Male</Option>
+                        <Option value="Female">Female</Option>
+                      </Select>
+                      {/* <Input
                         onChange={(e) =>
                           setUpdateUser({
                             ...updateUser,
@@ -250,7 +274,7 @@ const UserPage = () => {
                         }
                         value={updateUser.gender}
                         label="Gender"
-                      />
+                      /> */}
                       <Input
                         onChange={(e) =>
                           setUpdateUser({ ...updateUser, city: e.target.value })

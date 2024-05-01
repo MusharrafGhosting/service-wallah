@@ -40,6 +40,7 @@ import { AiFillHome } from "react-icons/ai";
 import { BiLogIn } from "react-icons/bi";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 const services = [
   {
@@ -246,7 +247,6 @@ export default function Nav() {
   const [errorMessage, setErrorMessage] = useState("");
   useEffect(() => {
     const token = localStorage.getItem("token");
-    gettingUser();
     if (token) {
       setIsAuthenticated(true);
     }
@@ -277,9 +277,12 @@ export default function Nav() {
         setIsAuthenticated(true);
         setOpen3(false);
         setRegisterData({
+          name: "",
           phoneNumber: "",
+          email: "",
           password: "",
         });
+        gettingUser();
       } else {
         setErrorMessage(data.message);
       }
@@ -325,6 +328,12 @@ export default function Nav() {
     }
   }
   useEffect(() => {
+    console.log(user);
+  }, [user]);
+  useEffect(() => {
+    gettingUser();
+  }, []);
+  useEffect(() => {
     window.addEventListener(
       "resize",
       () => window.innerWidth >= 960 && setOpenNav(false)
@@ -340,21 +349,28 @@ export default function Nav() {
           href={"/"}
           className="mr-4 cursor-pointer font-extrabold py-1.5 lg:ml-2"
         >
-          Service Wallah
+          <Image
+            src="/logo/secoundary-logo-black.png"
+            alt="logo"
+            width={150}
+            height={50}
+            className="cursor-pointer"
+          />
+          {/* Service Wallah */}
         </Link>
         <div className="hidden gap-2 lg:flex lg:items-center">
           <NavList />
-          {isAuthenticated ? (
+          {user?.name ? (
             <Menu allowHover={true} placement="bottom-start">
               <MenuHandler>
-                {user.image.url ? (
+                {user?.image?.url ? (
                   <img
                     src={user.image.url}
                     alt={user.name}
                     className="w-12 h-12 rounded-full object-cover cursor-pointer"
                   />
                 ) : (
-                  <div className="w-12 h-12 rounded-full font-junge bg-gray-400 cursor-pointer">
+                  <div className="w-12 h-12 rounded-full flex justify-center items-center font-junge bg-gray-400 cursor-pointer">
                     {user.name && Array.from(user.name)[0].toUpperCase()}
                   </div>
                 )}
