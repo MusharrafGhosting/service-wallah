@@ -375,11 +375,37 @@ export default function Nav() {
                   </div>
                 )}
               </MenuHandler>
-              <MenuList>
-                <Link href={`/user-page/${user._id}`}>
+              {user.role === "user" ? (
+                <MenuList>
+                  <Link href={`/user`} className="outline-none">
+                    <MenuItem className="text-center">Profile</MenuItem>
+                  </Link>
+                  <Link href={`/user/booking`} className="outline-none">
+                    <MenuItem className="text-center">Booking</MenuItem>
+                  </Link>
+                  <Link href={`/user/history`} className="outline-none">
+                    <MenuItem className="text-center">History</MenuItem>
+                  </Link>
+                  <MenuItem
+                    className="text-red-400 text-center"
+                    onClick={() => {
+                      localStorage.removeItem("token");
+                      setIsAuthenticated(false);
+                      window.location.reload();
+                    }}
+                  >
+                    Logout
+                  </MenuItem>
+                </MenuList>
+              ) : user.role === "service-provider" ? (
+                <MenuList>
+                <Link href={`/service-provider`} className="outline-none">
                   <MenuItem className="text-center">Profile</MenuItem>
                 </Link>
-                <Link href={`/user-history/${user._id}`}>
+                <Link href={`/service-provider/booking`} className="outline-none">
+                  <MenuItem className="text-center">Booking</MenuItem>
+                </Link>
+                <Link href={`/service-provider/history`} className="outline-none">
                   <MenuItem className="text-center">History</MenuItem>
                 </Link>
                 <MenuItem
@@ -393,6 +419,32 @@ export default function Nav() {
                   Logout
                 </MenuItem>
               </MenuList>
+              ) : (
+                <MenuList>
+                  <Link href={`/admin`} className="outline-none">
+                    <MenuItem className="text-center">Profile</MenuItem>
+                  </Link>
+                  <Link href={`/admin/services`} className="outline-none">
+                    <MenuItem className="text-center">Services</MenuItem>
+                  </Link>
+                  <Link href={`/admin/users`} className="outline-none">
+                    <MenuItem className="text-center">Users</MenuItem>
+                  </Link>
+                  <Link href={`/admin/service-providers`} className="outline-none">
+                    <MenuItem className="text-center">Service Provider</MenuItem>
+                  </Link>
+                  <MenuItem
+                    className="text-red-400 text-center"
+                    onClick={() => {
+                      localStorage.removeItem("token");
+                      setIsAuthenticated(false);
+                      window.location.reload();
+                    }}
+                  >
+                    Logout
+                  </MenuItem>
+                </MenuList>
+              )}
             </Menu>
           ) : (
             <button

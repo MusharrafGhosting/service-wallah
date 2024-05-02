@@ -132,6 +132,21 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <div className="w-full flex flex-col justify-center items-center py-4">
+        <h1 className="font-julius text-5xl text-gray-700">
+          FOR ALL YOUR NEEDS WE PROVIDES
+        </h1>
+        <h2 className="font-cookie text-7xl text-indigo-600">Best Services</h2>
+      </div>
+      <div className="w-full px-20 pb-6 grid grid-cols-4 gap-6">
+        <div className="bg-gray-400 p-4 flex flex-col items-center gap-2 rounded-lg">
+          <img
+            src="/image/service-logos/ac.svg"
+            className="w-14 h-14 object-cover"
+          />
+          <div>AC Repairing</div>
+        </div>
+      </div>
     </main>
   );
 }
