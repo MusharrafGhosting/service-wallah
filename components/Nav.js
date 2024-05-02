@@ -399,39 +399,53 @@ export default function Nav() {
                 </MenuList>
               ) : user.role === "service-provider" ? (
                 <MenuList>
-                <Link href={`/service-provider`} className="outline-none">
-                  <MenuItem className="text-center">Profile</MenuItem>
-                </Link>
-                <Link href={`/service-provider/booking`} className="outline-none">
-                  <MenuItem className="text-center">Booking</MenuItem>
-                </Link>
-                <Link href={`/service-provider/history`} className="outline-none">
-                  <MenuItem className="text-center">History</MenuItem>
-                </Link>
-                <MenuItem
-                  className="text-red-400 text-center"
-                  onClick={() => {
-                    localStorage.removeItem("token");
-                    setIsAuthenticated(false);
-                    window.location.reload();
-                  }}
-                >
-                  Logout
-                </MenuItem>
-              </MenuList>
+                  <Link href={`/service-provider`} className="outline-none">
+                    <MenuItem className="text-center">Profile</MenuItem>
+                  </Link>
+                  <Link
+                    href={`/service-provider/booking`}
+                    className="outline-none"
+                  >
+                    <MenuItem className="text-center">Booking</MenuItem>
+                  </Link>
+                  <Link
+                    href={`/service-provider/history`}
+                    className="outline-none"
+                  >
+                    <MenuItem className="text-center">History</MenuItem>
+                  </Link>
+                  <MenuItem
+                    className="text-red-400 text-center"
+                    onClick={() => {
+                      localStorage.removeItem("token");
+                      setIsAuthenticated(false);
+                      window.location.reload();
+                    }}
+                  >
+                    Logout
+                  </MenuItem>
+                </MenuList>
               ) : (
                 <MenuList>
                   <Link href={`/admin`} className="outline-none">
-                    <MenuItem className="text-center">Profile</MenuItem>
+                    <MenuItem className="text-center">Dashboard</MenuItem>
                   </Link>
                   <Link href={`/admin/services`} className="outline-none">
-                    <MenuItem className="text-center">Services</MenuItem>
+                    <MenuItem className="text-center">Manage Services</MenuItem>
                   </Link>
                   <Link href={`/admin/users`} className="outline-none">
-                    <MenuItem className="text-center">Users</MenuItem>
+                    <MenuItem className="text-center">Manage Users</MenuItem>
                   </Link>
-                  <Link href={`/admin/service-providers`} className="outline-none">
-                    <MenuItem className="text-center">Service Provider</MenuItem>
+                  <Link
+                    href={`/admin/service-providers`}
+                    className="outline-none"
+                  >
+                    <MenuItem className="text-center">
+                      Service Provider
+                    </MenuItem>
+                  </Link>
+                  <Link href={`/admin/payments`} className="outline-none">
+                    <MenuItem className="text-center">Manage Payments</MenuItem>
                   </Link>
                   <MenuItem
                     className="text-red-400 text-center"
