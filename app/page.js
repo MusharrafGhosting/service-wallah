@@ -94,13 +94,13 @@ export default function Home() {
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-4">
               <img
-                className="h-full max-w-full rounded-lg"
+                className="  ml-auto rounded-lg"
                 src="/image/hero1.webp"
                 alt=""
               />
               <div className="ml-auto">
                 <img
-                  className="float-right w-4/5  h-full rounded-lg"
+                  className="float-right     rounded-lg"
                   src="/image/hero3.webp"
                   alt=""
                 />
@@ -108,7 +108,7 @@ export default function Home() {
             </div>
             <div className="grid gap-4">
               <img
-                className="max-w-full h-full rounded-lg"
+                className="  h-full rounded-lg"
                 src="/image/hero2.webp"
                 alt=""
               />
@@ -124,7 +124,7 @@ export default function Home() {
             </div>
             <div className="grid gap-4">
               <img
-                className="max-w-full h-full w-full rounded-lg"
+                className="    w-full rounded-lg"
                 src="/image/hero5.webp"
                 alt=""
               />
