@@ -21,9 +21,6 @@ import {
   ChevronDownIcon,
   Bars3Icon,
   XMarkIcon,
-  HomeIcon,
-  WrenchScrewdriverIcon,
-  BookOpenIcon,
 } from "@heroicons/react/24/outline";
 import {
   Card,
@@ -33,7 +30,7 @@ import {
   TabsHeader,
   TabsBody,
   Tab,
-  TabPanel
+  TabPanel,
 } from "@material-tailwind/react";
 
 import { FaSearch, FaTools } from "react-icons/fa";
@@ -43,6 +40,7 @@ import { AiFillHome } from "react-icons/ai";
 import { BiLogIn } from "react-icons/bi";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 const services = [
   {
@@ -64,6 +62,7 @@ const services = [
 function ServicesList() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const renderItems = services.map(({ title, icon, link }, key) => (
     <Link href={link} key={key}>
       <MenuItem className="flex items-center justify-between gap-3 rounded-lg ">
@@ -71,7 +70,7 @@ function ServicesList() {
           <Typography
             variant="h6"
             color="blue-gray"
-            className="flex items-center text-sm font-bold"
+            className="flex items-center text-gray-700 text-sm font-bold"
           >
             {title}
           </Typography>
@@ -80,7 +79,7 @@ function ServicesList() {
           {" "}
           {React.createElement(icon, {
             strokeWidth: 2,
-            className: "h-6 text-gray-900 w-6",
+            className: "h-6 text-gray-700 w-6",
           })}
         </div>
       </MenuItem>
@@ -98,7 +97,7 @@ function ServicesList() {
         <MenuHandler>
           <Typography as="div" variant="small" className="font-medium">
             <ListItem
-              className="flex items-center gap-2 py-2 pr-4 font-medium text-gray-900 bg-white border h-full border-gray-300 rounded-md shadow-md"
+              className="flex items-center gap-2 py-2 pr-4 font-medium text-gray-900 bg-white border h-full border-gray-300 rounded-md shadow"
               selected={isMenuOpen || isMobileMenuOpen}
               onClick={() => setIsMobileMenuOpen((cur) => !cur)}
             >
@@ -144,7 +143,7 @@ function NavList() {
         <button
           onClick={handleOpen}
           variant="gradient"
-          className="flex gap-2 w-full border border-gray-300 hover:bg-gray-200 shadow py-2 px-4 rounded-md justify-center items-center"
+          className="flex gap-2 w-full border bg-white border-gray-300 hover:bg-gray-200 shadow py-2 px-4 rounded-md justify-center items-center"
         >
           Location
           <FaLocationDot size={18} color="#F44336" />
@@ -183,7 +182,7 @@ function NavList() {
         <button
           onClick={handleOpen2}
           variant="gradient"
-          className="flex gap-2 border border-gray-300 hover:bg-gray-200 shadow py-2 px-3 rounded-full justify-center items-center"
+          className="flex gap-2 border bg-white border-gray-300 hover:bg-gray-200 shadow py-2 px-3 rounded-full justify-center items-center"
         >
           <FaSearch className={`  text-[#582FFF;] `} />
         </button>
@@ -215,54 +214,249 @@ function NavList() {
 
 export default function Nav() {
   const [openNav, setOpenNav] = useState(false);
-  const [open3, setOpen3] = React.useState(false);
+  const [open3, setOpen3] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState({
+    image: {
+      url: "",
+      name: "",
+    },
+  });
+  const gettingUser = async () => {
+    const response = await fetch("/api/users/user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: localStorage.getItem("token") }),
+    });
+    const data = await response.json();
+    // console.log(data);
+    setUser(data);
+  };
+  const [registerData, setRegisterData] = useState({
+    name: "",
+    phoneNumber: "",
+    email: "",
+    password: "",
+  });
+  const [loginData, setLoginData] = useState({
+    phoneNumber: "",
+    password: "",
+  });
+  const [errorMessage, setErrorMessage] = useState("");
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsAuthenticated(true);
+    }
+  }, []);
 
+  async function handleLogin(e) {
+    e.preventDefault();
+    if (!loginData.phoneNumber || !loginData.password) {
+      setErrorMessage("Invalid data");
+      return;
+    }
+    try {
+      const response = await fetch(
+        "/api/users/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(loginData),
+        },
+        { cache: "no-store" }
+      );
+      const data = await response.json();
+      // console.log({ data });
+      if (data.status !== 400) {
+        localStorage.setItem("token", data._id);
+        setIsAuthenticated(true);
+        setOpen3(false);
+        setRegisterData({
+          name: "",
+          phoneNumber: "",
+          email: "",
+          password: "",
+        });
+        gettingUser();
+      } else {
+        setErrorMessage(data.message);
+      }
+    } catch {
+      setErrorMessage(
+        `Something went wrong while logging ${loginData.phoneNumber}`
+      );
+    }
+  }
+  async function handleRegister(e) {
+    e.preventDefault();
+    if (
+      !registerData.name ||
+      !registerData.phoneNumber ||
+      !registerData.password
+    ) {
+      setErrorMessage("Invalid data");
+      return;
+    }
+    try {
+      const response = await fetch(
+        "/api/users/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(registerData),
+        },
+        { cache: "no-store" }
+      );
+      const data = await response.json();
+      // console.log(data);
+      if (response.ok) {
+        setOpen3(false);
+        setLoginData({
+          phoneNumber: "",
+          password: "",
+        });
+      }
+    } catch {
+      setErrorMessage(`Something went wrong while Regestering`);
+    }
+  }
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+  useEffect(() => {
+    gettingUser();
+  }, []);
   useEffect(() => {
     window.addEventListener(
       "resize",
       () => window.innerWidth >= 960 && setOpenNav(false)
     );
   }, []);
-
-  function formatCardNumber(value) {
-    const val = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
-    const matches = val.match(/\d{4,16}/g);
-    const match = (matches && matches[0]) || "";
-    const parts = [];
-
-    for (let i = 0, len = match.length; i < len; i += 4) {
-      parts.push(match.substring(i, i + 4));
-    }
-
-    if (parts.length) {
-      return parts.join(" ");
-    } else {
-      return value;
-    }
-  }
   const handleOpen3 = () => setOpen3(!open3);
   const [type, setType] = React.useState("card");
-  const [email, setEmail] = React.useState("");
-  const onChange = ({ target }) => setEmail(target.value);
+
   return (
-    <Navbar className="mx-auto max-w-full px-4 py-2 rounded-none shadow-none bprder-none bg-none">
-      <div className="flex items-center justify-between text-blue-gray-900">
+    <div className="mx-auto max-w-full px-4 py-2 rounded-none shadow-none bprder-none bg-transparent">
+      <div className="flex items-center justify-between text-blue-gray-900 bg-transparent">
         <Link
           href={"/"}
           className="mr-4 cursor-pointer font-extrabold py-1.5 lg:ml-2"
         >
-          Service Wallah
+          <Image
+            src="/logo/secoundary-logo-black.png"
+            alt="logo"
+            width={150}
+            height={50}
+            className="cursor-pointer"
+          />
+          {/* Service Wallah */}
         </Link>
         <div className="hidden gap-2 lg:flex lg:items-center">
           <NavList />
-          <button
-            onClick={handleOpen3}
-            variant="gradient"
-            className="flex gap-1 border border-gray-300 shadow py-2 px-4 rounded-md hover:bg-[#393737bf] h-11 justify-center items-center text-white text-sm bg-[#000000BF]"
-            size="sm"
-          >
-            Log In <BiLogIn size={18} />
-          </button>
+          {user?.name ? (
+            <Menu allowHover={true} placement="bottom-start">
+              <MenuHandler>
+                {user?.image?.url ? (
+                  <img
+                    src={user.image.url}
+                    alt={user.name}
+                    className="w-12 h-12 rounded-full object-cover cursor-pointer"
+                  />
+                ) : (
+                  <div className="w-12 h-12 rounded-full flex justify-center items-center font-junge bg-gray-400 cursor-pointer">
+                    {user.name && Array.from(user.name)[0].toUpperCase()}
+                  </div>
+                )}
+              </MenuHandler>
+              {user.role === "user" ? (
+                <MenuList>
+                  <Link href={`/user`} className="outline-none">
+                    <MenuItem className="text-center">Profile</MenuItem>
+                  </Link>
+                  <Link href={`/user/booking`} className="outline-none">
+                    <MenuItem className="text-center">Booking</MenuItem>
+                  </Link>
+                  <Link href={`/user/history`} className="outline-none">
+                    <MenuItem className="text-center">History</MenuItem>
+                  </Link>
+                  <MenuItem
+                    className="text-red-400 text-center"
+                    onClick={() => {
+                      localStorage.removeItem("token");
+                      setIsAuthenticated(false);
+                      window.location.reload();
+                    }}
+                  >
+                    Logout
+                  </MenuItem>
+                </MenuList>
+              ) : user.role === "service-provider" ? (
+                <MenuList>
+                <Link href={`/service-provider`} className="outline-none">
+                  <MenuItem className="text-center">Profile</MenuItem>
+                </Link>
+                <Link href={`/service-provider/booking`} className="outline-none">
+                  <MenuItem className="text-center">Booking</MenuItem>
+                </Link>
+                <Link href={`/service-provider/history`} className="outline-none">
+                  <MenuItem className="text-center">History</MenuItem>
+                </Link>
+                <MenuItem
+                  className="text-red-400 text-center"
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                    setIsAuthenticated(false);
+                    window.location.reload();
+                  }}
+                >
+                  Logout
+                </MenuItem>
+              </MenuList>
+              ) : (
+                <MenuList>
+                  <Link href={`/admin`} className="outline-none">
+                    <MenuItem className="text-center">Profile</MenuItem>
+                  </Link>
+                  <Link href={`/admin/services`} className="outline-none">
+                    <MenuItem className="text-center">Services</MenuItem>
+                  </Link>
+                  <Link href={`/admin/users`} className="outline-none">
+                    <MenuItem className="text-center">Users</MenuItem>
+                  </Link>
+                  <Link href={`/admin/service-providers`} className="outline-none">
+                    <MenuItem className="text-center">Service Provider</MenuItem>
+                  </Link>
+                  <MenuItem
+                    className="text-red-400 text-center"
+                    onClick={() => {
+                      localStorage.removeItem("token");
+                      setIsAuthenticated(false);
+                      window.location.reload();
+                    }}
+                  >
+                    Logout
+                  </MenuItem>
+                </MenuList>
+              )}
+            </Menu>
+          ) : (
+            <button
+              onClick={handleOpen3}
+              variant="gradient"
+              className="flex gap-1 border border-gray-300 shadow py-2 px-4 rounded-md hover:bg-[#393737bf] h-11 justify-center items-center text-white text-sm bg-[#000000BF]"
+              size="sm"
+            >
+              Log In <BiLogIn size={18} />
+            </button>
+          )}
+
           <Dialog
             open={open3}
             handler={handleOpen3}
@@ -298,61 +492,131 @@ export default function Nav() {
                       }}
                     >
                       <TabPanel value="card" className="p-0">
-                        <form className="mt-12 flex flex-col gap-4 justify-center h-[50vh]">
+                        <form
+                          className="mt-12 flex flex-col gap-4 justify-center h-[50vh]"
+                          onSubmit={handleLogin}
+                        >
                           <div className="w-full">
-                            <Input type="tel" label="Phone Number" />
+                            <Input
+                              type="tel"
+                              label="Phone Number"
+                              value={loginData.phoneNumber}
+                              onChange={(e) =>
+                                setLoginData({
+                                  ...loginData,
+                                  phoneNumber: e.target.value,
+                                })
+                              }
+                            />
                           </div>
                           <div className="w-full">
-                            <Input type="password" label="Password" />
+                            <Input
+                              type="password"
+                              label="Password"
+                              value={loginData.password}
+                              onChange={(e) =>
+                                setLoginData({
+                                  ...loginData,
+                                  password: e.target.value,
+                                })
+                              }
+                            />
                             <Typography
                               variant="small"
                               color="gray"
-                              className="mt-2 flex items-center gap-1 font-normal"
+                              className="mt-2 flex flex-col justify-center gap-1 font-normal"
                             >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="currentColor"
-                                className="-mt-px h-4 w-4"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
-                                  clipRule="evenodd"
-                                />
-                              </svg>
-                              Use at least 8 characters, one uppercase, one
-                              lowercase and one number.
+                              <span className="flex gap-1 items-center">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 24 24"
+                                  fill="currentColor"
+                                  className="-mt-px h-4 w-4"
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                                Use at least 8 characters, one uppercase, one
+                                lowercase and one number.
+                              </span>
+                              {errorMessage && (
+                                <span className="text-red-500 flex gap-1 items-center">
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                    className="-mt-px h-4 w-4"
+                                  >
+                                    <path
+                                      fillRule="evenodd"
+                                      d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                                      clipRule="evenodd"
+                                    />
+                                  </svg>
+                                  {errorMessage}
+                                </span>
+                              )}
                             </Typography>
                           </div>
-                          <div class="flex gap-4">
+                          <div className="flex gap-4 justify-end">
                             <Button
                               variant="gradient"
                               color="red"
                               onClick={handleOpen3}
                               className="mr-1"
-                              fullWidth
                             >
                               <span>Cancel</span>
                             </Button>
-                            <Button size="lg" fullWidth>Login</Button>
+                            <Button size="lg" type="submit">
+                              Login
+                            </Button>
                           </div>
                         </form>
                       </TabPanel>
                       <TabPanel value="paypal" className="p-0">
-                        <form className="mt-12 flex flex-col gap-4">
+                        <form
+                          className="mt-12 flex flex-col gap-4"
+                          onSubmit={handleRegister}
+                        >
                           <div className="w-full">
-                            <Input label="Username" />
+                            <Input
+                              label="Fullname"
+                              value={registerData.name}
+                              onChange={(e) =>
+                                setRegisterData({
+                                  ...registerData,
+                                  name: e.target.value,
+                                })
+                              }
+                            />
                           </div>
                           <div className="w-full">
-                            <Input type="tel" label="Phone Number" />
+                            <Input
+                              type="tel"
+                              label="Phone Number"
+                              value={registerData.phoneNumber}
+                              onChange={(e) =>
+                                setRegisterData({
+                                  ...registerData,
+                                  phoneNumber: e.target.value,
+                                })
+                              }
+                            />
                           </div>
                           <div className="relative flex w-full max-w-full">
                             <Input
                               type="email"
                               label="Email Address"
-                              value={email}
-                              onChange={onChange}
+                              value={registerData.email}
+                              onChange={(e) =>
+                                setRegisterData({
+                                  ...registerData,
+                                  email: e.target.value,
+                                })
+                              }
                               className="pr-20"
                               containerProps={{
                                 className: "min-w-0",
@@ -360,39 +624,69 @@ export default function Nav() {
                             />
                           </div>
                           <div className="w-full">
-                            <Input type="password" label="Password" />
+                            <Input
+                              type="password"
+                              label="Password"
+                              value={registerData.password}
+                              onChange={(e) =>
+                                setRegisterData({
+                                  ...registerData,
+                                  password: e.target.value,
+                                })
+                              }
+                            />
                             <Typography
                               variant="small"
                               color="gray"
-                              className="mt-2 flex items-center gap-1 font-normal"
+                              className="mt-2 flex flex-col justify-center gap-1 font-normal"
                             >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="currentColor"
-                                className="-mt-px h-4 w-4"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
-                                  clipRule="evenodd"
-                                />
-                              </svg>
-                              Use at least 8 characters, one uppercase, one
-                              lowercase and one number.
+                              <span className="flex gap-1 items-center">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 24 24"
+                                  fill="currentColor"
+                                  className="-mt-px h-4 w-4"
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                                Use at least 8 characters, one uppercase, one
+                                lowercase and one number.
+                              </span>
+                              {errorMessage && (
+                                <span className="text-red-500 flex gap-1 items-center">
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                    className="-mt-px h-4 w-4"
+                                  >
+                                    <path
+                                      fillRule="evenodd"
+                                      d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                                      clipRule="evenodd"
+                                    />
+                                  </svg>
+                                  {errorMessage}
+                                </span>
+                              )}
                             </Typography>
                           </div>
-                          <div class="flex gap-4">
+                          <div className="flex gap-4 justify-end">
                             <Button
                               variant="gradient"
                               color="red"
                               onClick={handleOpen3}
                               className="mr-1"
-                              fullWidth
                             >
                               <span>Cancel</span>
                             </Button>
-                            <Button size="lg" fullWidth>Register</Button>
+                            <Button size="lg" type="submit">
+                              Register
+                            </Button>
                           </div>
                         </form>
                       </TabPanel>
@@ -418,13 +712,12 @@ export default function Nav() {
       </div>
       <Collapse open={openNav}>
         <NavList />
-
         <div className="flex w-full flex-nowrap items-center gap-2 lg:hidden">
-          <Button variant="gradient" size="sm" fullWidth>
+          <Button variant="gradient" size="sm" fullWidth onClick={handleOpen3}>
             Log In
           </Button>
         </div>
       </Collapse>
-    </Navbar>
+    </div>
   );
 }

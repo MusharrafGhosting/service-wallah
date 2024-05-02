@@ -6,6 +6,13 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    image: {
+      type: Object,
+      default: {
+        url: "",
+        name: "",
+      },
+    },
     email: {
       type: String,
     },
@@ -15,23 +22,18 @@ const userSchema = new Schema(
     },
     gender: {
       type: String,
-      required: true,
     },
     location: {
       type: String,
-      required: true,
     },
     city: {
       type: String,
-      required: true,
     },
     active: {
       type: Boolean,
-      default: true,
     },
     role: {
       type: String,
-      required: true,
     },
     serviceHistory: {
       type: Array,
