@@ -1,17 +1,20 @@
+'use client'
 import Nav from "../components/Nav";
 import { BsPersonFillAdd } from "react-icons/bs";
 import { RxDoubleArrowRight } from "react-icons/rx";
+import { Carousel } from "@material-tailwind/react";
 
 export default function Home() {
   return (
     <main>
       <Nav />
       <div className="flex flex-col lg:flex-row">
+
         {/* Left half */}
-        <div className="lg:w-1/2 py-20 px-10 flex items-center">
+        <div className="lg:w-1/2 pb-4 md:pb-20 pt-4 md:px-10 px-4 flex items-center">
           <div className="w-full">
             <p className="text-xl mb-1">Get Your Work done in a</p>
-            <h1 className="text-4xl lg:text-8xl text-center text-[#582FFF] font-junge">
+            <h1 className="text-6xl lg:text-8xl text-center text-blue-600 font-junge">
               Professional
             </h1>
             <span className="flex w-full justify-center">
@@ -52,12 +55,12 @@ export default function Home() {
               </svg>
             </span>
 
-            <h3 className="text-center text-2xl lg:text-4xl font-julius">Manner</h3>
-            <div className="flex w-full justify-center flex-nowrap items-center gap-4 mt-8">
-              <button className="px-6 py-4 outline transition-all duration-700 flex justify-center items-center rounded-md gap-1 hover:bg-gradient-to-r hover:from-[#ffffff] hover:to-[#ffffff] hover:text-[#5D35FF] hover:outline-[#582FFF] hover:outline-2 bg-gradient-to-r from-[#5D35FF] to-[#301BB1] font-semibold text-white">
+            <h3 className="text-center text-3xl lg:text-4xl font-julius">Manner</h3>
+            <div className="flex w-full flex-col md:flex-row justify-center flex-nowrap items-center gap-4 mt-8">
+              <button className="px-6 py-4 w-full md:w-fit outline transition-all duration-700 flex justify-center items-center rounded-md gap-1 hover:bg-gradient-to-r hover:from-transparent hover:to-transparent hover:text-blue-600 hover:outline-blue-600 hover:outline-2 bg-gradient-to-r from-blue-600 to-indigo-500 font-semibold text-white">
                 Find a Service <RxDoubleArrowRight size={18} />
               </button>
-              <button className="px-6 py-4 transition-all flex gap-1 items-center justify-center duration-700 rounded-md hover:bg-gradient-to-r hover:from-[#5D35FF] hover:to-[#301BB1] hover:text-white outline outline-2 outline-[#582FFF] text-[#582FFF] font-semibold">
+              <button className="px-6 py-4 w-full md:w-fit transition-all flex gap-1 items-center justify-center duration-700 rounded-md hover:bg-gradient-to-r hover:from-blue-600 hover:to-indigo-500 hover:text-white outline outline-2 outline-blue-600 text-blue-600 font-semibold">
                 Become a Service provider <BsPersonFillAdd />
               </button>
             </div>
@@ -69,7 +72,7 @@ export default function Home() {
                   alt=""
                 />
                 <div>
-                  <div className="mb-2 text-[#582FFF] font-bold text-2xl md:text-3xl">
+                  <div className="mb-2 text-blue-600 font-bold text-2xl md:text-3xl">
                     2+ Lakhs
                   </div>
                   <div className="font-medium text-sm md:text-base">
@@ -84,7 +87,7 @@ export default function Home() {
                   src="/image/start.png"
                   alt=""
                 />
-                <h3 className="text-[#582FFF] font-bold text-lg md:text-xl">
+                <h3 className="text-blue-600 font-bold text-lg md:text-xl">
                   4.7
                 </h3>
                 <p className="font-medium text-sm md:text-base">
@@ -96,7 +99,7 @@ export default function Home() {
           </div>
         </div>
         {/* Right half */}
-        <div className="lg:w-1/2 py-5 px-5">
+        <div className="lg:w-1/2 py-5 px-5 hidden md:block">
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-4">
               <img
@@ -137,65 +140,118 @@ export default function Home() {
             </div>
           </div>
         </div>
+        {/* MObile View Carosel */}
+        <Carousel
+          className="md:hidden"
+          loop={true}
+          navigation={({ setActiveIndex, activeIndex, length }) => (
+            <div className="absolute bottom-4 left-2/4 z-50 flex -translate-x-2/4 gap-2">
+              {new Array(length).fill("").map((_, i) => (
+                <span
+                  key={i}
+                  className={`block h-1 cursor-pointer rounded-2xl transition-all content-[''] ${activeIndex === i ? "w-8 bg-white" : "w-4 bg-white/50"
+                    }`}
+                  onClick={() => setActiveIndex(i)}
+                />
+              ))}
+            </div>
+          )}
+        >
+          <img
+            src="/image/slider1.jpg"
+            alt="image 1"
+            className="h-[32rem] w-full object-cover"
+          />
+          <img
+            src="/image/slider2.jpg"
+            alt="image 2"
+            className="h-[32rem] w-full object-cover"
+          />
+          <img
+            src="/image/slider3.jpg"
+            alt="image 3"
+            className="h-[32rem] w-full object-cover"
+          />
+          <img
+            src="/image/slider4.jpg"
+            alt="image 4"
+            className="h-[32rem] w-full object-cover"
+          />
+          <img
+            src="/image/slider5.jpg"
+            alt="image 5"
+            className="h-[32rem] w-full object-cover"
+          />
+          <img
+            src="/image/slider6.jpg"
+            alt="image 5"
+            className="h-[32rem] w-full object-cover"
+          />
+          <img
+            src="/image/slider7.jpg"
+            alt="image 5"
+            className="h-[32rem] w-full object-cover"
+          />
+        </Carousel>
       </div>
-      <div className="w-full flex flex-col justify-center items-center py-4">
+      <div className="w-full flex flex-col justify-center items-center py-4 px-4">
         <h1 className="font-julius text-5xl text-gray-700">
           FOR ALL YOUR NEEDS WE PROVIDES
         </h1>
-        <h2 className="font-cookie text-7xl text-indigo-600">Best Services</h2>
+        <h2 className="font-cookie text-7xl text-indigo-500">Best Services</h2>
       </div>
       <div class="px-4 lg:px-20 pb-6 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        <div class="bg-gray-400 p-4 flex flex-col items-center gap-2 rounded-lg">
+        <div class="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
           <img src="/image/service-logos/ac.svg" class="w-14 h-14 object-cover" />
           <div>AC Repairing & Installation</div>
         </div>
 
-        <div class="bg-gray-400 p-4 flex flex-col items-center gap-2 rounded-lg">
+        <div class="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
           <img src="/image/service-logos/washing-machine.svg" class="w-14 h-14 object-cover" />
           <div>Washing Machine Repairing</div>
         </div>
 
-        <div class="bg-gray-400 p-4 flex flex-col items-center gap-2 rounded-lg">
+        <div class="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
           <img src="/image/service-logos/refrigerator.svg" class="w-14 h-14 object-cover" />
           <div>Refrigerator Repairing</div>
         </div>
 
-        <div class="bg-gray-400 p-4 flex flex-col items-center gap-2 rounded-lg">
+        <div class="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
           <img src="/image/service-logos/water-purifier.svg" class="w-14 h-14 object-cover" />
           <div>Water Purifier Repairing</div>
         </div>
 
-        <div class="bg-gray-400 p-4 flex flex-col items-center gap-2 rounded-lg">
+        <div class="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
           <img src="/image/service-logos/cooler.svg" class="w-14 h-14 object-cover" />
           <div>Room Cooler Repairing</div>
         </div>
 
-        <div class="bg-gray-400 p-4 flex flex-col items-center gap-2 rounded-lg">
+        <div class="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
           <img src="/image/service-logos/Microwave.svg" class="w-14 h-14 object-cover" />
           <div>Microwave Repair</div>
         </div>
 
-        <div class="bg-gray-400 p-4 flex flex-col items-center gap-2 rounded-lg">
+        <div class="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
           <img src="/image/service-logos/fan.svg" class="w-14 h-14 object-cover" />
           <div>Fan Installation & Repairing</div>
         </div>
 
-        <div class="bg-gray-400 p-4 flex flex-col items-center gap-2 rounded-lg">
+        <div class="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
           <img src="/image/service-logos/cctv.svg" class="w-14 h-14 object-cover" />
           <div>CCTV Installation & Repair</div>
         </div>
 
-        <div class="bg-gray-400 p-4 flex flex-col items-center gap-2 rounded-lg">
+        <div class="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
           <img src="/image/service-logos/house wireing.svg" class="w-14 h-14 object-cover" />
           <div>House Wiring</div>
         </div>
 
-        <div class="bg-gray-400 p-4 flex flex-col items-center gap-2 rounded-lg">
+        <div class="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
           <img src="/image/service-logos/electricity-maintanance.svg" class="w-14 h-14 object-cover" />
           <div>Electrical Maintenance</div>
         </div>
 
-        <div class="bg-gray-400 p-4 flex flex-col items-center gap-2 rounded-lg">
+        <div class="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
           <img src="/image/service-logos/Lightning.svg" class="w-14 h-14 object-cover" />
           <div>Light Installation & Repairing</div>
         </div>

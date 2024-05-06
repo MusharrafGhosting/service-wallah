@@ -43,6 +43,6 @@ const userSchema = new Schema(
   }
 );
 
-const User = mongoose.models.User || mongoose.model("User", userSchema);
+const Service = mongoose.models.Service || mongoose.model("Service", userSchema);
 
-export default User;
+export default Service;

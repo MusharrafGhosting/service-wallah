@@ -104,13 +104,15 @@ function ServicesList() {
               Go to
               <ChevronDownIcon
                 strokeWidth={3.5}
-                className={`hidden h-3 w-3 transition-transform lg:block text-[#582FFF]  ${isMenuOpen ? "rotate-180" : ""
-                  }`}
+                className={`hidden h-3 w-3 transition-transform lg:block text-[#582FFF]  ${
+                  isMenuOpen ? "rotate-180" : ""
+                }`}
               />
               <ChevronDownIcon
                 strokeWidth={2.5}
-                className={`block h-3 w-3 transition-transform lg:hidden ${isMobileMenuOpen ? "rotate-180" : ""
-                  }`}
+                className={`block h-3 w-3 transition-transform lg:hidden ${
+                  isMobileMenuOpen ? "rotate-180" : ""
+                }`}
               />
             </ListItem>
           </Typography>
@@ -213,7 +215,6 @@ function NavList() {
 export default function Nav() {
   const [openNav, setOpenNav] = useState(false);
   const [open3, setOpen3] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState({
     image: {
       url: "",
@@ -243,12 +244,7 @@ export default function Nav() {
     password: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setIsAuthenticated(true);
-    }
-  }, []);
+  
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -272,7 +268,6 @@ export default function Nav() {
       // console.log({ data });
       if (data.status !== 400) {
         localStorage.setItem("token", data._id);
-        setIsAuthenticated(true);
         setOpen3(false);
         setRegisterData({
           name: "",
@@ -388,7 +383,6 @@ export default function Nav() {
                     className="text-red-400 text-center"
                     onClick={() => {
                       localStorage.removeItem("token");
-                      setIsAuthenticated(false);
                       window.location.reload();
                     }}
                   >
@@ -416,7 +410,6 @@ export default function Nav() {
                     className="text-red-400 text-center"
                     onClick={() => {
                       localStorage.removeItem("token");
-                      setIsAuthenticated(false);
                       window.location.reload();
                     }}
                   >
@@ -445,11 +438,13 @@ export default function Nav() {
                   <Link href={`/admin/payments`} className="outline-none">
                     <MenuItem className="text-center">Manage Payments</MenuItem>
                   </Link>
+                  <Link href={`/admin/create-admin`} className="outline-none">
+                    <MenuItem className="text-center">Create new Admin</MenuItem>
+                  </Link>
                   <MenuItem
                     className="text-red-400 text-center"
                     onClick={() => {
                       localStorage.removeItem("token");
-                      setIsAuthenticated(false);
                       window.location.reload();
                     }}
                   >
@@ -481,7 +476,9 @@ export default function Nav() {
               <Card className="bg-none shadow-none">
                 <CardBody>
                   <Tabs value={type} className="">
-                  <h1 className="  text-4xl mb-8 text-center text-[#582FFF] font-junge font-bold">Welcome to Our Service-Wallah</h1>
+                    <h1 className="  text-4xl mb-8 text-center text-[#582FFF] font-junge font-bold">
+                      Welcome to Our Service-Wallah
+                    </h1>
 
                     <TabsHeader className="relative z-0 ">
                       <Tab value="card" onClick={() => setType("card")}>
@@ -524,7 +521,6 @@ export default function Nav() {
                             />
                           </div>
                           <div className="w-full">
-                          
                             <Input
                               type="password"
                               label="Password"
