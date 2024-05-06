@@ -104,15 +104,13 @@ function ServicesList() {
               Go to
               <ChevronDownIcon
                 strokeWidth={3.5}
-                className={`hidden h-3 w-3 transition-transform lg:block text-[#582FFF]  ${
-                  isMenuOpen ? "rotate-180" : ""
-                }`}
+                className={`hidden h-3 w-3 transition-transform lg:block text-[#582FFF]  ${isMenuOpen ? "rotate-180" : ""
+                  }`}
               />
               <ChevronDownIcon
                 strokeWidth={2.5}
-                className={`block h-3 w-3 transition-transform lg:hidden ${
-                  isMobileMenuOpen ? "rotate-180" : ""
-                }`}
+                className={`block h-3 w-3 transition-transform lg:hidden ${isMobileMenuOpen ? "rotate-180" : ""
+                  }`}
               />
             </ListItem>
           </Typography>
@@ -399,26 +397,26 @@ export default function Nav() {
                 </MenuList>
               ) : user.role === "service-provider" ? (
                 <MenuList>
-                <Link href={`/service-provider`} className="outline-none">
-                  <MenuItem className="text-center">Profile</MenuItem>
-                </Link>
-                <Link href={`/service-provider/booking`} className="outline-none">
-                  <MenuItem className="text-center">Booking</MenuItem>
-                </Link>
-                <Link href={`/service-provider/history`} className="outline-none">
-                  <MenuItem className="text-center">History</MenuItem>
-                </Link>
-                <MenuItem
-                  className="text-red-400 text-center"
-                  onClick={() => {
-                    localStorage.removeItem("token");
-                    setIsAuthenticated(false);
-                    window.location.reload();
-                  }}
-                >
-                  Logout
-                </MenuItem>
-              </MenuList>
+                  <Link href={`/service-provider`} className="outline-none">
+                    <MenuItem className="text-center">Profile</MenuItem>
+                  </Link>
+                  <Link href={`/service-provider/booking`} className="outline-none">
+                    <MenuItem className="text-center">Booking</MenuItem>
+                  </Link>
+                  <Link href={`/service-provider/history`} className="outline-none">
+                    <MenuItem className="text-center">History</MenuItem>
+                  </Link>
+                  <MenuItem
+                    className="text-red-400 text-center"
+                    onClick={() => {
+                      localStorage.removeItem("token");
+                      setIsAuthenticated(false);
+                      window.location.reload();
+                    }}
+                  >
+                    Logout
+                  </MenuItem>
+                </MenuList>
               ) : (
                 <MenuList>
                   <Link href={`/admin`} className="outline-none">
@@ -465,10 +463,12 @@ export default function Nav() {
               unmount: { scale: 0.9, y: -100 },
             }}
           >
-            <DialogBody className="min-h-[80vh]">
+            <DialogBody className="h-auto">
               <Card className="bg-none shadow-none">
                 <CardBody>
                   <Tabs value={type} className="">
+                  <h1 className="  text-4xl mb-8 text-center text-[#582FFF] font-junge font-bold">Welcome to Our Service-Wallah</h1>
+
                     <TabsHeader className="relative z-0 ">
                       <Tab value="card" onClick={() => setType("card")}>
                         LogIn
@@ -493,7 +493,7 @@ export default function Nav() {
                     >
                       <TabPanel value="card" className="p-0">
                         <form
-                          className="mt-12 flex flex-col gap-4 justify-center h-[50vh]"
+                          className="  flex flex-col gap-4 justify-center h-[33vh]"
                           onSubmit={handleLogin}
                         >
                           <div className="w-full">
@@ -510,6 +510,7 @@ export default function Nav() {
                             />
                           </div>
                           <div className="w-full">
+                          
                             <Input
                               type="password"
                               label="Password"
@@ -561,7 +562,7 @@ export default function Nav() {
                               )}
                             </Typography>
                           </div>
-                          <div className="flex gap-4 justify-end">
+                          <div className="flex gap-4 justify-center">
                             <Button
                               variant="gradient"
                               color="red"
@@ -578,7 +579,7 @@ export default function Nav() {
                       </TabPanel>
                       <TabPanel value="paypal" className="p-0">
                         <form
-                          className="mt-12 flex flex-col gap-4"
+                          className="mt-7 flex flex-col gap-4 "
                           onSubmit={handleRegister}
                         >
                           <div className="w-full">
@@ -675,7 +676,7 @@ export default function Nav() {
                               )}
                             </Typography>
                           </div>
-                          <div className="flex gap-4 justify-end">
+                          <div className="flex gap-4 justify-center">
                             <Button
                               variant="gradient"
                               color="red"

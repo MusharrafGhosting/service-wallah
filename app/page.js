@@ -11,7 +11,7 @@ export default function Home() {
         <div className="lg:w-1/2 py-20 px-10 flex items-center">
           <div className="w-full">
             <p className="text-xl mb-1">Get Your Work done in a</p>
-            <h1 className="text-8xl text-center text-[#582FFF] font-junge">
+            <h1 className="text-4xl lg:text-8xl text-center text-[#582FFF] font-junge">
               Professional
             </h1>
             <span className="flex w-full justify-center">
@@ -52,7 +52,7 @@ export default function Home() {
               </svg>
             </span>
 
-            <h3 className="text-center text-4xl font-julius">Manner</h3>
+            <h3 className="text-center text-2xl lg:text-4xl font-julius">Manner</h3>
             <div className="flex w-full justify-center flex-nowrap items-center gap-4 mt-8">
               <button className="px-6 py-4 outline transition-all duration-700 flex justify-center items-center rounded-md gap-1 hover:bg-gradient-to-r hover:from-[#ffffff] hover:to-[#ffffff] hover:text-[#5D35FF] hover:outline-[#582FFF] hover:outline-2 bg-gradient-to-r from-[#5D35FF] to-[#301BB1] font-semibold text-white">
                 Find a Service <RxDoubleArrowRight size={18} />
@@ -61,32 +61,38 @@ export default function Home() {
                 Become a Service provider <BsPersonFillAdd />
               </button>
             </div>
-            <div className="flex w-full justify-center mt-12 items-center">
-              <div className="star w-1/2 flex text-center gap-4">
+            <div className="flex flex-col md:flex-row w-full justify-center items-center mt-12 gap-1">
+              <div class="flex gap-2 items-center">
                 <img
-                  className="h-auto rounded-lg w-20"
+                  className="w-20 md:w-24"
                   src="/image/hero-child.png"
                   alt=""
                 />
-                <div className="w-full flex items-start justify-center flex-col">
-                  <div className="mb-2 text-[#582FFF] font-bold text-3xl">
+                <div>
+                  <div className="mb-2 text-[#582FFF] font-bold text-2xl md:text-3xl">
                     2+ Lakhs
                   </div>
-                  <div className="font-medium">Happy Customers</div>
+                  <div className="font-medium text-sm md:text-base">
+                    Happy Customers
+                  </div>
                 </div>
               </div>
-              <div className=" flex flex-col items-center justify-center">
+
+              <div className="flex flex-col items-center justify-center w-full md:w-1/4">
                 <img
-                  className="max-w-full text-center rounded-lg w-20"
+                  className="max-w-full text-center rounded-lg w-20 md:w-24"
                   src="/image/start.png"
                   alt=""
                 />
-                <h3 className="text-[#582FFF] font-bold text-xl text-center">
+                <h3 className="text-[#582FFF] font-bold text-lg md:text-xl">
                   4.7
                 </h3>
-                <p className="font-medium">Service Rating</p>
+                <p className="font-medium text-sm md:text-base">
+                  Service Rating
+                </p>
               </div>
             </div>
+
           </div>
         </div>
         {/* Right half */}
@@ -138,13 +144,60 @@ export default function Home() {
         </h1>
         <h2 className="font-cookie text-7xl text-indigo-600">Best Services</h2>
       </div>
-      <div className="w-full px-20 pb-6 grid grid-cols-4 gap-6">
-        <div className="bg-gray-400 p-4 flex flex-col items-center gap-2 rounded-lg">
-          <img
-            src="/image/service-logos/ac.svg"
-            className="w-14 h-14 object-cover"
-          />
-          <div>AC Repairing</div>
+      <div class="px-4 lg:px-20 pb-6 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div class="bg-gray-400 p-4 flex flex-col items-center gap-2 rounded-lg">
+          <img src="/image/service-logos/ac.svg" class="w-14 h-14 object-cover" />
+          <div>AC Repairing & Installation</div>
+        </div>
+
+        <div class="bg-gray-400 p-4 flex flex-col items-center gap-2 rounded-lg">
+          <img src="/image/service-logos/washing-machine.svg" class="w-14 h-14 object-cover" />
+          <div>Washing Machine Repairing</div>
+        </div>
+
+        <div class="bg-gray-400 p-4 flex flex-col items-center gap-2 rounded-lg">
+          <img src="/image/service-logos/refrigerator.svg" class="w-14 h-14 object-cover" />
+          <div>Refrigerator Repairing</div>
+        </div>
+
+        <div class="bg-gray-400 p-4 flex flex-col items-center gap-2 rounded-lg">
+          <img src="/image/service-logos/water-purifier.svg" class="w-14 h-14 object-cover" />
+          <div>Water Purifier Repairing</div>
+        </div>
+
+        <div class="bg-gray-400 p-4 flex flex-col items-center gap-2 rounded-lg">
+          <img src="/image/service-logos/cooler.svg" class="w-14 h-14 object-cover" />
+          <div>Room Cooler Repairing</div>
+        </div>
+
+        <div class="bg-gray-400 p-4 flex flex-col items-center gap-2 rounded-lg">
+          <img src="/image/service-logos/Microwave.svg" class="w-14 h-14 object-cover" />
+          <div>Microwave Repair</div>
+        </div>
+
+        <div class="bg-gray-400 p-4 flex flex-col items-center gap-2 rounded-lg">
+          <img src="/image/service-logos/fan.svg" class="w-14 h-14 object-cover" />
+          <div>Fan Installation & Repairing</div>
+        </div>
+
+        <div class="bg-gray-400 p-4 flex flex-col items-center gap-2 rounded-lg">
+          <img src="/image/service-logos/cctv.svg" class="w-14 h-14 object-cover" />
+          <div>CCTV Installation & Repair</div>
+        </div>
+
+        <div class="bg-gray-400 p-4 flex flex-col items-center gap-2 rounded-lg">
+          <img src="/image/service-logos/house wireing.svg" class="w-14 h-14 object-cover" />
+          <div>House Wiring</div>
+        </div>
+
+        <div class="bg-gray-400 p-4 flex flex-col items-center gap-2 rounded-lg">
+          <img src="/image/service-logos/electricity-maintanance.svg" class="w-14 h-14 object-cover" />
+          <div>Electrical Maintenance</div>
+        </div>
+
+        <div class="bg-gray-400 p-4 flex flex-col items-center gap-2 rounded-lg">
+          <img src="/image/service-logos/Lightning.svg" class="w-14 h-14 object-cover" />
+          <div>Light Installation & Repairing</div>
         </div>
       </div>
     </main>
