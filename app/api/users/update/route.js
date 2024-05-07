@@ -17,20 +17,20 @@ export async function POST(request) {
     role,
     serviceHistory,
   } = await request.json();
-  // console.log(
-  //   id,
-  //   name,
-  //   phoneNumber,
-  //   email,
-  //   password,
-  //   image,
-  //   gender,
-  //   location,
-  //   city,
-  //   active,
-  //   role,
-  //   serviceHistory
-  // );
+  console.log(
+    id,
+    name,
+    phoneNumber,
+    email,
+    password,
+    image,
+    gender,
+    location,
+    city,
+    active,
+    role,
+    serviceHistory
+  );
   await connectMongoDB();
   const user = await User.findByIdAndUpdate(id, {
     name,

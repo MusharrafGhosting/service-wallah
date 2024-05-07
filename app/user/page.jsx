@@ -13,7 +13,12 @@ import {
   Select,
   Option,
 } from "@material-tailwind/react";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
 import { storage } from "@/firebase";
 
 const User = () => {
@@ -68,29 +73,32 @@ const User = () => {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
-    gettingUser();
     setOpen(!open);
   };
-  const [uploadedImageObject, setUploadedImageObject] = useState({
-    url: user.image.url,
-    name: user.image.name,
-  });
-  const handleUploadProfile = async (image) => {
+  const [profileUploaded, setProfileUploaded] = useState(false);
+  const handleUploadProfile = async (profileImage) => {
     try {
-      if (!image) {
+      if (!profileImage) {
         alert("Invalid Image");
         return;
       }
+      if (updateUser.image.url) {
+        await deleteObject(ref(storage, updateUser.image.name));
+      }
       const imageRef = ref(
         storage,
-        `userprofile/${image.lastModified + image.size + image.name}`
+        `userprofile/${
+          profileImage.lastModified + profileImage.size + profileImage.name
+        }`
       );
-      await uploadBytes(imageRef, image);
-      const imageUrl = await getDownloadURL(imageRef); // Get the image URL directly
-      setUploadedImageObject({
+      await uploadBytes(imageRef, profileImage);
+      const imageUrl = await getDownloadURL(imageRef); // Get the profileImage URL directly
+      setProfileUploaded(true);
+      const imageObject = {
         url: imageUrl,
         name: imageRef._location.path_,
-      });
+      };
+      setUpdateUser({ ...updateUser, image: imageObject });
       // console.log({ imageUrl, imageRef: imageRef._location.path_ });
     } catch (err) {
       console.error(err);
@@ -106,7 +114,7 @@ const User = () => {
     });
     const data = await response.json();
     // console.log(data);
-    setUser(data);
+    gettingUser();
     if (response.ok) {
       setOpen(false);
     }
@@ -127,14 +135,9 @@ const User = () => {
     });
   }, [user]);
   useEffect(() => {
-    setUpdateUser({ ...updateUser, image: uploadedImageObject });
-  }, [uploadedImageObject]);
-  useEffect(() => {
-    console.log(updateUser);
+    // setUpdateUser({ ...updateUser, image: uploadedImageObject });
+    console.log({ updateUser });
   }, [updateUser]);
-  useEffect(() => {
-    console.log(uploadedImageObject);
-  }, [uploadedImageObject]);
   return (
     <div className="userpage-bg min-h-screen">
       <Nav />
@@ -296,9 +299,9 @@ const User = () => {
                           type="file"
                           className="hidden"
                           id="profile"
-                          onChange={(e) =>
-                            handleUploadProfile(e.target.files[0])
-                          }
+                          onChange={(e) => {
+                            handleUploadProfile(e.target.files[0]);
+                          }}
                         />
                       </figcaption>
                     </figure>
@@ -315,6 +318,7 @@ const User = () => {
                     <Button
                       variant="gradient"
                       color="green"
+                      disabled={!profileUploaded}
                       onClick={handleOpen}
                     >
                       <span onClick={handleUpdate}>Update</span>

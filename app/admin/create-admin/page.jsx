@@ -16,14 +16,20 @@ import {
   CardFooter,
 } from "@material-tailwind/react";
 import { MdDelete } from "react-icons/md";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
 import { storage } from "@/firebase";
 
 const CreateAdmin = () => {
   const [open, setOpen] = useState(false);
+  const [imageUploaded, setimageUploaded] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [data, setData] = useState({
-    email: "",
+    phoneNumber: "",
     password: "",
     image: {
       url: "",
@@ -42,6 +48,7 @@ const CreateAdmin = () => {
       );
       await uploadBytes(imageRef, image);
       const imageUrl = await getDownloadURL(imageRef); // Get the image URL directly
+      setimageUploaded(true);
       const imageObject = { url: imageUrl, name: imageRef._location.path_ };
       setData({ ...data, image: imageObject });
       // console.log({ imageUrl, imageRef: imageRef._location.path_ });
@@ -50,41 +57,89 @@ const CreateAdmin = () => {
     }
   };
   async function handleRegister() {
-    if (!data.email || !data.image.url || !data.password) {
+    if (!data.phoneNumber || !data.image.url || !data.password) {
       setErrorMessage("Invalid data");
       return;
     }
+    const response = await fetch(
+      "/api/admin/create-admin",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      },
+      { cache: "no-store" }
+    );
+    const responseData = await response.json();
+    console.log(responseData);
+    if (response.status === 201) {
+      setAdmins([...admins, responseData]);
+      setErrorMessage("");
+      setData({
+        phoneNumber: "",
+        password: "",
+        image: {
+          url: "",
+          name: "",
+        },
+      });
+      setOpen(false);
+    }
+    if (response.status !== 201) {
+      setErrorMessage(`Something went wrong while Creating a new account`);
+    }
+  }
+  const handleDelete = async (id, imageRef) => {
+    const confirmation = confirm(`Are you sure you want to delete`);
+    if (!confirmation) return;
+    if (imageRef) {
+      await deleteObject(ref(storage, imageRef));
+    }
     try {
       const response = await fetch(
-        "/api/admin/register",
+        "/api/admin/delete-admin",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(data),
+          body: JSON.stringify({ id }),
         },
         { cache: "no-store" }
       );
-      const data = await response.json();
-      console.log(data);
-      if (response.ok) {
-        data({
-          email: "",
-          password: "",
-          image: {
-            url: "",
-            name: "",
-          },
-        });
-      }
+      const responsseData = await response.json();
+      console.log(responsseData);
+      gettingAdmin();
     } catch {
-      setErrorMessage(`Something went wrong while Creating a new account`);
+      alert(`Something went wrong while Deleting account`);
     }
-  }
+  };
+  const [admins, setAdmins] = useState([]);
+  const gettingAdmin = async () => {
+    const response = await fetch(
+      "/api/admin/create-admin",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+      { cache: "no-store" }
+    );
+    const responseData = await response.json();
+    const allAdmin = responseData.filter((admin) => {
+      return admin.role === "admin";
+    });
+    setAdmins(allAdmin);
+  };
   useEffect(() => {
-    console.log(data);
-  }, [data]);
+    gettingAdmin();
+  }, []);
+  useEffect(() => {
+    console.log(admins);
+  }, [admins]);
   const handleOpen = () => setOpen((cur) => !cur);
   return (
     <div className="min-h-screen">
@@ -110,21 +165,21 @@ const CreateAdmin = () => {
                     Create Admin Account
                   </Typography>
                   <Typography className="-mb-2" variant="h6">
-                    Your Email
+                    Phone Number
                   </Typography>
                   <Input
-                    label="Email"
+                    label="123456789"
                     size="lg"
-                    value={data.email}
+                    value={data.phoneNumber}
                     onChange={(e) =>
-                      setData({ ...data, email: e.target.value })
+                      setData({ ...data, phoneNumber: e.target.value })
                     }
                   />
                   <Typography className="-mb-2" variant="h6">
-                    Your Password
+                    Password
                   </Typography>
                   <Input
-                    label="Password"
+                    label="******"
                     size="lg"
                     value={data.password}
                     onChange={(e) =>
@@ -174,7 +229,12 @@ const CreateAdmin = () => {
                   )}
                 </CardBody>
                 <CardFooter className="pt-0">
-                  <Button variant="gradient" onClick={handleRegister} fullWidth>
+                  <Button
+                    variant="gradient"
+                    disabled={!imageUploaded}
+                    onClick={handleRegister}
+                    fullWidth
+                  >
                     Create Account
                   </Button>
                 </CardFooter>
@@ -182,36 +242,40 @@ const CreateAdmin = () => {
             </Dialog>
           </div>
           <List>
-            <ListItem className="flex justify-between">
-              <div className="flex">
-                <ListItemPrefix>
-                  <Avatar
-                    variant="circular"
-                    alt="candice"
-                    src="https://docs.material-tailwind.com/img/face-1.jpg"
-                  />
-                </ListItemPrefix>
-                <div>
-                  <Typography variant="h6" color="blue-gray">
-                    TaniaAndrew@gmail.com
-                  </Typography>
-                  <Typography
-                    variant="small"
-                    color="gray"
-                    className="font-normal"
-                  >
-                    Password: <span>123456</span>
-                  </Typography>
-                </div>
-              </div>
-              <div>
-                <MdDelete
-                  color="red"
-                  size={30}
-                  onClick={() => console.log("CLicked")}
-                />
-              </div>
-            </ListItem>
+            {admins.map((admin) => {
+              return (
+                <ListItem className="flex justify-between" key={admin._id}>
+                  <div className="flex">
+                    <ListItemPrefix>
+                      <Avatar
+                        variant="circular"
+                        alt="candice"
+                        src={admin.image?.url}
+                      />
+                    </ListItemPrefix>
+                    <div>
+                      <Typography variant="h6" color="blue-gray">
+                        {admin.phoneNumber}
+                      </Typography>
+                      <Typography
+                        variant="small"
+                        color="gray"
+                        className="font-normal"
+                      >
+                        Password: <span>{admin.password}</span>
+                      </Typography>
+                    </div>
+                  </div>
+                  <div>
+                    <MdDelete
+                      color="red"
+                      size={30}
+                      onClick={() => handleDelete(admin._id, admin.image.name)}
+                    />
+                  </div>
+                </ListItem>
+              );
+            })}
           </List>
         </Card>
       </div>

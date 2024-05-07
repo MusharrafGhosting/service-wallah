@@ -14,7 +14,7 @@ export default function Home() {
         <div className="lg:w-1/2 pb-4 md:pb-20 pt-4 md:px-10 px-4 flex items-center">
           <div className="w-full">
             <p className="text-xl mb-1">Get Your Work done in a</p>
-            <h1 className="text-6xl lg:text-8xl text-center text-blue-600 font-junge">
+            <h1 className="text-6xl lg:text-8xl text-center text-indigo-500 font-junge">
               Professional
             </h1>
             <span className="flex w-full justify-center">
@@ -57,10 +57,10 @@ export default function Home() {
 
             <h3 className="text-center text-3xl lg:text-4xl font-julius">Manner</h3>
             <div className="flex w-full flex-col md:flex-row justify-center flex-nowrap items-center gap-4 mt-8">
-              <button className="px-6 py-4 w-full md:w-fit outline transition-all duration-700 flex justify-center items-center rounded-md gap-1 hover:bg-gradient-to-r hover:from-transparent hover:to-transparent hover:text-blue-600 hover:outline-blue-600 hover:outline-2 bg-gradient-to-r from-blue-600 to-indigo-500 font-semibold text-white">
+              <button className="px-6 py-4 w-full md:w-fit outline transition-all duration-700 flex justify-center items-center rounded-md gap-1 hover:bg-gradient-to-r hover:from-transparent hover:to-transparent hover:text-blue-600 hover:outline-blue-600 hover:outline-2 bg-gradient-to-r from-indigo-500 to-deep-purple-500 font-semibold text-white">
                 Find a Service <RxDoubleArrowRight size={18} />
               </button>
-              <button className="px-6 py-4 w-full md:w-fit transition-all flex gap-1 items-center justify-center duration-700 rounded-md hover:bg-gradient-to-r hover:from-blue-600 hover:to-indigo-500 hover:text-white outline outline-2 outline-blue-600 text-blue-600 font-semibold">
+              <button className="px-6 py-4 w-full md:w-fit transition-all flex gap-1 items-center justify-center duration-700 rounded-md hover:bg-gradient-to-r hover:from-indigo-500 hover:to-deep-purple-500 hover:text-white outline outline-2 outline-indigo-500 text-indigo-500 font-semibold">
                 Become a Service provider <BsPersonFillAdd />
               </button>
             </div>

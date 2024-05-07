@@ -4,7 +4,6 @@ const userSchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
     },
     image: {
       type: Object,
@@ -18,7 +17,6 @@ const userSchema = new Schema(
     },
     phoneNumber: {
       type: String,
-      required: true,
     },
     gender: {
       type: String,
