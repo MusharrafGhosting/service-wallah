@@ -75,8 +75,9 @@ const User = () => {
   const handleOpen = () => {
     setOpen(!open);
   };
-  const [profileUploaded, setProfileUploaded] = useState(false);
+  const [profileUploaded, setProfileUploaded] = useState(true);
   const handleUploadProfile = async (profileImage) => {
+    setProfileUploaded(false);
     try {
       if (!profileImage) {
         alert("Invalid Image");
@@ -93,12 +94,12 @@ const User = () => {
       );
       await uploadBytes(imageRef, profileImage);
       const imageUrl = await getDownloadURL(imageRef); // Get the profileImage URL directly
-      setProfileUploaded(true);
       const imageObject = {
         url: imageUrl,
         name: imageRef._location.path_,
       };
       setUpdateUser({ ...updateUser, image: imageObject });
+      setProfileUploaded(true);
       // console.log({ imageUrl, imageRef: imageRef._location.path_ });
     } catch (err) {
       console.error(err);
@@ -318,7 +319,8 @@ const User = () => {
                     <Button
                       variant="gradient"
                       color="green"
-                      disabled={!profileUploaded}
+                      // disabled={!profileUploaded}
+                      loading={!profileUploaded}
                       onClick={handleOpen}
                     >
                       <span onClick={handleUpdate}>Update</span>

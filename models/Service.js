@@ -7,13 +7,13 @@ const userSchema = new Schema(
       required: true,
     },
     icon: {
-      type: String,
+      type: Object,
     },
     status: {
-      type: Boolean,
+      type: String,
       required: true
     },
-    gallery: {
+    images: {
       type: Array,
       default: [],
     },
@@ -30,7 +30,7 @@ const userSchema = new Schema(
       default: [],
     },
     tags: {
-      type: Array,
+      type: String,
       default: [],
     },
     reviews: {

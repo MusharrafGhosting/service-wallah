@@ -244,7 +244,6 @@ export default function Nav() {
     password: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
-  
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -320,9 +319,9 @@ export default function Nav() {
       setErrorMessage(`Something went wrong while Regestering`);
     }
   }
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
+  // useEffect(() => {
+  //   console.log(user);
+  // }, [user]);
   useEffect(() => {
     gettingUser();
   }, []);
@@ -342,18 +341,16 @@ export default function Nav() {
           href={"/"}
           className="mr-4 cursor-pointer font-extrabold py-1.5 lg:ml-2"
         >
-          <Image
+          <img
             src="/logo/secoundary-logo-black.png"
             alt="logo"
-            width={150}
-            height={50}
-            className="cursor-pointer"
+            className="cursor-pointer w-40 object-cover"
           />
           {/* Service Wallah */}
         </Link>
         <div className="hidden gap-2 lg:flex lg:items-center">
           <NavList />
-          {user?.name ? (
+          {user?.role ? (
             <Menu allowHover={true} placement="bottom-start">
               <MenuHandler>
                 {user?.image?.url ? (
@@ -439,7 +436,9 @@ export default function Nav() {
                     <MenuItem className="text-center">Manage Payments</MenuItem>
                   </Link>
                   <Link href={`/admin/create-admin`} className="outline-none">
-                    <MenuItem className="text-center">Create new Admin</MenuItem>
+                    <MenuItem className="text-center">
+                      Create new Admin
+                    </MenuItem>
                   </Link>
                   <MenuItem
                     className="text-red-400 text-center"
