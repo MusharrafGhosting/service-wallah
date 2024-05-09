@@ -68,8 +68,8 @@ const User = () => {
     const formattedDate = date.toLocaleDateString("en-US", options);
     return formattedDate;
   }
-  const router = useRouter();
   const formattedDate = formatDate(user.createdAt);
+  const router = useRouter();
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
