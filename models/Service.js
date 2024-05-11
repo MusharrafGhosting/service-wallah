@@ -31,7 +31,6 @@ const userSchema = new Schema(
     },
     tags: {
       type: String,
-      default: [],
     },
     reviews: {
       type: Array,
