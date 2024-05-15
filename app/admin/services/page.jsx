@@ -252,7 +252,7 @@ const Services = () => {
                   <img
                     src={serv.icon.url}
                     alt="ac"
-                    className="w-24 object-cover rounded"
+                    className="w-24 h-24 drop-shadow-lg object-cover rounded"
                   />
                   <div className="flex flex-col gap-2 justify-center">
                     <div>

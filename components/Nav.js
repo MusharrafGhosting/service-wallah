@@ -222,12 +222,12 @@ export default function Nav() {
     },
   });
   const gettingUser = async () => {
-    const response = await fetch("/api/users/user", {
-      method: "POST",
+    const id = localStorage.getItem("token");
+    const response = await fetch(`/api/users/${id}`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ id: localStorage.getItem("token") }),
     });
     const data = await response.json();
     // console.log(data);
@@ -268,10 +268,8 @@ export default function Nav() {
       if (data.status !== 400) {
         localStorage.setItem("token", data._id);
         setOpen3(false);
-        setRegisterData({
-          name: "",
+        setLoginData({
           phoneNumber: "",
-          email: "",
           password: "",
         });
         gettingUser();
@@ -310,12 +308,14 @@ export default function Nav() {
       // console.log(data);
       if (response.ok) {
         setOpen3(false);
-        setLoginData({
+        setRegisterData({
+          name: "",
           phoneNumber: "",
+          email: "",
           password: "",
         });
       }
-    } catch {
+    } catch (err) {
       setErrorMessage(`Something went wrong while Regestering`);
     }
   }
@@ -323,7 +323,10 @@ export default function Nav() {
   //   console.log(user);
   // }, [user]);
   useEffect(() => {
-    gettingUser();
+    const id = localStorage.getItem("token");
+    if (id) {
+      gettingUser();
+    }
   }, []);
   useEffect(() => {
     window.addEventListener(
@@ -335,7 +338,7 @@ export default function Nav() {
   const [type, setType] = React.useState("card");
 
   return (
-    <div className="mx-auto max-w-full px-4 py-2 rounded-none shadow-none bprder-none bg-transparent">
+    <div className="mx-auto max-w-full px-4 py-2 rounded-none shadow-none bprder-none bg-transparent z-50">
       <div className="flex items-center justify-between text-blue-gray-900 bg-transparent">
         <Link
           href={"/"}
@@ -466,6 +469,7 @@ export default function Nav() {
           <Dialog
             open={open3}
             handler={handleOpen3}
+            size="sm"
             animate={{
               mount: { scale: 1, y: 0 },
               unmount: { scale: 0.9, y: -100 },
@@ -475,8 +479,8 @@ export default function Nav() {
               <Card className="bg-none shadow-none">
                 <CardBody>
                   <Tabs value={type} className="">
-                    <h1 className="  text-4xl mb-8 text-center text-[#582FFF] font-junge font-bold">
-                      Welcome to Our Service-Wallah
+                    <h1 className="  text-2xl mb-4 text-center text-indigo-400 font-bold">
+                      Welcome to Service Wallah
                     </h1>
 
                     <TabsHeader className="relative z-0 ">
@@ -503,10 +507,10 @@ export default function Nav() {
                     >
                       <TabPanel value="card" className="p-0">
                         <form
-                          className="  flex flex-col gap-4 justify-center h-[33vh]"
+                          className="flex flex-col gap-4 justify-center h-[38vh]"
                           onSubmit={handleLogin}
                         >
-                          <div className="w-full">
+                          <div className="w-full ">
                             <Input
                               type="tel"
                               label="Phone Number"
@@ -571,16 +575,23 @@ export default function Nav() {
                               )}
                             </Typography>
                           </div>
-                          <div className="flex gap-4 justify-center">
+                          <div className="flex gap-2 justify-center">
                             <Button
                               variant="gradient"
                               color="red"
                               onClick={handleOpen3}
                               className="mr-1"
+                              fullWidth
                             >
                               <span>Cancel</span>
                             </Button>
-                            <Button size="lg" type="submit">
+                            <Button
+                              fullWidth
+                              size="lg"
+                              type="submit"
+                              variant="gradient"
+                              color="gray"
+                            >
                               Login
                             </Button>
                           </div>

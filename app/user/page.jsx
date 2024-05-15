@@ -32,7 +32,7 @@ const User = () => {
       name: "",
     },
     gender: "",
-    location: "",
+    locations: "",
     city: "",
     active: "",
     role: "",
@@ -98,6 +98,17 @@ const User = () => {
         url: imageUrl,
         name: imageRef._location.path_,
       };
+      await fetch("/api/users/update", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...updateUser,
+          id: user._id,
+          image: imageObject,
+        }),
+      });
       setUpdateUser({ ...updateUser, image: imageObject });
       setProfileUploaded(true);
       // console.log({ imageUrl, imageRef: imageRef._location.path_ });
@@ -113,27 +124,13 @@ const User = () => {
       },
       body: JSON.stringify({ ...updateUser, id: user._id }),
     });
-    const data = await response.json();
-    // console.log(data);
     gettingUser();
     if (response.ok) {
       setOpen(false);
     }
   };
   useEffect(() => {
-    setUpdateUser({
-      name: user.name,
-      phoneNumber: user.phoneNumber,
-      email: user.email,
-      password: user.password,
-      image: user.image,
-      gender: user.gender,
-      location: user.location,
-      city: user.city,
-      active: user.active,
-      role: user.role,
-      serviceHistory: user.serviceHistory,
-    });
+    setUpdateUser({ ...user });
   }, [user]);
   useEffect(() => {
     // setUpdateUser({ ...updateUser, image: uploadedImageObject });

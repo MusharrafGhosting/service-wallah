@@ -9,11 +9,6 @@ import { useRouter } from "next/navigation";
 import {
   ListItem,
   ListItemSuffix,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Typography,
   Button,
   Input,
   Dialog,
@@ -28,7 +23,6 @@ import {
   IoMdAddCircle,
   IoMdImages,
 } from "react-icons/io";
-import { IoMdOpen } from "react-icons/io";
 import { TiArrowRepeat } from "react-icons/ti";
 import {
   ref,
@@ -37,6 +31,7 @@ import {
   deleteObject,
 } from "firebase/storage";
 import { storage } from "@/firebase";
+import SubServiceCard from "@/components/SubServiceCard";
 
 const ServicePage = () => {
   const { id } = useParams();
@@ -110,14 +105,12 @@ const ServicePage = () => {
       await uploadBytes(iconRef, images);
       const iconUrl = await getDownloadURL(iconRef); // Get the image URL directly
       const iconObject = { url: iconUrl, name: iconRef._location.path_ };
-      setServiceData({
-        ...serviceData,
-        icon: iconObject,
-      });
       const postData = {
         ...serviceData,
         icon: iconObject,
       };
+      setServiceData(postData);
+
       console.log(postData);
       const response = await fetch(
         `/api/services/${id}/sub-service/create`,
@@ -142,6 +135,7 @@ const ServicePage = () => {
           name: "",
         },
       });
+      gettingSubServices();
       setImages(null);
       setOpen(false);
     } catch (err) {
@@ -210,17 +204,18 @@ const ServicePage = () => {
       alert("Invalid icon");
       return;
     }
-    // await deleteObject(ref(storage, updateService.icon.name));
+    await deleteObject(ref(storage, updateService.icon.name));
     const iconRef = ref(
       storage,
       `serviceIcons/${img.lastModified + img.size + img.name}`
     );
-    await uploadBytes(iconRef, img.icon);
+    await uploadBytes(iconRef, img);
     const iconUrl = await getDownloadURL(iconRef);
     const iconObject = { url: iconUrl, name: iconRef._location.path_ };
     setUpdateService({ ...updateService, icon: iconObject });
+    setService({ ...service, icon: iconObject });
     const postData = {
-     ...updateService,
+      ...updateService,
       icon: iconObject,
     };
     const response = await fetch(`/api/services/${id}/update`, {
@@ -230,11 +225,91 @@ const ServicePage = () => {
       },
       body: JSON.stringify(postData),
     });
-    const data = await response.json();
-    console.log(data);
-    // if (response.ok) {
-    //   router.refresh();
-    // }
+    await response.json();
+  };
+
+  const handleUploadImages = async (imgs) => {
+    if (!imgs) {
+      alert("Invalid icon / Gallery Image");
+      return;
+    }
+    const images = Object.values(imgs);
+    const imagesUrlArray = await Promise.all(
+      images.map(async (img) => {
+        const imageRef = ref(
+          storage,
+          `serviceImages/${img.lastModified + img.size + img.name}`
+        );
+        await uploadBytes(imageRef, img);
+        const imageUrl = await getDownloadURL(imageRef); // Get the image URL directly
+        const imageObject = { url: imageUrl, name: imageRef._location.path_ };
+        return imageObject;
+      })
+    );
+    const postData = {
+      ...updateService,
+      images: [...updateService.images, ...imagesUrlArray],
+    };
+    setUpdateService(postData);
+    setService(postData);
+
+    await fetch(`/api/services/${id}/update`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postData),
+    });
+  };
+
+  const handleDeleteServiceImage = async (image) => {
+    await deleteObject(ref(storage, image.name));
+    setUpdateService({
+      ...updateService,
+      images: updateService.images.filter((e, i) => e.name !== image.name),
+    });
+    setService({
+      ...service,
+      images: service.images.filter((e, i) => e.name !== image.name),
+    });
+    const postData = {
+      ...updateService,
+      images: updateService.images.filter((e, i) => e.name !== image.name),
+    };
+    await fetch(`/api/services/${id}/update`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postData),
+    });
+  };
+  const handleReplaceServiceImage = async (NewImage, oldImage) => {
+    await deleteObject(ref(storage, oldImage.name));
+    let postData = {
+      ...updateService,
+      images: updateService.images.filter((e, i) => e.name !== oldImage.name),
+    };
+    const imageRef = ref(
+      storage,
+      `serviceImages/${NewImage.lastModified + NewImage.size + NewImage.name}`
+    );
+    await uploadBytes(imageRef, NewImage);
+    const imageUrl = await getDownloadURL(imageRef); // Get the image URL directly
+    const imageObject = { url: imageUrl, name: imageRef._location.path_ };
+    postData = {
+      ...postData,
+      images: [...postData.images, imageObject],
+    };
+    setUpdateService(postData);
+    setService(postData);
+    await fetch(`/api/services/${id}/update`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postData),
+    });
   };
   return (
     <>
@@ -389,9 +464,6 @@ const ServicePage = () => {
                         onChange={(e) => handleUploadIcon(e.target.files[0])}
                         className="hidden"
                       ></input>
-                      <button className="px-2 py-1 rounded bg-red-300 cursor-pointer flex gap-1 items-center justify-center">
-                        Delete <MdDelete />
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -408,6 +480,7 @@ const ServicePage = () => {
                       Add new <IoIosAddCircleOutline size={24} />
                     </label>
                     <input
+                      onChange={(e) => handleUploadImages(e.target.files)}
                       type="file"
                       className="hidden"
                       id="new-gallery-img"
@@ -438,18 +511,16 @@ const ServicePage = () => {
                                 type="file"
                                 id={index}
                                 className="hidden"
+                                onChange={(e) =>
+                                  handleReplaceServiceImage(
+                                    e.target.files[0],
+                                    image
+                                  )
+                                }
                               ></input>
                               <button
                                 className="px-2 py-1 rounded bg-red-300 cursor-pointer flex gap-1 items-center justify-center"
-                                onClick={async () => {
-                                  await deleteObject(ref(storage, image.name));
-                                  setUpdateService({
-                                    ...updateService,
-                                    images: updateService.images.filter(
-                                      (_, i) => i !== index
-                                    ),
-                                  });
-                                }}
+                                onClick={() => handleDeleteServiceImage(image)}
                               >
                                 Delete <MdDelete />
                               </button>
@@ -475,7 +546,7 @@ const ServicePage = () => {
           <img
             src={service.icon?.url}
             alt=""
-            className="w-32 object-cover shadow-lg"
+            className="w-32 h-full rounded-md object-cover drop-shadow-lg"
           />
           <div className="flex flex-col gap-2 justify-center">
             <div>
@@ -570,7 +641,7 @@ const ServicePage = () => {
                   key={image.name}
                   src={image.url}
                   alt=""
-                  className="h-full w-full object-cover"
+                  className="h-96 w-full object-cover"
                 />
               );
             })}
@@ -662,91 +733,8 @@ const ServicePage = () => {
         <div className="h-px bg-gray-400 w-full"></div>
 
         <div className="flex justify-start gap-6">
-          {subServices.map((sub) => {
-            return (
-              <Card className="w-full max-w-72 shadow-lg">
-                <CardHeader floated={false} color="blue-gray">
-                  <img
-                    src={sub.icon.url}
-                    alt="Service Iconr"
-                    className="object-cover"
-                  />
-                  <div className="to-bg-black-10 absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/60 " />
-                </CardHeader>
-                <CardBody>
-                  <div className="mb-1 flex flex-col justify-start gap-2">
-                    <div>
-                      <span
-                        className={`border ${
-                          sub.status === "active" ? "bg-teal-100" : "bg-red-100"
-                        }  text-xs ${
-                          sub.status === "active"
-                            ? "text-teal-700"
-                            : "text-red-700"
-                        }  px-2 py-1 rounded-full`}
-                      >
-                        {sub.status}
-                      </span>
-                    </div>
-                    <Typography
-                      variant="h4"
-                      color="blue-gray"
-                      className="font-medium"
-                    >
-                      {sub.name}
-                    </Typography>
-                  </div>
-                  <div className="flex flex-col">
-                    <div className="mb-1 flex gap-2">
-                      <Typography
-                        color="blue-gray"
-                        className="flex items-center gap-1.5 font-normal"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                          className="-mt-0.5 h-5 w-5 text-yellow-700"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                        5.0
-                      </Typography>
-                      <Typography color="gray">
-                        | {sub.reviews.length} Reviews
-                      </Typography>
-                    </div>
-                    <div className="text-2xl font-bold text-teal-500">
-                      ₹{sub.price}
-                    </div>
-                  </div>
-                </CardBody>
-                <CardFooter className="pt-0 flex flex-col gap-2">
-                  <Button
-                    size="lg"
-                    fullWidth={true}
-                    variant="gradient"
-                    color="indigo"
-                    className="flex gap-1 items-center justify-center"
-                  >
-                    View <IoMdOpen size={20} />
-                  </Button>
-                  <Button
-                    size="lg"
-                    fullWidth={true}
-                    variant="gradient"
-                    color="red"
-                    className="flex gap-1 items-center justify-center"
-                  >
-                    Delete <MdDelete size={20} />
-                  </Button>
-                </CardFooter>
-              </Card>
-            );
+          {subServices.map((sub, index) => {
+            return <SubServiceCard sub={sub} index={index} serviceId={id} />;
           })}
         </div>
       </div>

@@ -10,8 +10,11 @@ export async function POST(request) {
   if (!user) {
     return NextResponse.json({ message: "Invalid phone number", status: 400 }, { status: 400 });
   }
-  if (user.password!== password) {
+  else if (user.password!== password) {
     return NextResponse.json({ message: "Invalid password", status: 400 }, { status: 400 });
+  }
+  else if (!user.active) {
+    return NextResponse.json({ message: "Account is not active", status: 400 }, { status: 400 });
   }
   return NextResponse.json(user, { status: 201 });
 }

@@ -3,6 +3,30 @@ import Service from "@/models/Service";
 import { NextResponse } from "next/server";
 import { v4 } from "uuid";
 
+function getCurrentDateFormatted() {
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const currentDate = new Date();
+  const day = currentDate.getDate().toString().padStart(2, "0");
+  const month = months[currentDate.getMonth()];
+  const year = currentDate.getFullYear();
+  return `${day} ${month} ${year}`;
+}
+
+// Example usage:
+const formattedDate = getCurrentDateFormatted();
 export async function POST(request, { params }) {
   const { id } = params;
   const { name, status, price, icon } = await request.json();
@@ -17,6 +41,7 @@ export async function POST(request, { params }) {
     icon,
     reviews: [],
     bookings: [],
+    createdAt: formattedDate,
   });
   const savedService = await service.save();
   return NextResponse.json(savedService, { status: 201 });

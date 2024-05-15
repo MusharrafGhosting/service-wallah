@@ -3,6 +3,7 @@ import Nav from "../components/Nav";
 import { BsPersonFillAdd } from "react-icons/bs";
 import { RxDoubleArrowRight } from "react-icons/rx";
 import { Carousel } from "@material-tailwind/react";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -14,7 +15,7 @@ export default function Home() {
         <div className="lg:w-1/2 pb-4 md:pb-20 pt-4 md:px-10 px-4 flex items-center">
           <div className="w-full">
             <p className="text-xl mb-1">Get Your Work done in a</p>
-            <h1 className="text-6xl lg:text-8xl text-center text-indigo-500 font-junge">
+            <h1 className="text-6xl lg:text-8xl text-center text-blue-500 font-junge">
               Professional
             </h1>
             <span className="flex w-full justify-center">
@@ -57,12 +58,12 @@ export default function Home() {
 
             <h3 className="text-center text-3xl lg:text-4xl font-julius">Manner</h3>
             <div className="flex w-full flex-col md:flex-row justify-center flex-nowrap items-center gap-4 mt-8">
-              <button className="px-6 py-4 w-full md:w-fit outline transition-all duration-700 flex justify-center items-center rounded-md gap-1 hover:bg-gradient-to-r hover:from-transparent hover:to-transparent hover:text-indigo-600 hover:outline-indigo-600 hover:outline-2 bg-gradient-to-r from-indigo-500 to-deep-purple-500 font-semibold text-white">
+              <button className="px-6 py-4 w-full md:w-fit outline transition-all duration-700 flex justify-center items-center rounded-md gap-1 hoverbg-gradient-to-r hover:from-transparent hover:to-transparent hover:text-blue-600 outline-none hover:outline-blue-600 hover:outline-2 bg-gradient-to-tr from-blue-400 to-blue-600 font-semibold text-white">
                 Find a Service <RxDoubleArrowRight size={18} />
               </button>
-              <button className="px-6 py-4 w-full md:w-fit transition-all flex gap-1 items-center justify-center duration-700 rounded-md hover:bg-gradient-to-r hover:from-indigo-500 hover:to-deep-purple-500 hover:text-white outline outline-2 outline-indigo-500 text-indigo-500 font-semibold">
+              <Link href={`/service-provider/create`} className="px-6 py-4 w-full md:w-fit transition-all flex gap-1 items-center justify-center duration-700 rounded-md hover:bg-gradient-to-r hover:from-blue-400 hover:to-blue-600 hover:text-white outline outline-2 outline-blue-500 text-blue-500 font-semibold">
                 Become a Service provider <BsPersonFillAdd />
-              </button>
+              </Link>
             </div>
             <div className="flex flex-col md:flex-row w-full justify-center items-center mt-12 gap-1">
               <div className="flex gap-2 items-center">
@@ -198,7 +199,7 @@ export default function Home() {
         <h1 className="font-julius text-5xl text-gray-700">
           FOR ALL YOUR NEEDS WE PROVIDES
         </h1>
-        <h2 className="font-cookie text-7xl text-indigo-500">Best Services</h2>
+        <h2 className="font-cookie text-7xl text-blue-500">Best Services</h2>
       </div>
       <div className="px-4 lg:px-20 pb-6 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <div className="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
