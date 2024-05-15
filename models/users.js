@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { unique } from "next/dist/build/utils";
+
 
 const userSchema = new Schema(
   {
@@ -7,7 +7,10 @@ const userSchema = new Schema(
       type: String,
     },
     image: {
-      type: Object,
+      type: {
+        url: String,
+        name: String,
+      },
       default: {
         url: "",
         name: "",
@@ -23,9 +26,10 @@ const userSchema = new Schema(
     },
     gender: {
       type: String,
+      enum: ["male", "female", "other"], // Example enum values, adjust as needed
     },
     locations: {
-      type: Array,
+      type: [String],
       default: [],
     },
     city: {
@@ -38,7 +42,7 @@ const userSchema = new Schema(
       type: String,
     },
     serviceHistory: {
-      type: Array,
+      type: [Schema.Types.ObjectId], // Assuming these are references to other documents
       default: [],
     },
     password: {
@@ -50,26 +54,29 @@ const userSchema = new Schema(
       unique: true,
     },
     services: {
-      type: Array,
+      type: [String],
       default: [],
     },
     reviews: {
-      type: Array,
+      type: [Schema.Types.ObjectId], // Assuming these are references to other documents
       default: [],
     },
-    bookings: { 
-      type: Array,
+    bookings: {
+      type: [Schema.Types.ObjectId], // Assuming these are references to other documents
       default: [],
     },
     bookingHistory: {
-      type: Array,
+      type: [Schema.Types.ObjectId], // Assuming these are references to other documents
       default: [],
     },
     payments: {
-      type: Array,
+      type: [Schema.Types.ObjectId], // Assuming these are references to other documents
       default: [],
     },
-    messages: { type: Array, default: [] },
+    messages: {
+      type: [Schema.Types.ObjectId], // Assuming these are references to other documents
+      default: [],
+    },
   },
   {
     timestamps: true,

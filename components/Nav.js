@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import {
-  Navbar,
   Collapse,
   Typography,
   Button,
@@ -40,7 +39,6 @@ import { AiFillHome } from "react-icons/ai";
 import { BiLogIn } from "react-icons/bi";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import Image from "next/image";
 
 const services = [
   {
