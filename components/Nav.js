@@ -32,13 +32,15 @@ import {
   TabPanel,
 } from "@material-tailwind/react";
 
-import { FaSearch, FaTools } from "react-icons/fa";
-import { FaLocationDot } from "react-icons/fa6";
-import { IoIosInformationCircle } from "react-icons/io";
+import { FaCalendarCheck, FaHistory, FaSearch, FaTools, FaUser } from "react-icons/fa";
+import { FaLocationDot, FaUsersGear } from "react-icons/fa6";
+import { IoIosInformationCircle, IoMdMailUnread } from "react-icons/io";
 import { AiFillHome } from "react-icons/ai";
-import { BiLogIn } from "react-icons/bi";
+import { BiLogIn, BiSolidTimeFive } from "react-icons/bi";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { MdAddModerator, MdDashboardCustomize, MdManageAccounts, MdOutlineManageHistory, MdOutlinePayment } from "react-icons/md";
+import { IoLogOut } from "react-icons/io5";
 
 const services = [
   {
@@ -129,8 +131,8 @@ function ServicesList() {
 }
 
 function NavList() {
-  const [open, setOpen] = React.useState(false);
-  const [open2, setOpen2] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
 
   const handleOpen = () => setOpen(!open);
   const handleOpen2 = () => setOpen2(!open2);
@@ -369,86 +371,95 @@ export default function Nav() {
               {user.role === "user" ? (
                 <MenuList>
                   <Link href={`/user`} className="outline-none">
-                    <MenuItem className="text-center">Profile</MenuItem>
+                    <MenuItem className="justify-center flex items-center gap-1">Profile <FaUser size={12} /></MenuItem>
                   </Link>
                   <Link href={`/user/booking`} className="outline-none">
-                    <MenuItem className="text-center">Booking</MenuItem>
+                    <MenuItem className="justify-center flex items-center gap-1">Booking <FaCalendarCheck /></MenuItem>
                   </Link>
                   <Link href={`/user/history`} className="outline-none">
-                    <MenuItem className="text-center">History</MenuItem>
+                    <MenuItem className="justify-center flex items-center gap-1">History <FaHistory /></MenuItem>
+                  </Link>
+                  <Link href={`/mail`} className="outline-none">
+                    <MenuItem className="justify-center flex items-center gap-1">Mail <IoMdMailUnread /></MenuItem>
                   </Link>
                   <MenuItem
-                    className="text-red-400 text-center"
+                    className="text-red-400 justify-center flex items-center gap-1"
                     onClick={() => {
                       localStorage.removeItem("token");
                       window.location.reload();
                     }}
                   >
-                    Logout
+                    Logout <IoLogOut />
                   </MenuItem>
                 </MenuList>
               ) : user.role === "service-provider" ? (
                 <MenuList>
-                  <Link href={`/service-provider`} className="outline-none">
-                    <MenuItem className="text-center">Profile</MenuItem>
+                  <Link href={`/service-provider/${user._id}`} className="outline-none">
+                    <MenuItem className="justify-center flex items-center gap-1">Profile <FaUser size={12} /></MenuItem>
                   </Link>
                   <Link
-                    href={`/service-provider/booking`}
+                    href={`/service-provider/${user._id}/booking`}
                     className="outline-none"
                   >
-                    <MenuItem className="text-center">Booking</MenuItem>
+                    <MenuItem className="justify-center flex items-center gap-1">Booking <FaCalendarCheck /></MenuItem>
                   </Link>
                   <Link
-                    href={`/service-provider/history`}
+                    href={`/service-provider/${user._id}/history`}
                     className="outline-none"
                   >
-                    <MenuItem className="text-center">History</MenuItem>
+                    <MenuItem className="justify-center flex items-center gap-1">History <FaHistory /></MenuItem>
+                  </Link>
+                  <Link href={`/mail`} className="outline-none">
+                    <MenuItem className="justify-center flex items-center gap-1">Mail <IoMdMailUnread /></MenuItem>
                   </Link>
                   <MenuItem
-                    className="text-red-400 text-center"
+                    className="text-red-400 justify-center flex items-center gap-1"
                     onClick={() => {
                       localStorage.removeItem("token");
                       window.location.reload();
                     }}
                   >
-                    Logout
+                    Logout <IoLogOut />
                   </MenuItem>
                 </MenuList>
               ) : (
                 <MenuList>
                   <Link href={`/admin`} className="outline-none">
-                    <MenuItem className="text-center">Dashboard</MenuItem>
+                    <MenuItem className="justify-center flex items-center gap-1">Dashboard <MdDashboardCustomize /></MenuItem>
                   </Link>
                   <Link href={`/admin/services`} className="outline-none">
-                    <MenuItem className="text-center">Manage Services</MenuItem>
+                    <MenuItem className="justify-center flex items-center gap-1">Manage Services <MdOutlineManageHistory /></MenuItem>
                   </Link>
                   <Link href={`/admin/users`} className="outline-none">
-                    <MenuItem className="text-center">Manage Users</MenuItem>
+                    <MenuItem className="justify-center flex items-center gap-1">Manage Users <MdManageAccounts /></MenuItem>
                   </Link>
                   <Link
                     href={`/admin/service-providers`}
                     className="outline-none"
                   >
-                    <MenuItem className="text-center">
-                      Service Provider
+                    <MenuItem className="justify-center flex items-center gap-1">
+                      Service Provider <FaUsersGear />
                     </MenuItem>
                   </Link>
                   <Link href={`/admin/payments`} className="outline-none">
-                    <MenuItem className="text-center">Manage Payments</MenuItem>
+                    <MenuItem className="justify-center flex items-center gap-1">Manage Payments <MdOutlinePayment /></MenuItem>
                   </Link>
                   <Link href={`/admin/create-admin`} className="outline-none">
-                    <MenuItem className="text-center">
-                      Create new Admin
+                    <MenuItem className="justify-center flex items-center gap-1">
+                      Create new Admin <MdAddModerator />
                     </MenuItem>
                   </Link>
+                  <Link href={`/mail`} className="outline-none">
+                    <MenuItem className="justify-center flex items-center gap-1">Mail <IoMdMailUnread /></MenuItem>
+                  </Link>
                   <MenuItem
-                    className="text-red-400 text-center"
+                    className="text-red-400 justify-center flex items-center gap-1"
                     onClick={() => {
                       localStorage.removeItem("token");
                       window.location.reload();
                     }}
                   >
-                    Logout
+                    Logout <IoLogOut />
                   </MenuItem>
                 </MenuList>
               )}

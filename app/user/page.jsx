@@ -12,6 +12,8 @@ import {
   DialogFooter,
   Select,
   Option,
+  Badge,
+  Avatar,
 } from "@material-tailwind/react";
 import {
   ref,
@@ -261,9 +263,9 @@ const User = () => {
                           })
                         }
                       >
-                        <Option value="Unspecified">Unspecified</Option>
-                        <Option value="Male">Male</Option>
-                        <Option value="Female">Female</Option>
+                        <Option value="unspecified">Unspecified</Option>
+                        <Option value="male">Male</Option>
+                        <Option value="female">Female</Option>
                       </Select>
                       <Input
                         onChange={(e) =>
@@ -275,11 +277,17 @@ const User = () => {
                     </div>
                     <figure className="relative h-72 w-3/5 rounded-md">
                       {updateUser.image.url || user.image.url ? (
-                        <img
-                          className="h-full w-full rounded-xl object-cover object-center"
+                        <Badge
+                        content={<div className="h-3 w-h-3"></div>}
+                        overlap="circular"
+                        className="bg-gradient-to-tr from-green-400 to-green-600 border-2 border-white shadow-lg shadow-black/20"
+                      >
+                        <Avatar
                           src={updateUser.image.url || user.image.url}
-                          alt="Profile image"
+                          alt="profile picture"
+                          className="w-32 h-32 object-cover"
                         />
+                      </Badge>
                       ) : (
                         <div className="bg-gray-700 h-full w-full font-junge text-white font-bold text-7xl flex justify-center items-center rounded-xl">
                           {user.name && Array.from(user.name)[0].toUpperCase()}
@@ -316,7 +324,6 @@ const User = () => {
                     <Button
                       variant="gradient"
                       color="green"
-                      // disabled={!profileUploaded}
                       loading={!profileUploaded}
                       onClick={handleOpen}
                     >

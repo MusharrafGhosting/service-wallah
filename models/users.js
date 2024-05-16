@@ -54,7 +54,7 @@ const userSchema = new Schema(
       unique: true,
     },
     services: {
-      type: [String],
+      type: Array,
       default: [],
     },
     reviews: {

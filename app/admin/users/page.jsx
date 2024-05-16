@@ -2,6 +2,7 @@
 import Nav from "@/components/Nav";
 import { FaUsers } from "react-icons/fa6";
 import { MdOpenInNew } from "react-icons/md";
+import Fuse from "fuse.js";
 import {
   Menu,
   MenuHandler,
@@ -13,13 +14,14 @@ import {
   DialogFooter,
   ListItem,
   ListItemSuffix,
+  Select,
+  Option,
 } from "@material-tailwind/react";
 import { IoIosSearch } from "react-icons/io";
 import { useEffect, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { FaUserAltSlash } from "react-icons/fa";
 import { AiOutlineUserDelete } from "react-icons/ai";
-import { TiArrowRepeat } from "react-icons/ti";
 import { deleteObject, ref } from "firebase/storage";
 import { storage } from "@/firebase";
 
@@ -97,6 +99,55 @@ const Users = () => {
       console.log(err);
     }
   };
+  const [filterByStatus, setfilterByStatus] = useState("both");
+  const handleFilterByStatus = async (val) => {
+    const response = await fetch("/api/admin/users", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+    });
+    const data = await response.json();
+    setfilterByStatus(val);
+    const checkStatement =
+      val === "active" ? true : val === "inactive" ? false : "both";
+    if (checkStatement == "both") {
+      setAllUsers(data);
+      return;
+    }
+    const serviceProviders = data.filter((e, i) => {
+      return e.active === checkStatement;
+    });
+    setAllUsers(serviceProviders);
+  };
+  
+  const [searchQuery, setSearchQuery] = useState("");
+  const handleSearch = async (event) => {
+    const query = event.target.value;
+    setSearchQuery(query);
+    const response = await fetch("/api/admin/users", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+    });
+    const data = await response.json();
+    if(!query){
+      setAllUsers(data);
+      return;
+    }
+    const fuse = new Fuse(data, {
+      keys: ['name'],
+      includeScore: true,
+      threshold: 0.4, // Adjust this threshold as needed
+      findAllMatches: true,
+    });
+    const result = fuse.search(query);
+    const filteredUsers = result.map(item => item.item);
+    setAllUsers(filteredUsers);
+  };
   return (
     <div>
       <Nav />
@@ -111,23 +162,23 @@ const Users = () => {
               label="Search Users"
               className="bg-white"
               icon={<IoIosSearch />}
+              value={searchQuery}
+              onChange={handleSearch}
+              color="indigo"
             />
           </div>
-          <Menu
-            animate={{
-              mount: { y: 0 },
-              unmount: { y: 25 },
-            }}
-            allowHover
-          >
-            <MenuHandler>
-              <Button>FIlter By Status</Button>
-            </MenuHandler>
-            <MenuList>
-              <MenuItem>Active</MenuItem>
-              <MenuItem>InActive</MenuItem>
-            </MenuList>
-          </Menu>
+          <div className="w-60 bg-white">
+            <Select
+              label="FIlter By Status"
+              value={filterByStatus}
+              color="indigo"
+              onChange={(e) => handleFilterByStatus(e)}
+            >
+              <Option value="active">Active</Option>
+              <Option value="inactive">InActive</Option>
+              <Option value="both">Both</Option>
+            </Select>
+          </div>
         </div>
       </div>
       <div className="grid gap-10 grid-cols-4 px-10 mt-8">
