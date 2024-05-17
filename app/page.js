@@ -1,8 +1,12 @@
 'use client'
 import Nav from "../components/Nav";
+import Footer from "../components/Footer";
 import { BsPersonFillAdd } from "react-icons/bs";
 import { RxDoubleArrowRight } from "react-icons/rx";
 import { Carousel } from "@material-tailwind/react";
+import { WiStars } from "react-icons/wi";
+
+import Video from "../components/Video";
 import Link from "next/link";
 
 export default function Home() {
@@ -199,7 +203,8 @@ export default function Home() {
         <h1 className="font-julius text-5xl text-gray-700">
           FOR ALL YOUR NEEDS WE PROVIDES
         </h1>
-        <h2 className="font-cookie text-7xl text-blue-500">Best Services</h2>
+        <h2 className="font-cookie w-full md:w-auto flex justify-center md:justify-start text-7xl text-blue-500">Best Services</h2>
+
       </div>
       <div className="px-4 lg:px-20 pb-6 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <div className="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
@@ -257,6 +262,26 @@ export default function Home() {
           <div>Light Installation & Repairing</div>
         </div>
       </div>
+      <div className="w-full flex flex-col justify-center items-center py-4 px-4">
+        <h1 className="font-julius text-5xl text-gray-700">
+          COMPLETE THE TASK WITH
+        </h1>
+        <h2 className="font-cookie text-7xl text-blue-500">Experienced Professionals</h2>
+      </div>
+      <Video />
+      <div class="w-full flex flex-col justify-center items-center py-4 px-4">
+        <h1 class="font-julius text-5xl flex text-gray-700">
+          <WiStars color="orange" />
+          How to book a service
+          <WiStars color="orange" />
+        </h1>
+        <img
+                  className="  md:w-96"
+                  src="/image/line2.svg"
+                  alt=""
+                />
+      </div>
+      <Footer />
     </main>
   );
 }
