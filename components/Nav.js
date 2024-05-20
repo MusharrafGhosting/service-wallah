@@ -31,15 +31,27 @@ import {
   Tab,
   TabPanel,
 } from "@material-tailwind/react";
-
-import { FaCalendarCheck, FaHistory, FaSearch, FaTools, FaUser } from "react-icons/fa";
+import { FcLike } from "react-icons/fc";
+import {
+  FaCalendarCheck,
+  FaHistory,
+  FaSearch,
+  FaTools,
+  FaUser,
+} from "react-icons/fa";
 import { FaLocationDot, FaUsersGear } from "react-icons/fa6";
 import { IoIosInformationCircle, IoMdMailUnread } from "react-icons/io";
 import { AiFillHome } from "react-icons/ai";
 import { BiLogIn, BiSolidTimeFive } from "react-icons/bi";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { MdAddModerator, MdDashboardCustomize, MdManageAccounts, MdOutlineManageHistory, MdOutlinePayment } from "react-icons/md";
+import {
+  MdAddModerator,
+  MdDashboardCustomize,
+  MdManageAccounts,
+  MdOutlineManageHistory,
+  MdOutlinePayment,
+} from "react-icons/md";
 import { IoLogOut } from "react-icons/io5";
 
 const services = [
@@ -85,6 +97,7 @@ function ServicesList() {
       </MenuItem>
     </Link>
   ));
+
   return (
     <>
       <Menu
@@ -136,6 +149,34 @@ function NavList() {
 
   const handleOpen = () => setOpen(!open);
   const handleOpen2 = () => setOpen2(!open2);
+
+  const [topServices, setTopServices] = useState([]);
+  const gettingServices = async () => {
+    try {
+      const fetchedData = await fetch("/api/services", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const response = await fetchedData.json();
+      function getTopBookedServices(services, topN) {
+        return services
+          .sort((a, b) => b.bookings.length - a.bookings.length)
+          .filter(service => service.status === "active")
+          .slice(0, topN);
+      }
+
+      const topBookedServices = getTopBookedServices(response, 6);
+
+      setTopServices(topBookedServices);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  useEffect(() => {
+    gettingServices();
+  }, []);
   return (
     <List className="mt-4 mb-6 p-0 lg:mt-0 lg:mb-0 lg:flex-row lg:p-1 md:gap-4">
       <ServicesList />
@@ -188,21 +229,58 @@ function NavList() {
         </button>
         <Dialog
           open={open2}
+          size="lg"
           handler={handleOpen2}
           animate={{
             mount: { scale: 1, y: 0 },
             unmount: { scale: 0.9, y: -100 },
           }}
         >
-          <DialogBody>
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search"
-                className="w-full px-4 py-2 pl-10 rounded-lg border border-gray-300 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
-              />
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3 ">
-                <FaSearch className="  cursor-pointer text-[#582FFF;]" />
+          <DialogBody className="p-10 min-h-[90vh] bg-gray-100 rounded-xl">
+            <div className="flex gap-3 mb-10 justify-center items-center">
+              <h1 className="text-4xl font-julius uppercase">
+                Search For Service
+              </h1>
+              <h2 className="text-5xl font-cookie text-blue-500">You like</h2>
+            </div>
+            <Input
+              label="Search a Service"
+              color="blue"
+              icon={<FaSearch className="cursor-pointer text-blue-500" />}
+            />
+            <div>
+              <div className="flex gap-2 items-center my-4">
+                <h2 className="whitespace-nowrap text-gray-500">
+                  Most Booked Services You may like
+                </h2>
+                <div className="h-px bg-gray-300 w-full"></div>
+              </div>
+              <div className="grid gap-4 grid-cols-3">
+                {topServices.map((service, index) => {
+                  return (
+                    <div key={index} className="bg-white rounded-lg py-4 px-4">
+                      <div className="flex flex-col items-center gap-2">
+                        <img
+                          src={service.icon.url}
+                          alt={service.name}
+                          className="w-16 h-16 rounded-md"
+                        />
+                        <div className="flex flex-col items-center gap-1 w-full">
+                          <h2 className="text-blue-500">{service.name}</h2>
+                          <p className="text-gray-500">{service.description}</p>
+                          <Button
+                            variant="gradient"
+                            color="blue-gray"
+                            className="rounded w-full"
+                            size="sm"
+                          >
+                            View
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </DialogBody>
@@ -371,17 +449,25 @@ export default function Nav() {
               {user.role === "user" ? (
                 <MenuList>
                   <Link href={`/user`} className="outline-none">
-                    <MenuItem className="justify-center flex items-center gap-1">Profile <FaUser size={12} /></MenuItem>
+                    <MenuItem className="justify-center flex items-center gap-1">
+                      Profile <FaUser size={12} />
+                    </MenuItem>
                   </Link>
                   <Link href={`/user/booking`} className="outline-none">
-                    <MenuItem className="justify-center flex items-center gap-1">Booking <FaCalendarCheck /></MenuItem>
+                    <MenuItem className="justify-center flex items-center gap-1">
+                      Booking <FaCalendarCheck />
+                    </MenuItem>
                   </Link>
                   <Link href={`/user/history`} className="outline-none">
-                    <MenuItem className="justify-center flex items-center gap-1">History <FaHistory /></MenuItem>
+                    <MenuItem className="justify-center flex items-center gap-1">
+                      History <FaHistory />
+                    </MenuItem>
                   </Link>
-                  <Link href={`/mail`} className="outline-none">
-                    <MenuItem className="justify-center flex items-center gap-1">Mail <IoMdMailUnread /></MenuItem>
-                  </Link>
+                  {/* <Link href={`/mail`} className="outline-none">
+                    <MenuItem className="justify-center flex items-center gap-1">
+                      Mail <IoMdMailUnread />
+                    </MenuItem>
+                  </Link> */}
                   <MenuItem
                     className="text-red-400 justify-center flex items-center gap-1"
                     onClick={() => {
@@ -394,24 +480,35 @@ export default function Nav() {
                 </MenuList>
               ) : user.role === "service-provider" ? (
                 <MenuList>
-                  <Link href={`/service-provider/${user._id}`} className="outline-none">
-                    <MenuItem className="justify-center flex items-center gap-1">Profile <FaUser size={12} /></MenuItem>
+                  <Link
+                    href={`/service-provider/${user._id}`}
+                    className="outline-none"
+                  >
+                    <MenuItem className="justify-center flex items-center gap-1">
+                      Profile <FaUser size={12} />
+                    </MenuItem>
                   </Link>
                   <Link
                     href={`/service-provider/${user._id}/booking`}
                     className="outline-none"
                   >
-                    <MenuItem className="justify-center flex items-center gap-1">Booking <FaCalendarCheck /></MenuItem>
+                    <MenuItem className="justify-center flex items-center gap-1">
+                      Booking <FaCalendarCheck />
+                    </MenuItem>
                   </Link>
                   <Link
                     href={`/service-provider/${user._id}/history`}
                     className="outline-none"
                   >
-                    <MenuItem className="justify-center flex items-center gap-1">History <FaHistory /></MenuItem>
+                    <MenuItem className="justify-center flex items-center gap-1">
+                      History <FaHistory />
+                    </MenuItem>
                   </Link>
-                  <Link href={`/mail`} className="outline-none">
-                    <MenuItem className="justify-center flex items-center gap-1">Mail <IoMdMailUnread /></MenuItem>
-                  </Link>
+                  {/* <Link href={`/mail`} className="outline-none">
+                    <MenuItem className="justify-center flex items-center gap-1">
+                      Mail <IoMdMailUnread />
+                    </MenuItem>
+                  </Link> */}
                   <MenuItem
                     className="text-red-400 justify-center flex items-center gap-1"
                     onClick={() => {
@@ -425,13 +522,19 @@ export default function Nav() {
               ) : (
                 <MenuList>
                   <Link href={`/admin`} className="outline-none">
-                    <MenuItem className="justify-center flex items-center gap-1">Dashboard <MdDashboardCustomize /></MenuItem>
+                    <MenuItem className="justify-center flex items-center gap-1">
+                      Dashboard <MdDashboardCustomize />
+                    </MenuItem>
                   </Link>
                   <Link href={`/admin/services`} className="outline-none">
-                    <MenuItem className="justify-center flex items-center gap-1">Manage Services <MdOutlineManageHistory /></MenuItem>
+                    <MenuItem className="justify-center flex items-center gap-1">
+                      Manage Services <MdOutlineManageHistory />
+                    </MenuItem>
                   </Link>
                   <Link href={`/admin/users`} className="outline-none">
-                    <MenuItem className="justify-center flex items-center gap-1">Manage Users <MdManageAccounts /></MenuItem>
+                    <MenuItem className="justify-center flex items-center gap-1">
+                      Manage Users <MdManageAccounts />
+                    </MenuItem>
                   </Link>
                   <Link
                     href={`/admin/service-providers`}
@@ -442,16 +545,20 @@ export default function Nav() {
                     </MenuItem>
                   </Link>
                   <Link href={`/admin/payments`} className="outline-none">
-                    <MenuItem className="justify-center flex items-center gap-1">Manage Payments <MdOutlinePayment /></MenuItem>
+                    <MenuItem className="justify-center flex items-center gap-1">
+                      Manage Payments <MdOutlinePayment />
+                    </MenuItem>
                   </Link>
                   {/* <Link href={`/admin/create-admin`} className="outline-none">
                     <MenuItem className="justify-center flex items-center gap-1">
                       Create new Admin <MdAddModerator />
                     </MenuItem>
                   </Link> */}
-                  <Link href={`/mail`} className="outline-none">
-                    <MenuItem className="justify-center flex items-center gap-1">Mail <IoMdMailUnread /></MenuItem>
-                  </Link>
+                  {/* <Link href={`/mail`} className="outline-none">
+                    <MenuItem className="justify-center flex items-center gap-1">
+                      Mail <IoMdMailUnread />
+                    </MenuItem>
+                  </Link> */}
                   <MenuItem
                     className="text-red-400 justify-center flex items-center gap-1"
                     onClick={() => {

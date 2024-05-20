@@ -50,7 +50,7 @@ const VideoCarousel = () => {
                     <div key={index} className="video-group">
                         {chunk.map((video, idx) => (
                             <div key={idx} className="video-wrapper">
-                                <video loop muted autoPlay className="video">
+                                <video loop muted autoPlay className="video shadow-lg border">
                                     <source src={video} type="video/mp4" />
                                     Your browser does not support the video tag.
                                 </video>

@@ -9,7 +9,7 @@ import medalIcon3 from '../public/image/service3model.svg';
 
 const ServiceSection = () => {
     return (
-        <div className="flex flex-col items-center space-y-8 py-8 bg-gray-100">
+        <div className="flex flex-col gap-4 items-center space-y-8 py-8 bg-gray-100">
             <ServiceCard
                 title="Find the service"
                 description="Choose from various amounts of services that fit your needs and expectations."

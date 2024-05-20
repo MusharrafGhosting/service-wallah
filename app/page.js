@@ -21,7 +21,7 @@ export default function Home() {
         <div className="lg:w-1/2 pb-4 md:pb-20 pt-4 md:px-10 px-4 flex items-center">
           <div className="w-full">
             <p className="text-xl mb-1">Get Your Work done in a</p>
-            <h1 className="lg:text-6xl md:text-7xl sm:text-7xl text-6xl text-center text-blue-500 font-junge">
+            <h1 className="lg:text-8xl md:text-7xl sm:text-7xl text-6xl text-center text-blue-500 font-junge">
               Professional
             </h1>
             <span className="flex w-full justify-center">

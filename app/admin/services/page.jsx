@@ -87,7 +87,6 @@ const Services = () => {
         { cache: "no-store" }
       );
       const data = await response.json();
-      console.log(data);
       setimageUploaded(false);
       setServiceData({
         name: "",
@@ -105,6 +104,7 @@ const Services = () => {
         images: null,
       });
       setOpen(false);
+      window.location.reload();
     } catch (err) {
       console.error(err);
     }
