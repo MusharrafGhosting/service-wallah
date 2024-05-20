@@ -1,12 +1,16 @@
 'use client'
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
+import ServiceSection from '../components/ServiceSection';
 import { BsPersonFillAdd } from "react-icons/bs";
 import { RxDoubleArrowRight } from "react-icons/rx";
 import { Carousel } from "@material-tailwind/react";
+import { FaUserPlus } from "react-icons/fa";
 import { WiStars } from "react-icons/wi";
 
-import Video from "../components/Video";
+
+// import Video from "../components/Video";
+import Testimonials from "../components/Testimonials";
 import Link from "next/link";
 
 export default function Home() {
@@ -19,7 +23,7 @@ export default function Home() {
         <div className="lg:w-1/2 pb-4 md:pb-20 pt-4 md:px-10 px-4 flex items-center">
           <div className="w-full">
             <p className="text-xl mb-1">Get Your Work done in a</p>
-            <h1 className="text-6xl lg:text-8xl text-center text-blue-500 font-junge">
+            <h1 className="lg:text-6xl md:text-7xl sm:text-7xl text-6xl text-center text-blue-500 font-junge">
               Professional
             </h1>
             <span className="flex w-full justify-center">
@@ -200,10 +204,10 @@ export default function Home() {
         </Carousel>
       </div>
       <div className="w-full flex flex-col justify-center items-center py-4 px-4">
-        <h1 className="font-julius text-5xl text-gray-700">
+        <h1 className="font-julius lg:text-5xl md:text-4xl sm:text-3xl text-3xl text-center text-gray-700">
           FOR ALL YOUR NEEDS WE PROVIDES
         </h1>
-        <h2 className="font-cookie w-full md:w-auto flex justify-center md:justify-start text-7xl text-blue-500">Best Services</h2>
+        <h2 className="font-cookie w-full md:w-auto flex justify-center md:justify-start lg:text-6xl md:text-6xl sm:text-5xl text-5xl text-center text-blue-500 ">Best Services</h2>
 
       </div>
       <div className="px-4 lg:px-20 pb-6 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -263,25 +267,49 @@ export default function Home() {
         </div>
       </div>
       <div className="w-full flex flex-col justify-center items-center py-4 px-4">
-        <h1 className="font-julius text-5xl text-gray-700">
+        <h1 className="font-julius lg:text-5xl md:text-4xl sm:text-3xl text-3xl text-center text-gray-700">
           COMPLETE THE TASK WITH
         </h1>
-        <h2 className="font-cookie text-7xl text-blue-500">Experienced Professionals</h2>
+        <h2 className="font-cookie lg:text-6xl md:text-6xl sm:text-5xl text-4xl text-center text-blue-500">Experienced Professionals</h2>
       </div>
-      <Video />
+      {/* <Video /> */}
       <div class="w-full flex flex-col justify-center items-center py-4 px-4">
-        <h1 class="font-julius text-5xl flex text-gray-700">
+        <h1 class="font-julius lg:text-5xl md:text-4xl sm:text-3xl text-3xl text-center flex text-gray-700 mb-2  ">
           <WiStars color="orange" />
           How to book a service
           <WiStars color="orange" />
         </h1>
         <img
-                  className="  md:w-96"
-                  src="/image/line2.svg"
-                  alt=""
-                />
+          className=" lg:w-96  md:w-96 sm:w-80 w-64"
+          src="/image/line2.svg"
+          alt=""
+        />
+      </div>
+      <div className="px-4 lg:px-20 pb-6 w-full ">
+        <ServiceSection />
+      </div>
+      <div className="flex flex-col items-center justify-center bg-gray-100 py-10 px-4 sm:px-6 lg:px-8 mx-auto max-w-3xl">
+        <button className="lg:w-full md:w-full sm:w-full w-full bg-blue-500 text-white font-semibold py-3 px-6 rounded-md mb-6">
+          Book a Service »
+        </button>
+        <div className="flex items-center lg:w-full md:w-full sm:w-full w-full mb-6">
+          <hr className="flex-grow border-gray-300" />
+          <span className="px-4 text-gray-500 font-medium">or</span>
+          <hr className="flex-grow border-gray-300" />
+        </div>
+        <button className="lg:w-full md:w-full sm:w-full w-full border border-blue-500 text-blue-500 font-semibold py-3 px-6 rounded-md flex items-center justify-center">
+          Become a service provider <span className="ml-2"><FaUserPlus /></span>
+        </button>
+      </div>
+      <div className="w-full flex flex-col justify-center items-center py-4 px-4">
+        <h1 className="font-julius  lg:text-5xl md:text-4xl sm:text-3xl text-3xl text-center text-gray-700">
+          SOME REVIEWS OF OUR
+        </h1>
+        <h2 className="font-cookie lg:text-6xl md:text-6xl sm:text-5xl text-5xl text-center text-blue-500">Satisfied Customers</h2>
+        <Testimonials />
       </div>
       <Footer />
     </main>
+
   );
 }
