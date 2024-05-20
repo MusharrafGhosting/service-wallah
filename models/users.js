@@ -26,7 +26,7 @@ const userSchema = new Schema(
     },
     gender: {
       type: String,
-      enum: ["male", "female", "other"], // Example enum values, adjust as needed
+      enum: ["male", "female", "Unspecified"], // Example enum values, adjust as needed
     },
     locations: {
       type: [String],

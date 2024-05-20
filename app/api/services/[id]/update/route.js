@@ -32,9 +32,6 @@ export async function POST(request, { params }) {
   const data = await request.json();
   console.log(data);
   await connectMongoDB();
-  const service = await Service.findByIdAndUpdate(id, {
-    data,
-    updatedAt: formattedDate,
-  });
+  const service = await Service.findByIdAndUpdate(id, data);
   return NextResponse.json(service, { status: 201 });
 }

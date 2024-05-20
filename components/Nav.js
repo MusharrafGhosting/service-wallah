@@ -444,11 +444,11 @@ export default function Nav() {
                   <Link href={`/admin/payments`} className="outline-none">
                     <MenuItem className="justify-center flex items-center gap-1">Manage Payments <MdOutlinePayment /></MenuItem>
                   </Link>
-                  <Link href={`/admin/create-admin`} className="outline-none">
+                  {/* <Link href={`/admin/create-admin`} className="outline-none">
                     <MenuItem className="justify-center flex items-center gap-1">
                       Create new Admin <MdAddModerator />
                     </MenuItem>
-                  </Link>
+                  </Link> */}
                   <Link href={`/mail`} className="outline-none">
                     <MenuItem className="justify-center flex items-center gap-1">Mail <IoMdMailUnread /></MenuItem>
                   </Link>
