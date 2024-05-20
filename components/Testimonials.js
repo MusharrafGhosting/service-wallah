@@ -1,4 +1,5 @@
-import React from 'react';
+"use client"
+import React, { useState, useEffect } from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
@@ -36,26 +37,38 @@ const Testimonials = () => {
         },
         // Add other testimonials
     ];
-    const getCenterSlidePercentage = () => {
+
+    const [centerSlidePercentage, setCenterSlidePercentage] = useState(33.33);
+
+    const updateCenterSlidePercentage = () => {
         const screenWidth = window.innerWidth;
         if (screenWidth <= 540) {
-            return 100; // Mobile view
+            setCenterSlidePercentage(100); // Mobile view
         } else if (screenWidth <= 1024) {
-            return 50; // Tablet view
+            setCenterSlidePercentage(50); // Tablet view
         } else {
-            return 33.33; // Desktop view
+            setCenterSlidePercentage(33.33); // Desktop view
         }
     };
+
+    useEffect(() => {
+        updateCenterSlidePercentage();
+        window.addEventListener('resize', updateCenterSlidePercentage);
+        return () => {
+            window.removeEventListener('resize', updateCenterSlidePercentage);
+        };
+    }, []);
+
     const settings = {
         showArrows: true,
-        showThumbs: false, // Updated to false for mobile view
+        showThumbs: false,
         showStatus: false,
         infiniteLoop: true,
         autoPlay: true,
         interval: 5000,
         stopOnHover: true,
         centerMode: true,
-        centerSlidePercentage: getCenterSlidePercentage(),
+        centerSlidePercentage: centerSlidePercentage,
         swipeable: true,
         dynamicHeight: false,
         emulateTouch: true,
@@ -68,11 +81,13 @@ const Testimonials = () => {
                     {testimonials.map((testimonial, index) => (
                         <div key={index} className="p-4">
                             <div className="bg-white p-6 rounded-lg shadow-lg">
-                                <img
-                                    src={testimonial.image}
-                                    alt={testimonial.name} 
-                                    className="w-10 h-10 rounded-full mx-auto object-cover"
-                                />
+                                <div className='flex justify-center'>
+                                    <img
+                                        src={testimonial.image}
+                                        alt={testimonial.name}
+                                        className="w-16 h-16 rounded-full object-cover"
+                                    />
+                                </div>
                                 <div className="text-center mt-4">
                                     <h3 className="text-xl font-semibold text-blue-600">{testimonial.name}</h3>
                                     <p className="text-gray-500">{testimonial.title}</p>

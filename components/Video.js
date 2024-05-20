@@ -2,44 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
-const Testimonials = () => {
-    const testimonials = [
-        {
-            name: 'Hanna Lisem',
-            title: 'Project Manager',
-            image: '/images/image1.jpg',
-            quote: 'Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat',
-        },
-        {
-            name: 'Ronne Galle',
-            title: 'Designer',
-            image: '/images/image2.jpg',
-            quote: 'Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat',
-        },
-        {
-            name: 'Missy Limana',
-            title: 'Developer',
-            image: '/images/image3.jpg',
-            quote: 'Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat',
-        },
-        {
-            name: 'John Doe',
-            title: 'Marketing Specialist',
-            image: '/images/image4.jpg',
-            quote: 'Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat',
-        },
-        {
-            name: 'Jane Smith',
-            title: 'Product Manager',
-            image: '/images/image5.jpg',
-            quote: 'Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat',
-        },
-        {
-            name: 'Alice Johnson',
-            title: 'Sales Manager',
-            image: '/images/image6.jpg',
-            quote: 'Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat',
-        },
+const VideoCarousel = () => {
+    const videos = [
+        "/Video/video1.mp4",
+        "/Video/video2.mp4",
+        "/Video/video3.mp4",
+        "/Video/video4.mp4",
+        "/Video/video5.mp4",
+        "/Video/video6.mp4"
     ];
 
     const [isMobile, setIsMobile] = useState(false);
@@ -55,44 +25,70 @@ const Testimonials = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    const settings = {
-        showArrows: true,
-        showThumbs: false,
-        showStatus: false,
-        infiniteLoop: true,
-        autoPlay: true,
-        interval: 5000,
-        stopOnHover: true,
-        centerMode: true,
-        centerSlidePercentage: isMobile ? 100 : 33.33,
-        swipeable: true,
-        dynamicHeight: false,
-        emulateTouch: true,
+    const chunkArray = (array, chunkSize) => {
+        const result = [];
+        for (let i = 0; i < array.length; i += chunkSize) {
+            result.push(array.slice(i, i + chunkSize));
+        }
+        return result;
     };
 
+    const videoChunks = chunkArray(videos, isMobile ? 1 : 3);
+
     return (
-        <div className="flex flex-col items-center overflow-hidden">
-            <h2 className="text-4xl font-bold text-center my-8">Testimonials</h2>
-            <Carousel {...settings} className="lg:max-w-5xl md:max-w-3xl overflow-hidden">
-                {testimonials.map((testimonial, index) => (
-                    <div key={index} className="p-4 overflow-hidden">
-                        <div className="bg-white p-6 rounded-lg shadow-lg overflow-hidden">
-                            <img
-                                src={testimonial.image}
-                                alt={testimonial.name}
-                                className="w-24 h-24 rounded-full mx-auto"
-                            />
-                            <div className="text-center mt-4">
-                                <h3 className="text-xl font-semibold text-blue-600">{testimonial.name}</h3>
-                                <p className="text-gray-500">{testimonial.title}</p>
-                                <p className="mt-4 text-gray-700">&quot;{testimonial.quote}&quot;</p>
+        <div className="carousel-container">
+            <Carousel
+                showThumbs={false}
+                showStatus={false}
+                infiniteLoop
+                useKeyboardArrows
+                autoPlay
+                interval={8000}
+                transitionTime={500}
+            >
+                {videoChunks.map((chunk, index) => (
+                    <div key={index} className="video-group">
+                        {chunk.map((video, idx) => (
+                            <div key={idx} className="video-wrapper">
+                                <video loop muted autoPlay className="video">
+                                    <source src={video} type="video/mp4" />
+                                    Your browser does not support the video tag.
+                                </video>
                             </div>
-                        </div>
+                        ))}
                     </div>
                 ))}
             </Carousel>
+            <style jsx>{`
+                .carousel-container {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 20px;
+                }
+                .video-group {
+                    display: flex;
+                    justify-content: space-between;
+                }
+                .video-wrapper {
+                    flex: 1;
+                    margin: 0 10px;
+                }
+                .video {
+                    width: 100%;
+                    height: auto;
+                    border-radius: 10px;
+                }
+                @media (max-width: 768px) {
+                    .video-group {
+                        flex-direction: column;
+                    }
+                    .video-wrapper {
+                        margin: 0;
+                    }
+                }
+            `}</style>
         </div>
     );
 };
 
-export default Testimonials;
+export default VideoCarousel;

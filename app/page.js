@@ -1,15 +1,14 @@
-'use client'
+"use client";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
-import ServiceSection from '../components/ServiceSection';
+import ServiceSection from "../components/ServiceSection";
 import { BsPersonFillAdd } from "react-icons/bs";
 import { RxDoubleArrowRight } from "react-icons/rx";
 import { Carousel } from "@material-tailwind/react";
 import { FaUserPlus } from "react-icons/fa";
 import { WiStars } from "react-icons/wi";
 
-
-// import Video from "../components/Video";
+import Video from "../components/Video";
 import Testimonials from "../components/Testimonials";
 import Link from "next/link";
 
@@ -18,7 +17,6 @@ export default function Home() {
     <main>
       <Nav />
       <div className="flex flex-col lg:flex-row">
-
         {/* Left half */}
         <div className="lg:w-1/2 pb-4 md:pb-20 pt-4 md:px-10 px-4 flex items-center">
           <div className="w-full">
@@ -64,12 +62,17 @@ export default function Home() {
               </svg>
             </span>
 
-            <h3 className="text-center text-3xl lg:text-4xl font-julius">Manner</h3>
+            <h3 className="text-center text-3xl lg:text-4xl font-julius">
+              Manner
+            </h3>
             <div className="flex w-full flex-col md:flex-row justify-center flex-nowrap items-center gap-4 mt-8">
               <button className="px-6 py-4 w-full md:w-fit outline transition-all duration-700 flex justify-center items-center rounded-md gap-1 hoverbg-gradient-to-r hover:from-transparent hover:to-transparent hover:text-blue-600 outline-none hover:outline-blue-600 hover:outline-2 bg-gradient-to-tr from-blue-400 to-blue-600 font-semibold text-white">
                 Find a Service <RxDoubleArrowRight size={18} />
               </button>
-              <Link href={`/service-provider/create`} className="px-6 py-4 w-full md:w-fit transition-all flex gap-1 items-center justify-center duration-700 rounded-md hover:bg-gradient-to-r hover:from-blue-400 hover:to-blue-600 hover:text-white outline outline-2 outline-blue-500 text-blue-500 font-semibold">
+              <Link
+                href={`/service-provider/create`}
+                className="px-6 py-4 w-full md:w-fit transition-all flex gap-1 items-center justify-center duration-700 rounded-md hover:bg-gradient-to-r hover:from-blue-400 hover:to-blue-600 hover:text-white outline outline-2 outline-blue-500 text-blue-500 font-semibold"
+              >
                 Become a Service provider <BsPersonFillAdd />
               </Link>
             </div>
@@ -104,7 +107,6 @@ export default function Home() {
                 </p>
               </div>
             </div>
-
           </div>
         </div>
         {/* Right half */}
@@ -158,8 +160,9 @@ export default function Home() {
               {new Array(length).fill("").map((_, i) => (
                 <span
                   key={i}
-                  className={`block h-1 cursor-pointer rounded-2xl transition-all content-[''] ${activeIndex === i ? "w-8 bg-white" : "w-4 bg-white/50"
-                    }`}
+                  className={`block h-1 cursor-pointer rounded-2xl transition-all content-[''] ${
+                    activeIndex === i ? "w-8 bg-white" : "w-4 bg-white/50"
+                  }`}
                   onClick={() => setActiveIndex(i)}
                 />
               ))}
@@ -207,62 +210,96 @@ export default function Home() {
         <h1 className="font-julius lg:text-5xl md:text-4xl sm:text-3xl text-3xl text-center text-gray-700">
           FOR ALL YOUR NEEDS WE PROVIDES
         </h1>
-        <h2 className="font-cookie w-full md:w-auto flex justify-center md:justify-start lg:text-6xl md:text-6xl sm:text-5xl text-5xl text-center text-blue-500 ">Best Services</h2>
-
+        <h2 className="font-cookie w-full md:w-auto flex justify-center md:justify-start lg:text-6xl md:text-6xl sm:text-5xl text-5xl text-center text-blue-500 ">
+          Best Services
+        </h2>
       </div>
       <div className="px-4 lg:px-20 pb-6 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <div className="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
-          <img src="/image/service-logos/ac.svg" className="w-14 h-14 object-cover" />
+          <img
+            src="/image/service-logos/ac.svg"
+            className="w-14 h-14 object-cover"
+          />
           <div>AC Repairing & Installation</div>
         </div>
 
         <div className="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
-          <img src="/image/service-logos/washing-machine.svg" className="w-14 h-14 object-cover" />
+          <img
+            src="/image/service-logos/washing-machine.svg"
+            className="w-14 h-14 object-cover"
+          />
           <div>Washing Machine Repairing</div>
         </div>
 
         <div className="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
-          <img src="/image/service-logos/refrigerator.svg" className="w-14 h-14 object-cover" />
+          <img
+            src="/image/service-logos/refrigerator.svg"
+            className="w-14 h-14 object-cover"
+          />
           <div>Refrigerator Repairing</div>
         </div>
 
         <div className="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
-          <img src="/image/service-logos/water-purifier.svg" className="w-14 h-14 object-cover" />
+          <img
+            src="/image/service-logos/water-purifier.svg"
+            className="w-14 h-14 object-cover"
+          />
           <div>Water Purifier Repairing</div>
         </div>
 
         <div className="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
-          <img src="/image/service-logos/cooler.svg" className="w-14 h-14 object-cover" />
+          <img
+            src="/image/service-logos/cooler.svg"
+            className="w-14 h-14 object-cover"
+          />
           <div>Room Cooler Repairing</div>
         </div>
 
         <div className="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
-          <img src="/image/service-logos/Microwave.svg" className="w-14 h-14 object-cover" />
+          <img
+            src="/image/service-logos/Microwave.svg"
+            className="w-14 h-14 object-cover"
+          />
           <div>Microwave Repair</div>
         </div>
 
         <div className="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
-          <img src="/image/service-logos/fan.svg" className="w-14 h-14 object-cover" />
+          <img
+            src="/image/service-logos/fan.svg"
+            className="w-14 h-14 object-cover"
+          />
           <div>Fan Installation & Repairing</div>
         </div>
 
         <div className="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
-          <img src="/image/service-logos/cctv.svg" className="w-14 h-14 object-cover" />
+          <img
+            src="/image/service-logos/cctv.svg"
+            className="w-14 h-14 object-cover"
+          />
           <div>CCTV Installation & Repair</div>
         </div>
 
         <div className="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
-          <img src="/image/service-logos/house wireing.svg" className="w-14 h-14 object-cover" />
+          <img
+            src="/image/service-logos/house wireing.svg"
+            className="w-14 h-14 object-cover"
+          />
           <div>House Wiring</div>
         </div>
 
         <div className="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
-          <img src="/image/service-logos/electricity-maintanance.svg" className="w-14 h-14 object-cover" />
+          <img
+            src="/image/service-logos/electricity-maintanance.svg"
+            className="w-14 h-14 object-cover"
+          />
           <div>Electrical Maintenance</div>
         </div>
 
         <div className="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
-          <img src="/image/service-logos/Lightning.svg" className="w-14 h-14 object-cover" />
+          <img
+            src="/image/service-logos/Lightning.svg"
+            className="w-14 h-14 object-cover"
+          />
           <div>Light Installation & Repairing</div>
         </div>
       </div>
@@ -270,11 +307,13 @@ export default function Home() {
         <h1 className="font-julius lg:text-5xl md:text-4xl sm:text-3xl text-3xl text-center text-gray-700">
           COMPLETE THE TASK WITH
         </h1>
-        <h2 className="font-cookie lg:text-6xl md:text-6xl sm:text-5xl text-4xl text-center text-blue-500">Experienced Professionals</h2>
+        <h2 className="font-cookie lg:text-6xl md:text-6xl sm:text-5xl text-4xl text-center text-blue-500">
+          Experienced Professionals
+        </h2>
       </div>
-      {/* <Video /> */}
-      <div class="w-full flex flex-col justify-center items-center py-4 px-4">
-        <h1 class="font-julius lg:text-5xl md:text-4xl sm:text-3xl text-3xl text-center flex text-gray-700 mb-2  ">
+      <Video />
+      <div className="w-full flex flex-col justify-center items-center py-4 px-4">
+        <h1 className="font-julius lg:text-5xl md:text-4xl sm:text-3xl text-3xl text-center flex text-gray-700 mb-2  ">
           <WiStars color="orange" />
           How to book a service
           <WiStars color="orange" />
@@ -298,18 +337,22 @@ export default function Home() {
           <hr className="flex-grow border-gray-300" />
         </div>
         <button className="lg:w-full md:w-full sm:w-full w-full border border-blue-500 text-blue-500 font-semibold py-3 px-6 rounded-md flex items-center justify-center">
-          Become a service provider <span className="ml-2"><FaUserPlus /></span>
+          Become a service provider{" "}
+          <span className="ml-2">
+            <FaUserPlus />
+          </span>
         </button>
       </div>
       <div className="w-full flex flex-col justify-center items-center py-4 px-4">
         <h1 className="font-julius  lg:text-5xl md:text-4xl sm:text-3xl text-3xl text-center text-gray-700">
           SOME REVIEWS OF OUR
         </h1>
-        <h2 className="font-cookie lg:text-6xl md:text-6xl sm:text-5xl text-5xl text-center text-blue-500">Satisfied Customers</h2>
-        <Testimonials />
+        <h2 className="font-cookie lg:text-6xl md:text-6xl sm:text-5xl text-5xl text-center text-blue-500">
+          Satisfied Customers
+        </h2>
+        {/* <Testimonials /> */}
       </div>
       <Footer />
     </main>
-
   );
 }
