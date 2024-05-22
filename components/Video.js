@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 
 const VideoCarousel = () => {
     const videos = [
@@ -35,8 +36,32 @@ const VideoCarousel = () => {
 
     const videoChunks = chunkArray(videos, isMobile ? 1 : 3);
 
+    const renderArrowPrev = (onClickHandler, hasPrev, label) =>
+        hasPrev && (
+            <button
+                type="button"
+                onClick={onClickHandler}
+                title={label}
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-700 hover:bg-gray-800 text-white rounded-full p-2 z-10 focus:outline-none"
+            >
+                <MdChevronLeft className="w-6 h-6" />
+            </button>
+        );
+
+    const renderArrowNext = (onClickHandler, hasNext, label) =>
+        hasNext && (
+            <button
+                type="button"
+                onClick={onClickHandler}
+                title={label}
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-700 hover:bg-gray-800 text-white rounded-full p-2 z-10 focus:outline-none"
+            >
+                <MdChevronRight className="w-6 h-6" />
+            </button>
+        );
+
     return (
-        <div className="carousel-container">
+        <div className="carousel-container relative">
             <Carousel
                 showThumbs={false}
                 showStatus={false}
@@ -45,12 +70,14 @@ const VideoCarousel = () => {
                 autoPlay
                 interval={8000}
                 transitionTime={500}
+                renderArrowPrev={renderArrowPrev}
+                renderArrowNext={renderArrowNext}
             >
                 {videoChunks.map((chunk, index) => (
-                    <div key={index} className="video-group">
+                    <div key={index} className="video-group flex justify-center gap-4">
                         {chunk.map((video, idx) => (
-                            <div key={idx} className="video-wrapper">
-                                <video loop muted autoPlay className="video shadow-lg border">
+                            <div key={idx} className="video-wrapper flex-1">
+                                <video loop muted autoPlay className="video shadow-lg border rounded-lg">
                                     <source src={video} type="video/mp4" />
                                     Your browser does not support the video tag.
                                 </video>
@@ -64,14 +91,6 @@ const VideoCarousel = () => {
                     max-width: 1200px;
                     margin: 0 auto;
                     padding: 20px;
-                }
-                .video-group {
-                    display: flex;
-                    justify-content: space-between;
-                }
-                .video-wrapper {
-                    flex: 1;
-                    margin: 0 10px;
                 }
                 .video {
                     width: 100%;

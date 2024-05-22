@@ -3,19 +3,19 @@ import { useEffect, useState } from 'react';
 const testimonials = [
     {
         name: 'Maria Kate',
-        image: '/image/testimonial/img1.webp',
+        image: 'https://plus.unsplash.com/premium_photo-1707932485795-1d0aed727376?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxMDZ8fHxlbnwwfHx8fHw%3D',
         testimonial:
             'In ac turpis justo. Vivamus auctor quam vitae odio feugiat pulvinar. Sed semper ligula sed lorem tincidunt dignissim. Nam sed cursus lectus. Proin non rutrum magna. Proin gravida, justo et imperdiet tristique turpis nisi viverra.',
     },
     {
         name: 'John Doe',
-        image: '/image/testimonial/img2.webp',
+        image: 'https://plus.unsplash.com/premium_photo-1707932485795-1d0aed727376?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxMDZ8fHxlbnwwfHx8fHw%3D',
         testimonial:
             'Maecenas auctor, quam eget tincidunt pretium, felis diam semper turpis, sed scelerisque diam libero facilisis libero. Quisque vitae semper metus. Aliquam eu dui aliquam, faucibus metus quis, elementum nunc.',
     },
     {
         name: 'Anna Deynah',
-        image: '/image/testimonial/img3.webp',
+        image: 'https://plus.unsplash.com/premium_photo-1707932485795-1d0aed727376?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxMDZ8fHxlbnwwfHx8fHw%3D',
         testimonial:
             'Duis sagittis, turpis in ullamcorper venenatis, ligula nibh porta dui, sit amet rutrum enim massa in ante. Curabitur in justo at lorem laoreet ultricies. Nunc ligula felis, sagittis eget nisi vitae ex arcu sit amet erat.',
     },

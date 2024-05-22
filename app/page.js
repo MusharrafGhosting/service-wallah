@@ -7,7 +7,7 @@ import { RxDoubleArrowRight } from "react-icons/rx";
 import { Carousel } from "@material-tailwind/react";
 import { FaUserPlus } from "react-icons/fa";
 import { WiStars } from "react-icons/wi";
-
+import ServiceShow from "@/components/ServiceShow";
 import Video from "../components/Video";
 import Testimonials from "../components/Testimonials";
 import Link from "next/link";
@@ -217,95 +217,7 @@ export default function Home() {
           Best Services
         </h2>
       </div>
-      <div className="px-4 lg:px-20 pb-6 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        <div className="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
-          <img
-            src="/image/service-logos/ac.svg"
-            className="w-14 h-14 object-cover"
-          />
-          <div>AC Repairing & Installation</div>
-        </div>
-
-        <div className="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
-          <img
-            src="/image/service-logos/washing-machine.svg"
-            className="w-14 h-14 object-cover"
-          />
-          <div>Washing Machine Repairing</div>
-        </div>
-
-        <div className="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
-          <img
-            src="/image/service-logos/refrigerator.svg"
-            className="w-14 h-14 object-cover"
-          />
-          <div>Refrigerator Repairing</div>
-        </div>
-
-        <div className="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
-          <img
-            src="/image/service-logos/water-purifier.svg"
-            className="w-14 h-14 object-cover"
-          />
-          <div>Water Purifier Repairing</div>
-        </div>
-
-        <div className="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
-          <img
-            src="/image/service-logos/cooler.svg"
-            className="w-14 h-14 object-cover"
-          />
-          <div>Room Cooler Repairing</div>
-        </div>
-
-        <div className="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
-          <img
-            src="/image/service-logos/Microwave.svg"
-            className="w-14 h-14 object-cover"
-          />
-          <div>Microwave Repair</div>
-        </div>
-
-        <div className="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
-          <img
-            src="/image/service-logos/fan.svg"
-            className="w-14 h-14 object-cover"
-          />
-          <div>Fan Installation & Repairing</div>
-        </div>
-
-        <div className="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
-          <img
-            src="/image/service-logos/cctv.svg"
-            className="w-14 h-14 object-cover"
-          />
-          <div>CCTV Installation & Repair</div>
-        </div>
-
-        <div className="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
-          <img
-            src="/image/service-logos/house wireing.svg"
-            className="w-14 h-14 object-cover"
-          />
-          <div>House Wiring</div>
-        </div>
-
-        <div className="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
-          <img
-            src="/image/service-logos/electricity-maintanance.svg"
-            className="w-14 h-14 object-cover"
-          />
-          <div>Electrical Maintenance</div>
-        </div>
-
-        <div className="bg-gray-300 p-4 flex flex-col items-center gap-2 rounded-lg">
-          <img
-            src="/image/service-logos/Lightning.svg"
-            className="w-14 h-14 object-cover"
-          />
-          <div>Light Installation & Repairing</div>
-        </div>
-      </div>
+       <ServiceShow />
       <div className="w-full flex flex-col justify-center items-center py-4 px-4">
         <h1 className="font-julius lg:text-5xl md:text-4xl sm:text-3xl text-3xl text-center text-gray-700">
           COMPLETE THE TASK WITH
