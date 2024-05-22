@@ -31,7 +31,6 @@ import {
   Tab,
   TabPanel,
 } from "@material-tailwind/react";
-import { FcLike } from "react-icons/fc";
 import {
   FaCalendarCheck,
   FaHistory,
@@ -42,11 +41,10 @@ import {
 import { FaLocationDot, FaUsersGear } from "react-icons/fa6";
 import { IoIosInformationCircle, IoMdMailUnread } from "react-icons/io";
 import { AiFillHome } from "react-icons/ai";
-import { BiLogIn, BiSolidTimeFive } from "react-icons/bi";
+import { BiLogIn } from "react-icons/bi";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import {
-  MdAddModerator,
   MdDashboardCustomize,
   MdManageAccounts,
   MdOutlineManageHistory,
@@ -63,7 +61,7 @@ const services = [
   {
     title: "All Services",
     icon: FaTools,
-    link: "/all=services",
+    link: "/services",
   },
   {
     title: "About",

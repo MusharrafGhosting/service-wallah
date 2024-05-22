@@ -1,103 +1,117 @@
-"use client"
-import React, { useState, useEffect } from 'react';
-import { Carousel } from 'react-responsive-carousel';
-import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { useEffect, useState } from 'react';
+
+const testimonials = [
+    {
+        name: 'Maria Kate',
+        image: '/image/testimonial/img1.webp',
+        testimonial:
+            'In ac turpis justo. Vivamus auctor quam vitae odio feugiat pulvinar. Sed semper ligula sed lorem tincidunt dignissim. Nam sed cursus lectus. Proin non rutrum magna. Proin gravida, justo et imperdiet tristique turpis nisi viverra.',
+    },
+    {
+        name: 'John Doe',
+        image: '/image/testimonial/img2.webp',
+        testimonial:
+            'Maecenas auctor, quam eget tincidunt pretium, felis diam semper turpis, sed scelerisque diam libero facilisis libero. Quisque vitae semper metus. Aliquam eu dui aliquam, faucibus metus quis, elementum nunc.',
+    },
+    {
+        name: 'Anna Deynah',
+        image: '/image/testimonial/img3.webp',
+        testimonial:
+            'Duis sagittis, turpis in ullamcorper venenatis, ligula nibh porta dui, sit amet rutrum enim massa in ante. Curabitur in justo at lorem laoreet ultricies. Nunc ligula felis, sagittis eget nisi vitae ex arcu sit amet erat.',
+    },
+];
 
 const Testimonials = () => {
-    const testimonials = [
-        {
-            name: 'Hanna Lisem',
-            title: 'Project Manager',
-            image: 'https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            quote: 'Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat',
-        },
-        {
-            name: 'Ronne Galle',
-            title: 'Designer',
-            image: 'https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            quote: 'Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat',
-        },
-        {
-            name: 'Ronne Galle',
-            title: 'Designer',
-            image: 'https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            quote: 'Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat',
-        },
-        {
-            name: 'Ronne Galle',
-            title: 'Designer',
-            image: 'https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            quote: 'Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat',
-        },
-        {
-            name: 'Ronne Galle',
-            title: 'Designer',
-            image: 'https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            quote: 'Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat',
-        },
-        // Add other testimonials
-    ];
-
-    const [centerSlidePercentage, setCenterSlidePercentage] = useState(33.33);
-
-    const updateCenterSlidePercentage = () => {
-        const screenWidth = window.innerWidth;
-        if (screenWidth <= 540) {
-            setCenterSlidePercentage(100); // Mobile view
-        } else if (screenWidth <= 1024) {
-            setCenterSlidePercentage(50); // Tablet view
-        } else {
-            setCenterSlidePercentage(33.33); // Desktop view
-        }
-    };
+    const [activeIndex, setActiveIndex] = useState(0);
 
     useEffect(() => {
-        updateCenterSlidePercentage();
-        window.addEventListener('resize', updateCenterSlidePercentage);
-        return () => {
-            window.removeEventListener('resize', updateCenterSlidePercentage);
-        };
-    }, []);
+        const interval = setInterval(() => {
+            setActiveIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
+        }, 20000); // Change slide every 5 seconds
 
-    const settings = {
-        showArrows: true,
-        showThumbs: false,
-        showStatus: false,
-        infiniteLoop: true,
-        autoPlay: true,
-        interval: 5000,
-        stopOnHover: true,
-        centerMode: true,
-        centerSlidePercentage: centerSlidePercentage,
-        swipeable: true,
-        dynamicHeight: false,
-        emulateTouch: true,
-    };
+        return () => clearInterval(interval); // Clear interval on component unmount
+    }, []); // Empty dependency array to run only once
 
     return (
-        <div className="flex flex-col items-center">
-            <div className="overflow-x-hidden w-screen p-4">
-                <Carousel {...settings}>
-                    {testimonials.map((testimonial, index) => (
-                        <div key={index} className="p-4">
-                            <div className="bg-white p-6 rounded-lg shadow-lg">
-                                <div className='flex justify-center'>
-                                    <img
-                                        src={testimonial.image}
-                                        alt={testimonial.name}
-                                        className="w-16 h-16 rounded-full object-cover"
-                                    />
-                                </div>
-                                <div className="text-center mt-4">
-                                    <h3 className="text-xl font-semibold text-blue-600">{testimonial.name}</h3>
-                                    <p className="text-gray-500">{testimonial.title}</p>
-                                    <p className="mt-4 text-gray-700">&quot;{testimonial.quote}&quot;</p>
+        <div className="container my-12 mx-auto md:px-6">
+            <section className="  text-center">
+                <div className="relative" id="carouselExampleCaptions">
+                    <div className="relative w-full overflow-hidden">
+                        {testimonials.map((testimonial, index) => (
+                            <div
+                                key={index}
+                                className={`relative float-left -mr-[100%] w-full transition-transform duration-[600ms] ease-in-out ${index === activeIndex ? 'block' : 'hidden'
+                                    }`}
+                            >
+                                <img
+                                    className="mx-auto mb-6 rounded-full shadow-lg dark:shadow-black/20 w-[150px]"
+                                    src={testimonial.image}
+                                    alt="avatar"
+                                />
+                                <div className="flex flex-wrap justify-center">
+                                    <div className="w-full shrink-0 grow-0 basis-auto px-3 lg:w-8/12">
+                                        <h5 className="mb-2 text-lg font-bold">{testimonial.name}</h5>
+                                        <p className="mb-6 text-neutral-500 dark:text-neutral-300">
+                                            {testimonial.testimonial}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
-                </Carousel>
-            </div>
+                        ))}
+                    </div>
+
+                    <button
+                        className="absolute top-0 bottom-0 left-0 z-[1] flex w-[15%] items-center justify-center border-0 bg-none p-0 text-center text-white opacity-50 transition-opacity duration-150 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] hover:text-white hover:no-underline hover:opacity-90 hover:outline-none focus:text-white focus:no-underline focus:opacity-90 focus:outline-none"
+                        type="button"
+                        onClick={() =>
+                            setActiveIndex((prevIndex) =>
+                                prevIndex === 0 ? testimonials.length - 1 : prevIndex - 1
+                            )
+                        }
+                    >
+                        <span className="inline-block h-8 w-8">
+                            <svg
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 16 16"
+                                className="text-neutral-600 text-black dark:text-neutral-300"
+                            >
+                                <path
+                                    fill="currentColor"
+                                    d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
+                                />
+                            </svg>
+                        </span>
+                        <span className="absolute -m-px h-px w-px overflow-hidden    whitespace-nowrap border-0 p-0 clip-rect(0,0,0,0)">
+                            Previous
+                        </span>
+                    </button>
+                    <button
+                        className="absolute top-0 bottom-0 right-0 z-[1] flex w-[15%] items-center justify-center border-0 bg-none p-0 text-center text-white opacity-50 transition-opacity duration-150 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] hover:text-white hover:no-underline hover:opacity-90 hover:outline-none focus:text-white focus:no-underline focus:opacity-90 focus:outline-none"
+                        type="button"
+                        onClick={() =>
+                            setActiveIndex((prevIndex) => (prevIndex + 1) % testimonials.length)
+                        }
+                    >
+                        <span className="inline-block h-8 w-8">
+                            <svg
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 16 16"
+                                className="text-neutral-600 text-black dark:text-neutral-300"
+                            >
+                                <path
+                                    fill="currentColor"
+                                    d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
+                                />
+                            </svg>
+                        </span>
+                        <span className="absolute -m-px h-px w-px overflow-hidden  whitespace-nowrap border-0 p-0 clip-rect(0,0,0,0)">
+                            Next
+                        </span>
+                    </button>
+                </div>
+            </section>
         </div>
     );
 };
