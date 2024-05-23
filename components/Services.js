@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LuArrowUpRightSquare } from "react-icons/lu";
+import { IoMdOpen } from "react-icons/io";
 
 const Service = ({ iconSrc, title, services, link }) => {
   return (
@@ -19,7 +19,9 @@ const Service = ({ iconSrc, title, services, link }) => {
         </div>
         <div>
           {services.length === 0 ? (
-            <div className="text-center my-4">🫠Uh oh, There is no services in {title}</div>
+            <div className="text-center my-4">
+              🫠Uh oh, There is no services in {title}
+            </div>
           ) : (
             services.map((service, index) => (
               <div
@@ -41,7 +43,7 @@ const Service = ({ iconSrc, title, services, link }) => {
         <a className="text-center flex justify-center items-center gap-2 bg-gray-700 text-white py-2 rounded-md">
           View{" "}
           <span aria-hidden="true">
-            <LuArrowUpRightSquare />
+            <IoMdOpen />
           </span>
         </a>
       </Link>

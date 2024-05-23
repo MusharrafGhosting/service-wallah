@@ -34,13 +34,14 @@ import {
 import {
   FaCalendarCheck,
   FaHistory,
+  FaInfoCircle,
   FaSearch,
   FaTools,
   FaUser,
 } from "react-icons/fa";
 import { FaLocationDot, FaUsersGear } from "react-icons/fa6";
 import { IoIosInformationCircle, IoMdMailUnread } from "react-icons/io";
-import { AiFillHome } from "react-icons/ai";
+import { AiFillHome, AiFillWarning } from "react-icons/ai";
 import { BiLogIn } from "react-icons/bi";
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -51,6 +52,7 @@ import {
   MdOutlinePayment,
 } from "react-icons/md";
 import { IoLogOut } from "react-icons/io5";
+import { RxCross1 } from "react-icons/rx";
 
 const services = [
   {
@@ -161,7 +163,7 @@ function NavList() {
       function getTopBookedServices(services, topN) {
         return services
           .sort((a, b) => b.bookings.length - a.bookings.length)
-          .filter(service => service.status === "active")
+          .filter((service) => service.status === "active")
           .slice(0, topN);
       }
 
@@ -291,6 +293,7 @@ function NavList() {
 export default function Nav() {
   const [openNav, setOpenNav] = useState(false);
   const [open3, setOpen3] = useState(false);
+
   const [user, setUser] = useState({
     image: {
       url: "",
@@ -348,6 +351,7 @@ export default function Nav() {
           phoneNumber: "",
           password: "",
         });
+        setErrorMessage("");
         gettingUser();
       } else {
         setErrorMessage(data.message);
@@ -358,6 +362,49 @@ export default function Nav() {
       );
     }
   }
+  // Registration
+  const [open4, setOpen4] = useState(false);
+  const handleOpen4 = () => setOpen4(!open4);
+  const [registerError, setRegisterError] = useState("");
+  const [otp, setOtp] = useState("");
+
+  const handleChange = (e) => {
+    setOtp(e.target.value);
+  };
+  function generateOTP() {
+    // Generate a random number between 1000 and 9999
+    const otp = Math.floor(1000 + Math.random() * 9000);
+    return otp.toString();
+  }
+  const [generatedOTP, setGeneratedOtp] = useState();
+  const [type, setType] = useState("paypal");
+  const SendingOtp = async () => {
+    if (
+      !registerData.name ||
+      !registerData.phoneNumber ||
+      !registerData.password
+    ) {
+      setRegisterError("Invalid data");
+      return;
+    }
+    console.log(" Sending OTP function triggered")
+    const authkey = "15d7c1359e59f369";
+    const name = "service wallah account";
+    const mobile = registerData.phoneNumber;
+    const country_code = "+91";
+    const SID = "13608";
+    const otp = generateOTP();
+    console.log(otp);
+    setGeneratedOtp(otp);
+    const url = `https://api.authkey.io/request?authkey=${authkey}&mobile=${mobile}&country_code=${country_code}&sid=${SID}&company=${name}&otp=${otp}`;
+    await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    setOpen4(true);
+  };
   async function handleRegister(e) {
     e.preventDefault();
     if (
@@ -365,10 +412,14 @@ export default function Nav() {
       !registerData.phoneNumber ||
       !registerData.password
     ) {
-      setErrorMessage("Invalid data");
+      setRegisterError("Invalid data");
       return;
     }
     try {
+      if (otp === undefined || otp !== generatedOTP) {
+        setRegisterError("Invalid OTP");
+        return;
+      }
       const response = await fetch(
         "/api/users/register",
         {
@@ -381,9 +432,12 @@ export default function Nav() {
         { cache: "no-store" }
       );
       const data = await response.json();
-      // console.log(data);
+      console.log(data);
       if (response.ok) {
-        setOpen3(false);
+        setRegisterError("");
+        // setOpen3(false);
+        setType("card")
+        setOpen4(false);
         setRegisterData({
           name: "",
           phoneNumber: "",
@@ -392,12 +446,9 @@ export default function Nav() {
         });
       }
     } catch (err) {
-      setErrorMessage(`Something went wrong while Regestering`);
+      setRegisterError(`Something went wrong while Regestering`);
     }
   }
-  // useEffect(() => {
-  //   console.log(user);
-  // }, [user]);
   useEffect(() => {
     const id = localStorage.getItem("token");
     if (id) {
@@ -411,7 +462,7 @@ export default function Nav() {
     );
   }, []);
   const handleOpen3 = () => setOpen3(!open3);
-  const [type, setType] = React.useState("card");
+  
 
   return (
     <div className="mx-auto max-w-full px-4 py-2 rounded-none shadow-none bprder-none bg-transparent z-50">
@@ -583,114 +634,116 @@ export default function Nav() {
           <Dialog
             open={open3}
             handler={handleOpen3}
+            dismiss={{ enabled: false }}
             size="sm"
             animate={{
               mount: { scale: 1, y: 0 },
               unmount: { scale: 0.9, y: -100 },
             }}
           >
-            <DialogBody className="h-auto">
-              <Card className="bg-none shadow-none">
-                <CardBody>
-                  <Tabs value={type} className="">
-                    <h1 className="  text-2xl mb-4 text-center text-indigo-400 font-bold">
-                      Welcome to Service Wallah
-                    </h1>
+            <CardBody>
+              <Tabs value={type} className="">
+                <div className="flex justify-between items-center mb-4">
+                  <h1 className="text-md text-center text-gray-800">
+                    Welcome to Service Wallah
+                  </h1>
+                  <RxCross1 size={20} onClick={handleOpen3} className="cursor-pointer" />
+                </div>
 
-                    <TabsHeader className="relative z-0 ">
-                      <Tab value="card" onClick={() => setType("card")}>
-                        LogIn
-                      </Tab>
-                      <Tab value="paypal" onClick={() => setType("paypal")}>
-                        Register Now
-                      </Tab>
-                    </TabsHeader>
-                    <TabsBody
-                      className="!overflow-x-hidden"
-                      animate={{
-                        initial: {
-                          x: type === "card" ? 400 : -400,
-                        },
-                        mount: {
-                          x: 0,
-                        },
-                        unmount: {
-                          x: type === "card" ? 400 : -400,
-                        },
-                      }}
+                <TabsHeader className="relative z-0 ">
+                  <Tab value="card" onClick={() => setType("card")}>
+                    LogIn
+                  </Tab>
+                  <Tab value="paypal" onClick={() => setType("paypal")}>
+                    Register Now
+                  </Tab>
+                </TabsHeader>
+                <TabsBody
+                  className="!overflow-x-hidden"
+                  animate={{
+                    initial: {
+                      x: type === "card" ? 400 : -400,
+                    },
+                    mount: {
+                      x: 0,
+                    },
+                    unmount: {
+                      x: type === "card" ? 400 : -400,
+                    },
+                  }}
+                >
+                  <TabPanel value="card" className="p-0">
+                    <form
+                      className="flex flex-col gap-4 justify-center h-[35vh]"
+                      onSubmit={handleLogin}
                     >
-                      <TabPanel value="card" className="p-0">
-                        <form
-                          className="flex flex-col gap-4 justify-center h-[38vh]"
-                          onSubmit={handleLogin}
+                      <div className="w-full ">
+                        <Input
+                          type="tel"
+                          label="Phone Number"
+                          value={loginData.phoneNumber}
+                          onChange={(e) =>
+                            setLoginData({
+                              ...loginData,
+                              phoneNumber: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="w-full">
+                        <Input
+                          type="password"
+                          label="Password"
+                          value={loginData.password}
+                          onChange={(e) =>
+                            setLoginData({
+                              ...loginData,
+                              password: e.target.value,
+                            })
+                          }
+                        />
+                        <Typography
+                          variant="small"
+                          color="gray"
+                          className="mt-2 flex flex-col justify-center gap-1 font-normal"
                         >
-                          <div className="w-full ">
-                            <Input
-                              type="tel"
-                              label="Phone Number"
-                              value={loginData.phoneNumber}
-                              onChange={(e) =>
-                                setLoginData({
-                                  ...loginData,
-                                  phoneNumber: e.target.value,
-                                })
-                              }
-                            />
-                          </div>
-                          <div className="w-full">
-                            <Input
-                              type="password"
-                              label="Password"
-                              value={loginData.password}
-                              onChange={(e) =>
-                                setLoginData({
-                                  ...loginData,
-                                  password: e.target.value,
-                                })
-                              }
-                            />
-                            <Typography
-                              variant="small"
-                              color="gray"
-                              className="mt-2 flex flex-col justify-center gap-1 font-normal"
+                          <span className="flex gap-1 items-center">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              fill="currentColor"
+                              className="-mt-px h-4 w-4"
                             >
-                              <span className="flex gap-1 items-center">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  viewBox="0 0 24 24"
-                                  fill="currentColor"
-                                  className="-mt-px h-4 w-4"
-                                >
-                                  <path
-                                    fillRule="evenodd"
-                                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
-                                    clipRule="evenodd"
-                                  />
-                                </svg>
-                                Use at least 8 characters, one uppercase, one
-                                lowercase and one number.
-                              </span>
-                              {errorMessage && (
-                                <span className="text-red-500 flex gap-1 items-center">
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                    fill="currentColor"
-                                    className="-mt-px h-4 w-4"
-                                  >
-                                    <path
-                                      fillRule="evenodd"
-                                      d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
-                                      clipRule="evenodd"
-                                    />
-                                  </svg>
-                                  {errorMessage}
-                                </span>
-                              )}
-                            </Typography>
-                          </div>
-                          <div className="flex gap-2 justify-center">
-                            <Button
+                              <path
+                                fillRule="evenodd"
+                                d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                            Use at least 8 characters, one uppercase, one
+                            lowercase and one number.
+                          </span>
+                          {errorMessage && (
+                            <span className="text-red-500 flex gap-1 items-center">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="-mt-px h-4 w-4"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                              {errorMessage}
+                            </span>
+                          )}
+                        </Typography>
+                      </div>
+                      <div className="flex gap-2 justify-center">
+                        {/* <Button
                               variant="gradient"
                               color="red"
                               onClick={handleOpen3}
@@ -698,138 +751,186 @@ export default function Nav() {
                               fullWidth
                             >
                               <span>Cancel</span>
-                            </Button>
-                            <Button
-                              fullWidth
-                              size="lg"
-                              type="submit"
-                              variant="gradient"
-                              color="gray"
-                            >
-                              Login
-                            </Button>
-                          </div>
-                        </form>
-                      </TabPanel>
-                      <TabPanel value="paypal" className="p-0">
-                        <form
-                          className="mt-7 flex flex-col gap-4 "
-                          onSubmit={handleRegister}
+                            </Button> */}
+                        <Button
+                          fullWidth
+                          size="lg"
+                          type="submit"
+                          variant="gradient"
+                          color="blue"
                         >
-                          <div className="w-full">
-                            <Input
-                              label="Fullname"
-                              value={registerData.name}
-                              onChange={(e) =>
-                                setRegisterData({
-                                  ...registerData,
-                                  name: e.target.value,
-                                })
-                              }
-                            />
-                          </div>
-                          <div className="w-full">
-                            <Input
-                              type="tel"
-                              label="Phone Number"
-                              value={registerData.phoneNumber}
-                              onChange={(e) =>
-                                setRegisterData({
-                                  ...registerData,
-                                  phoneNumber: e.target.value,
-                                })
-                              }
-                            />
-                          </div>
-                          <div className="relative flex w-full max-w-full">
-                            <Input
-                              type="email"
-                              label="Email Address"
-                              value={registerData.email}
-                              onChange={(e) =>
-                                setRegisterData({
-                                  ...registerData,
-                                  email: e.target.value,
-                                })
-                              }
-                              className="pr-20"
-                              containerProps={{
-                                className: "min-w-0",
-                              }}
-                            />
-                          </div>
-                          <div className="w-full">
-                            <Input
-                              type="password"
-                              label="Password"
-                              value={registerData.password}
-                              onChange={(e) =>
-                                setRegisterData({
-                                  ...registerData,
-                                  password: e.target.value,
-                                })
-                              }
-                            />
-                            <Typography
-                              variant="small"
-                              color="gray"
-                              className="mt-2 flex flex-col justify-center gap-1 font-normal"
+                          Login
+                        </Button>
+                      </div>
+                    </form>
+                  </TabPanel>
+                  <TabPanel value="paypal" className="p-0">
+                    <div className="mt-7 flex flex-col gap-4 ">
+                      <div className="w-full">
+                        <Input
+                          label="Fullname"
+                          value={registerData.name}
+                          onChange={(e) =>
+                            setRegisterData({
+                              ...registerData,
+                              name: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="w-full">
+                        <Input
+                          type="tel"
+                          label="Phone Number"
+                          value={registerData.phoneNumber}
+                          onChange={(e) =>
+                            setRegisterData({
+                              ...registerData,
+                              phoneNumber: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="relative flex w-full max-w-full">
+                        <Input
+                          type="email"
+                          label="Email Address"
+                          value={registerData.email}
+                          onChange={(e) =>
+                            setRegisterData({
+                              ...registerData,
+                              email: e.target.value,
+                            })
+                          }
+                          className="pr-20"
+                          containerProps={{
+                            className: "min-w-0",
+                          }}
+                        />
+                      </div>
+                      <div className="w-full">
+                        <Input
+                          type="password"
+                          label="Password"
+                          value={registerData.password}
+                          onChange={(e) =>
+                            setRegisterData({
+                              ...registerData,
+                              password: e.target.value,
+                            })
+                          }
+                        />
+                        <Typography
+                          variant="small"
+                          color="gray"
+                          className="mt-2 flex flex-col justify-center gap-1 font-normal"
+                        >
+                          <span className="flex gap-1 items-center">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              fill="currentColor"
+                              className="-mt-px h-4 w-4"
                             >
-                              <span className="flex gap-1 items-center">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  viewBox="0 0 24 24"
-                                  fill="currentColor"
-                                  className="-mt-px h-4 w-4"
-                                >
-                                  <path
-                                    fillRule="evenodd"
-                                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
-                                    clipRule="evenodd"
-                                  />
-                                </svg>
-                                Use at least 8 characters, one uppercase, one
-                                lowercase and one number.
-                              </span>
-                              {errorMessage && (
-                                <span className="text-red-500 flex gap-1 items-center">
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                    fill="currentColor"
-                                    className="-mt-px h-4 w-4"
-                                  >
-                                    <path
-                                      fillRule="evenodd"
-                                      d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
-                                      clipRule="evenodd"
-                                    />
-                                  </svg>
-                                  {errorMessage}
-                                </span>
-                              )}
-                            </Typography>
-                          </div>
-                          <div className="flex gap-4 justify-center">
-                            <Button
+                              <path
+                                fillRule="evenodd"
+                                d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                            Use at least 8 characters, one uppercase, one
+                            lowercase and one number.
+                          </span>
+                          {registerError && (
+                            <span className="text-red-500 flex gap-1 items-center">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="-mt-px h-4 w-4"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                              {registerError}
+                            </span>
+                          )}
+                        </Typography>
+                      </div>
+                      <div className="flex gap-4 justify-center">
+                        {/* <Button
                               variant="gradient"
                               color="red"
                               onClick={handleOpen3}
                               className="mr-1"
                             >
                               <span>Cancel</span>
-                            </Button>
-                            <Button size="lg" type="submit">
-                              Register
-                            </Button>
-                          </div>
-                        </form>
-                      </TabPanel>
-                    </TabsBody>
-                  </Tabs>
-                </CardBody>
-              </Card>
-            </DialogBody>
+                            </Button> */}
+                        <Button
+                          onClick={SendingOtp}
+                          variant="gradient"
+                          fullWidth
+                          size="lg"
+                          color="blue"
+                        >
+                          Verify Number
+                        </Button>
+                      </div>
+                    </div>
+                  </TabPanel>
+                </TabsBody>
+              </Tabs>
+            </CardBody>
+          </Dialog>
+          <Dialog
+            open={open4}
+            handler={handleOpen4}
+            size="xs"
+            dismiss={{ enabled: false }}
+            animate={{
+              mount: { scale: 1, y: 0 },
+              unmount: { scale: 0.9, y: -100 },
+            }}
+          >
+            <div className="bg-white rounded-lg shadow-lg p-8">
+              <h2 className="text-2xl font-bold mb-4 text-center text-blue-500">
+                Verify OTP
+              </h2>
+              <form onSubmit={handleRegister} className="flex flex-col gap-4">
+                <Input
+                  label="Enter OTP"
+                  maxLength={4}
+                  color="blue"
+                  value={otp}
+                  size="lg"
+                  minLength={4}
+                  onChange={handleChange}
+                />
+                {registerError && (
+                  <p className="text-red-500 flex gap-1 text-xs items-center">
+                    <FaInfoCircle />
+                    <span>{registerError}</span>
+                  </p>
+                )}
+                <p className="text-gray-600 flex gap-1 text-xs items-center">
+                  <FaInfoCircle />{" "}
+                  <span>
+                    Please enter the 4-digit OTP sent to your mobile number{" "}
+                    {registerData.phoneNumber}.
+                  </span>
+                </p>
+
+                <button
+                  type="submit"
+                  className="w-full bg-blue-400 text-white p-3 rounded hover:bg-blue-600 transition duration-200"
+                >
+                  Verify OTP
+                </button>
+              </form>
+            </div>
           </Dialog>
         </div>
         <IconButton
