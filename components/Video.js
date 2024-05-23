@@ -42,7 +42,7 @@ const VideoCarousel = () => {
                 type="button"
                 onClick={onClickHandler}
                 title={label}
-                className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-700 hover:bg-gray-800 text-white rounded-full p-2 z-10 focus:outline-none"
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-700 hover:bg-gray-800 text-white rounded-full p-2 z-10 focus:outline-none"
             >
                 <MdChevronLeft className="w-6 h-6" />
             </button>
@@ -54,7 +54,7 @@ const VideoCarousel = () => {
                 type="button"
                 onClick={onClickHandler}
                 title={label}
-                className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-700 hover:bg-gray-800 text-white rounded-full p-2 z-10 focus:outline-none"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-700 hover:bg-gray-800 text-white rounded-full p-2 z-10 focus:outline-none"
             >
                 <MdChevronRight className="w-6 h-6" />
             </button>
@@ -91,6 +91,7 @@ const VideoCarousel = () => {
                     max-width: 1200px;
                     margin: 0 auto;
                     padding: 20px;
+                    position: relative; /* Ensure the container is the reference for absolute positioning */
                 }
                 .video {
                     width: 100%;
@@ -104,6 +105,18 @@ const VideoCarousel = () => {
                     .video-wrapper {
                         margin: 0;
                     }
+                }
+                /* Additional styles to ensure arrows are placed correctly */
+                .carousel-container :global(.carousel .control-arrow) {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                }
+                .carousel-container :global(.carousel .control-prev) {
+                    left: -50px; /* Adjust this value based on your layout */
+                }
+                .carousel-container :global(.carousel .control-next) {
+                    right: -50px; /* Adjust this value based on your layout */
                 }
             `}</style>
         </div>

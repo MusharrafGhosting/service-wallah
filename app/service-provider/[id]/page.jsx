@@ -256,7 +256,7 @@ const ServiceProvider = () => {
       {loading ? (
         <div className="grid place-items-center min-h-screen">
           <div className="flex flex-col items-center gap-4">
-            <div class="loaction-loader"></div>
+            <div className="loaction-loader"></div>
             <div className="text-2xl font-julius">Loading</div>
           </div>
         </div>
@@ -570,9 +570,9 @@ const ServiceProvider = () => {
                   </Dialog>
                 </div>
                 <div className="p-4 bg-white rounded-lg">
-                  {UpdatedServices?.map((service) => {
+                  {UpdatedServices?.map((service,index) => {
                     return (
-                      <ListItem
+                      <ListItem key={index}
                         ripple={false}
                         className="py-2 text-blue-gray-500 text-xl"
                       >

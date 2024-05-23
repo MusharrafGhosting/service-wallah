@@ -51,6 +51,7 @@ import {
   MdOutlineManageHistory,
   MdOutlinePayment,
 } from "react-icons/md";
+import { AiOutlineShoppingCart } from "react-icons/ai";
 import { IoLogOut } from "react-icons/io5";
 import { RxCross1 } from "react-icons/rx";
 import axios from "axios";
@@ -111,7 +112,7 @@ function ServicesList() {
         <MenuHandler>
           <Typography as="div" variant="small" className="font-medium">
             <ListItem
-              className="flex items-center gap-2 py-2 pr-4 font-medium text-gray-900 bg-white border h-full border-gray-300 rounded-md shadow"
+              className="flex items-center gap-2 py-2 pr-4 font-medium text-gray-900 bg-white border h-full justify-center border-gray-300 rounded-md shadow"
               selected={isMenuOpen || isMobileMenuOpen}
               onClick={() => setIsMobileMenuOpen((cur) => !cur)}
             >
@@ -226,7 +227,14 @@ function NavList() {
           variant="gradient"
           className="flex gap-2 border bg-white border-gray-300 hover:bg-gray-200 shadow py-2 px-3 rounded-full justify-center items-center"
         >
-          <FaSearch className={`  text-[#582FFF;] `} />
+          <FaSearch />
+        </button>
+        <button
+          onClick={handleOpen2}
+          variant="gradient"
+          className="flex gap-2 border bg-white border-gray-300 hover:bg-gray-200 shadow py-2 px-3 rounded-full justify-center items-center"
+        >
+          <FaCartShopping size={20}  />
         </button>
         <Dialog
           open={open2}
@@ -460,6 +468,7 @@ export default function Nav() {
             password: "",
           });
         }
+
       }
     } catch (err) {
       setRegisterError(`Something went wrong while Regestering`);

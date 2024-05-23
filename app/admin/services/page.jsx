@@ -157,7 +157,7 @@ const Services = () => {
       {loading ? (
         <div className="grid place-items-center min-h-screen">
           <div className="flex flex-col items-center gap-4">
-            <div class="loaction-loader"></div>
+            <div className="loaction-loader"></div>
             <div className="text-2xl font-julius">Loading</div>
           </div>
         </div>
@@ -273,9 +273,9 @@ const Services = () => {
             </Dialog>
           </div>
           <div className="px-10 md:px-20 py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {allServices.map((serv) => {
+            {allServices.map((serv,index) => {
               return (
-                <div className="p-4 shadow border bg-white border-gray-300 rounded-lg flex flex-col justify-between gap-4">
+                <div key={index} className="p-4 shadow border bg-white border-gray-300 rounded-lg flex flex-col justify-between gap-4">
                   <div className="flex flex-col gap-4">
                     <div className="flex gap-2 items-center">
                       <img
@@ -317,9 +317,9 @@ const Services = () => {
                         🚫Uh oh, There are no Sub services yet.
                       </div>
                     ) : (
-                      serv.subServices.map((sub) => {
+                      serv.subServices.map((sub,index) => {
                         return (
-                          <div className="flex gap-2 items-center hover:bg-gray-300 rounded cursor-pointer transition-all duration-500 p-2">
+                          <div key={index} className="flex gap-2 items-center hover:bg-gray-300 rounded cursor-pointer transition-all duration-500 p-2">
                             <img
                               src={sub.icon?.url}
                               alt=""
