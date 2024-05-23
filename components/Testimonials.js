@@ -20,6 +20,7 @@ const testimonials = [
     testimonial:
       "Duis sagittis, turpis in ullamcorper venenatis, ligula nibh porta dui, sit amet rutrum enim massa in ante. Curabitur in justo at lorem laoreet ultricies. Nunc ligula felis, sagittis eget nisi vitae ex arcu sit amet erat.",
   },
+
 ];
 
 const Testimonials = () => {
