@@ -16,15 +16,6 @@ import {
 
 const Service = () => {
   const { id } = useParams();
-  const [subService, setSubService] = useState({
-    bookings: [],
-    images: [],
-    icon: {},
-    status: "",
-    name: "",
-    rank: 0,
-    createdAt: "",
-  });
 
   const [service, setService] = useState({});
   const [totalEarning, setTotalEarning] = useState(0);
@@ -34,9 +25,7 @@ const Service = () => {
     try {
       const res = await fetch(`/api/services/${id}`);
       const data = await res.json();
-      setSubService(data);
       setService(data);
-      setTotalEarning(data.totalEarning || 0);
       setFormattedDate(new Date(data.createdAt).toLocaleDateString());
     } catch (err) {
       console.log(err);
@@ -50,6 +39,7 @@ const Service = () => {
   return (
     <div>
       <Nav />
+     
       <div className="px-4 md:px-20 my-6 flex flex-col gap-6">
         <div className="flex flex-col lg:flex-row gap-6 w-full">
           <div className="lg:w-2/3 w-full p-4 grid grid-cols-1 gap-4 rounded-lg">
@@ -61,50 +51,21 @@ const Service = () => {
               <div className="h-px bg-gray-300 w-full"></div>
             </div>
             <div className="flex flex-col w-3/4 max-h-40 overflow-auto gap-4">
-              <Button
+            {service.subServices?.map((sub, index) => {
+              return (
+                <Button key={index}
                 variant="outlined"
                 className="flex bg-gray-200 items-center justify-between px-4 py-2 rounded-lg shadow-md"
               >
                 <img
-                  src="ac-installation-image-url"
-                  alt="AC Installation"
+                  src={sub.icon?.url}
+                  alt={sub.name}
                   className="w-12 h-12 object-cover rounded-lg"
                 />
-                <span>AC Installation</span>
+                <span>{sub.name}</span>
               </Button>
-              <Button
-                variant="outlined"
-                className="flex bg-gray-200 items-center justify-between px-4 py-2 rounded-lg shadow-md"
-              >
-                <img
-                  src="ac-repairing-image-url"
-                  alt="AC Repairing"
-                  className="w-12 h-12 object-cover rounded-lg"
-                />
-                <span>AC Repairing</span>
-              </Button>
-              <Button
-                variant="outlined"
-                className="flex bg-gray-200 items-center justify-between px-4 py-2 rounded-lg shadow-md"
-              >
-                <img
-                  src="ac-repairing-image-url"
-                  alt="AC Repairing"
-                  className="w-12 h-12 object-cover rounded-lg"
-                />
-                <span>AC Repairing</span>
-              </Button>
-              <Button
-                variant="outlined"
-                className="flex bg-gray-200 items-center justify-between px-4 py-2 rounded-lg shadow-md"
-              >
-                <img
-                  src="ac-repairing-image-url"
-                  alt="AC Repairing"
-                  className="w-12 h-12 object-cover rounded-lg"
-                />
-                <span>AC Repairing</span>
-              </Button>
+              );
+            })}
             </div>
           </div>
           <Carousel
@@ -159,7 +120,7 @@ const Service = () => {
               </IconButton>
             )}
           >
-            {subService.images?.map((image) => {
+            {service.images?.map((image) => {
               return (
                 <img
                   key={image.name}
@@ -177,7 +138,7 @@ const Service = () => {
           </h1>
         </div>
         <div className="flex flex-wrap gap-6 justify-center">
-          {subService.subServices?.map((service, index) => (
+          {service.subServices?.map((service, index) => (
             <Card className="w-full max-w-xs shadow-lg" key={index}>
               <CardHeader floated={false} color="blue-gray">
                 <img

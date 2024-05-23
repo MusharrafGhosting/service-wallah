@@ -335,7 +335,7 @@ const ServicePage = () => {
       {loading ? (
         <div className="grid place-items-center min-h-screen">
           <div className="flex flex-col items-center gap-4">
-            <div class="loaction-loader"></div>
+            <div className="loaction-loader"></div>
             <div className="text-2xl font-julius">Loading</div>
           </div>
         </div>
@@ -790,7 +790,7 @@ const ServicePage = () => {
             <div className="flex justify-start gap-6">
               {subServices.map((sub, index) => {
                 return (
-                  <SubServiceCard sub={sub} index={index} serviceId={id} />
+                  <SubServiceCard key={index} sub={sub} index={index} serviceId={id} />
                 );
               })}
             </div>

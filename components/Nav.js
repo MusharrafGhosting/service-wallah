@@ -39,7 +39,7 @@ import {
   FaTools,
   FaUser,
 } from "react-icons/fa";
-import { FaLocationDot, FaUsersGear } from "react-icons/fa6";
+import { FaCartShopping, FaLocationDot, FaUsersGear } from "react-icons/fa6";
 import { IoIosInformationCircle, IoMdMailUnread } from "react-icons/io";
 import { AiFillHome, AiFillWarning } from "react-icons/ai";
 import { BiLogIn } from "react-icons/bi";
@@ -51,6 +51,7 @@ import {
   MdOutlineManageHistory,
   MdOutlinePayment,
 } from "react-icons/md";
+import { AiOutlineShoppingCart } from "react-icons/ai";
 import { IoLogOut } from "react-icons/io5";
 import { RxCross1 } from "react-icons/rx";
 
@@ -110,7 +111,7 @@ function ServicesList() {
         <MenuHandler>
           <Typography as="div" variant="small" className="font-medium">
             <ListItem
-              className="flex items-center gap-2 py-2 pr-4 font-medium text-gray-900 bg-white border h-full border-gray-300 rounded-md shadow"
+              className="flex items-center gap-2 py-2 pr-4 font-medium text-gray-900 bg-white border h-full justify-center border-gray-300 rounded-md shadow"
               selected={isMenuOpen || isMobileMenuOpen}
               onClick={() => setIsMobileMenuOpen((cur) => !cur)}
             >
@@ -225,7 +226,14 @@ function NavList() {
           variant="gradient"
           className="flex gap-2 border bg-white border-gray-300 hover:bg-gray-200 shadow py-2 px-3 rounded-full justify-center items-center"
         >
-          <FaSearch className={`  text-[#582FFF;] `} />
+          <FaSearch />
+        </button>
+        <button
+          onClick={handleOpen2}
+          variant="gradient"
+          className="flex gap-2 border bg-white border-gray-300 hover:bg-gray-200 shadow py-2 px-3 rounded-full justify-center items-center"
+        >
+          <FaCartShopping size={20}  />
         </button>
         <Dialog
           open={open2}
@@ -387,7 +395,7 @@ export default function Nav() {
       setRegisterError("Invalid data");
       return;
     }
-    console.log(" Sending OTP function triggered")
+    console.log(" Sending OTP function triggered");
     const authkey = "15d7c1359e59f369";
     const name = "service wallah account";
     const mobile = registerData.phoneNumber;
@@ -436,7 +444,7 @@ export default function Nav() {
       if (response.ok) {
         setRegisterError("");
         // setOpen3(false);
-        setType("card")
+        setType("card");
         setOpen4(false);
         setRegisterData({
           name: "",
@@ -462,7 +470,6 @@ export default function Nav() {
     );
   }, []);
   const handleOpen3 = () => setOpen3(!open3);
-  
 
   return (
     <div className="mx-auto max-w-full px-4 py-2 rounded-none shadow-none bprder-none bg-transparent z-50">
@@ -647,7 +654,11 @@ export default function Nav() {
                   <h1 className="text-md text-center text-gray-800">
                     Welcome to Service Wallah
                   </h1>
-                  <RxCross1 size={20} onClick={handleOpen3} className="cursor-pointer" />
+                  <RxCross1
+                    size={20}
+                    onClick={handleOpen3}
+                    className="cursor-pointer"
+                  />
                 </div>
 
                 <TabsHeader className="relative z-0 ">
