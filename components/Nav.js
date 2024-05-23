@@ -40,7 +40,7 @@ import {
   FaUser,
 } from "react-icons/fa";
 import { FaLocationDot, FaUsersGear } from "react-icons/fa6";
-import { IoIosInformationCircle, IoMdMailUnread } from "react-icons/io";
+import { IoIosInformationCircle, IoMdMailUnread, IoMdOpen } from "react-icons/io";
 import { AiFillHome, AiFillWarning } from "react-icons/ai";
 import { BiLogIn } from "react-icons/bi";
 import Link from "next/link";
@@ -53,6 +53,7 @@ import {
 } from "react-icons/md";
 import { IoLogOut } from "react-icons/io5";
 import { RxCross1 } from "react-icons/rx";
+import axios from "axios";
 
 const services = [
   {
@@ -266,16 +267,18 @@ function NavList() {
                           className="w-16 h-16 rounded-md"
                         />
                         <div className="flex flex-col items-center gap-1 w-full">
-                          <h2 className="text-blue-500">{service.name}</h2>
+                          <h2 className="text-gray-700 font-julius font-semibold">{service.name}</h2>
                           <p className="text-gray-500">{service.description}</p>
+                          <Link href={`/service/${service._id}`}>
                           <Button
                             variant="gradient"
-                            color="blue-gray"
-                            className="rounded w-full"
+                            color="blue"
+                            className="rounded w-full flex items-center gap-1"
                             size="sm"
                           >
-                            View
+                            View <IoMdOpen />
                           </Button>
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -387,7 +390,7 @@ export default function Nav() {
       setRegisterError("Invalid data");
       return;
     }
-    console.log(" Sending OTP function triggered")
+    console.log(" Sending OTP function triggered");
     const authkey = "15d7c1359e59f369";
     const name = "service wallah account";
     const mobile = registerData.phoneNumber;
@@ -397,12 +400,7 @@ export default function Nav() {
     console.log(otp);
     setGeneratedOtp(otp);
     const url = `https://api.authkey.io/request?authkey=${authkey}&mobile=${mobile}&country_code=${country_code}&sid=${SID}&company=${name}&otp=${otp}`;
-    await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    await axios.get(url);
     setOpen4(true);
   };
   async function handleRegister(e) {
@@ -431,19 +429,37 @@ export default function Nav() {
         },
         { cache: "no-store" }
       );
-      const data = await response.json();
-      console.log(data);
-      if (response.ok) {
-        setRegisterError("");
-        // setOpen3(false);
-        setType("card")
-        setOpen4(false);
-        setRegisterData({
-          name: "",
-          phoneNumber: "",
-          email: "",
-          password: "",
-        });
+      await response.json();
+      const loginResponse = await fetch(
+        "/api/users/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            phoneNumber: registerData.phoneNumber,
+            password: registerData.password,
+          }),
+        },
+        { cache: "no-store" }
+      );
+      const data = await loginResponse.json();
+      // console.log({ data });
+      if (data.status !== 400) {
+        localStorage.setItem("token", data._id);
+        gettingUser();
+        if (response.ok) {
+          setRegisterError("");
+          setOpen4(false);
+          setOpen3(false);
+          setRegisterData({
+            name: "",
+            phoneNumber: "",
+            email: "",
+            password: "",
+          });
+        }
       }
     } catch (err) {
       setRegisterError(`Something went wrong while Regestering`);
@@ -462,7 +478,6 @@ export default function Nav() {
     );
   }, []);
   const handleOpen3 = () => setOpen3(!open3);
-  
 
   return (
     <div className="mx-auto max-w-full px-4 py-2 rounded-none shadow-none bprder-none bg-transparent z-50">
@@ -647,7 +662,11 @@ export default function Nav() {
                   <h1 className="text-md text-center text-gray-800">
                     Welcome to Service Wallah
                   </h1>
-                  <RxCross1 size={20} onClick={handleOpen3} className="cursor-pointer" />
+                  <RxCross1
+                    size={20}
+                    onClick={handleOpen3}
+                    className="cursor-pointer"
+                  />
                 </div>
 
                 <TabsHeader className="relative z-0 ">
@@ -860,25 +879,16 @@ export default function Nav() {
                           )}
                         </Typography>
                       </div>
-                      <div className="flex gap-4 justify-center">
-                        {/* <Button
-                              variant="gradient"
-                              color="red"
-                              onClick={handleOpen3}
-                              className="mr-1"
-                            >
-                              <span>Cancel</span>
-                            </Button> */}
-                        <Button
-                          onClick={SendingOtp}
-                          variant="gradient"
-                          fullWidth
-                          size="lg"
-                          color="blue"
-                        >
-                          Verify Number
-                        </Button>
-                      </div>
+
+                      <Button
+                        onClick={SendingOtp}
+                        variant="gradient"
+                        fullWidth
+                        size="lg"
+                        color="blue"
+                      >
+                        Verify Number
+                      </Button>
                     </div>
                   </TabPanel>
                 </TabsBody>

@@ -41,7 +41,7 @@ export async function POST(request, { params }) {
     icon,
     reviews: [],
     bookings: [],
-    createdAt: formattedDate,
+    createdDate: formattedDate,
   });
   const savedService = await service.save();
   return NextResponse.json(savedService, { status: 201 });

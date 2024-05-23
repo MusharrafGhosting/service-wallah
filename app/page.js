@@ -13,6 +13,7 @@ import Testimonials from "../components/Testimonials";
 import Link from "next/link";
 
 export default function Home() {
+  
   return (
     <main>
       <Nav />
@@ -265,7 +266,7 @@ export default function Home() {
         <h2 className="font-cookie lg:text-6xl md:text-6xl sm:text-5xl text-5xl text-center text-blue-500">
           Satisfied Customers
         </h2>
-        <Testimonials />
+        {/* <Testimonials /> */}
       </div>
       <Footer />
     </main>

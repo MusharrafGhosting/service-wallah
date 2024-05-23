@@ -9,8 +9,10 @@ import {
   Select,
   Tooltip,
 } from "@material-tailwind/react";
+import axios from "axios";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { useEffect, useState } from "react";
+import { FaInfoCircle } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 
 const CreateServiceProvider = () => {
@@ -40,68 +42,6 @@ const CreateServiceProvider = () => {
     password: "",
     image: "",
   });
-  const [open, setOpen] = useState(false);
-  const [popError, setPopError] = useState(false);
-
-  const handleOpen = () => setOpen(!open);
-  const [uploadingLoading, setUploadingLoading] = useState(false);
-
-  const handleRegisterServiceProvider = async () => {
-    // Validate inputs
-    const validationErrors = validateInputs();
-
-    // If there are errors, don't proceed
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-    setUploadingLoading(true);
-    const imageRef = ref(
-      storage,
-      `service-provider/${
-        inputData.image.lastModified +
-        inputData.image.size +
-        inputData.image.name
-      }`
-    );
-    await uploadBytes(imageRef, inputData.image);
-    const imageUrl = await getDownloadURL(imageRef); // Get the image URL directly
-    const imageObject = { url: imageUrl, name: imageRef._location.path_ };
-    const postData = { ...inputData, image: imageObject };
-    try {
-      const response = await fetch("/api/service-providers/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(postData),
-      });
-      setOpen(true);
-      setInputData({
-        name: "",
-        phoneNumber: "",
-        email: "",
-        image: {
-          url: "",
-          name: "",
-        },
-        gender: "",
-        aadhar: "",
-        city: "",
-        password: "",
-        role: "service-provider",
-        active: false,
-        image: null,
-      });
-      setUploadingLoading(false);
-      console.log(response);
-    } catch (error) {
-      setOpen(true);
-      setPopError(true);
-      console.log("Something went wroung while regestering.", error);
-    }
-  };
-
   const validateInputs = () => {
     const errors = {};
 
@@ -154,10 +94,97 @@ const CreateServiceProvider = () => {
 
     return errors;
   };
+  const [open, setOpen] = useState(false);
+  const [popError, setPopError] = useState("");
 
-  useEffect(() => {
-    console.log(inputData);
-  }, [inputData]);
+  const handleOpen = () => setOpen(!open);
+  const [uploadingLoading, setUploadingLoading] = useState(false);
+  const [open4, setOpen4] = useState(false);
+  const handleOpen4 = () => setOpen4(!open4);
+  const [otp, setOtp] = useState("");
+
+  const handleChange = (e) => {
+    setOtp(e.target.value);
+  };
+  function generateOTP() {
+    // Generate a random number between 1000 and 9999
+    const otp = Math.floor(1000 + Math.random() * 9000);
+    return otp.toString();
+  }
+  const [generatedOTP, setGeneratedOtp] = useState();
+  const SendingOtp = async () => {
+    // Validate inputs
+    const validationErrors = validateInputs();
+
+    // If there are errors, don't proceed
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    const authkey = "15d7c1359e59f369";
+    const name = "service wallah account";
+    const mobile = inputData.phoneNumber;
+    const country_code = "+91";
+    const SID = "13608";
+    const otp = generateOTP();
+    setGeneratedOtp(otp);
+    const url = `https://api.authkey.io/request?authkey=${authkey}&mobile=${mobile}&country_code=${country_code}&sid=${SID}&company=${name}&otp=${otp}`;
+    await axios.get(url);
+    setOpen4(true);
+  };
+const [otpError, setOtpError] = useState("")
+  const handleRegisterServiceProvider = async (e) => {
+    e.preventDefault();
+    if (otp === undefined || otp !== generatedOTP) {
+      setOtpError("Invalid OTP");
+      return;
+    }
+    setUploadingLoading(true);
+    const imageRef = ref(
+      storage,
+      `service-provider/${
+        inputData.image.lastModified +
+        inputData.image.size +
+        inputData.image.name
+      }`
+    );
+    await uploadBytes(imageRef, inputData.image);
+    const imageUrl = await getDownloadURL(imageRef); // Get the image URL directly
+    const imageObject = { url: imageUrl, name: imageRef._location.path_ };
+    const postData = { ...inputData, image: imageObject };
+    try {
+      const response = await fetch("/api/service-providers/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
+      });
+      setOpen(true);
+      setInputData({
+        name: "",
+        phoneNumber: "",
+        email: "",
+        image: {
+          url: "",
+          name: "",
+        },
+        gender: "",
+        aadhar: "",
+        city: "",
+        password: "",
+        role: "service-provider",
+        active: false,
+        image: null,
+      });
+      setUploadingLoading(false);
+      console.log(response);
+    } catch (error) {
+      setOpen(true);
+      setPopError(true);
+      console.log("Something went wroung while regestering.", error);
+    }
+  };
 
   return (
     <div className="min-h-screen">
@@ -177,6 +204,58 @@ const CreateServiceProvider = () => {
       </div>
       <Nav />
       <Dialog
+        open={open4}
+        handler={handleOpen4}
+        size="sm"
+        dismiss={{ enabled: false }}
+        animate={{
+          mount: { scale: 1, y: 0 },
+          unmount: { scale: 0.9, y: -100 },
+        }}
+      >
+        <div className="bg-white rounded-lg shadow-lg p-8">
+          <h2 className="text-2xl font-bold mb-4 text-center text-blue-500">
+            Verify OTP
+          </h2>
+          <form
+            onSubmit={handleRegisterServiceProvider}
+            className="flex flex-col gap-4"
+          >
+            <Input
+              label="Enter OTP"
+              maxLength={4}
+              color="blue"
+              value={otp}
+              size="lg"
+              minLength={4}
+              onChange={handleChange}
+            />
+            {otpError && (
+              <p className="text-red-500 flex gap-1 text-xs items-center">
+                <FaInfoCircle />
+                <span>{otpError}</span>
+              </p>
+            )}
+            <p className="text-gray-600 flex gap-1 text-xs items-center">
+              <FaInfoCircle />
+              <span>
+                Please enter the 4-digit OTP sent to your mobile number{" "}
+                {inputData.phoneNumber}.
+              </span>
+            </p>
+
+            <Button
+              type="submit"
+              color="blue"
+              fullWidth
+              loading={uploadingLoading}
+            >
+              Verify OTP
+            </Button>
+          </form>
+        </div>
+      </Dialog>
+      <Dialog
         open={open}
         handler={handleOpen}
         animate={{
@@ -188,7 +267,7 @@ const CreateServiceProvider = () => {
           <div className="p-6">
             <div className="flex justify-end items-center mb-4">
               <button
-                onClick={handleOpen}
+                onClick={() => window.location.reload()}
                 title="Close"
                 className="hover:scale-125 transition-all duration-500 ease-in-out "
               >
@@ -196,7 +275,7 @@ const CreateServiceProvider = () => {
               </button>
             </div>
             <h1 className="text-2xl font-bold text-deep-orange-500 font-lato text-center">
-              Something went wrong.
+              {popError}
             </h1>
             <p className="text-center">Please Try Again later.</p>
             <div className="w-full flex justify-center my-4">
@@ -204,7 +283,7 @@ const CreateServiceProvider = () => {
                 variant="gradient"
                 className="rounded-md"
                 color="blue"
-                onClick={handleOpen}
+                onClick={() => window.location.reload()}
               >
                 <span>Understood</span>
               </Button>
@@ -228,12 +307,7 @@ const CreateServiceProvider = () => {
               Wait For admin to approve Your account
             </p>
             <div className="w-full flex justify-center my-4">
-              <Button
-                variant="gradient"
-                className="rounded-md"
-                color="blue"
-                onClick={handleOpen}
-              >
+              <Button variant="gradient" className="rounded-md" color="blue">
                 <button
                   onClick={() => {
                     window.location.href = "/";
@@ -259,6 +333,7 @@ const CreateServiceProvider = () => {
               label="Name"
               color="indigo"
               value={inputData.name}
+              maxLength={25}
               onChange={(e) =>
                 setInputData({ ...inputData, name: e.target.value })
               }
@@ -270,6 +345,8 @@ const CreateServiceProvider = () => {
               label="Aadhaar Number"
               color="indigo"
               value={inputData.aadhar}
+              minLength={12}
+              maxLength={12}
               onChange={(e) =>
                 setInputData({ ...inputData, aadhar: e.target.value })
               }
@@ -283,6 +360,8 @@ const CreateServiceProvider = () => {
               label="Phone Number"
               color="indigo"
               value={inputData.phoneNumber}
+              minLength={10}
+              maxLength={10}
               onChange={(e) =>
                 setInputData({ ...inputData, phoneNumber: e.target.value })
               }
@@ -295,6 +374,7 @@ const CreateServiceProvider = () => {
             <Input
               label="Email"
               color="indigo"
+              type="email"
               value={inputData.email}
               onChange={(e) =>
                 setInputData({ ...inputData, email: e.target.value })
@@ -334,6 +414,8 @@ const CreateServiceProvider = () => {
                 label="Password"
                 color="indigo"
                 type="password"
+                minLength={10}
+                maxLength={25}
                 value={inputData.password}
                 onChange={(e) =>
                   setInputData({ ...inputData, password: e.target.value })
@@ -386,14 +468,14 @@ const CreateServiceProvider = () => {
               <span className="text-red-500 animate-shake">{errors.image}</span>
             )}
             <Button
-              loading={uploadingLoading}
+              // loading={uploadingLoading}
               fullWidth
               variant="gradient"
               color="blue"
-              onClick={handleRegisterServiceProvider}
+              onClick={SendingOtp}
               className="1hover:scale-105 transition-all duration-700 flex items-center justify-center py-4 rounded-md shadow-2xl cursor-pointer text-white"
             >
-              Sign up Now!
+              Verify Mobile Number
             </Button>
           </div>
         </div>

@@ -1,10 +1,11 @@
-// components/ServiceShow.js
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FaTools } from "react-icons/fa";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+import Link from "next/link";
 
 const ServiceShow = () => {
   const cards = [
@@ -85,55 +86,79 @@ const ServiceShow = () => {
       },
     ],
   };
+  const [topServices, setTopServices] = useState([]);
+  const gettingServices = async () => {
+    try {
+      const fetchedData = await fetch("/api/services", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const response = await fetchedData.json();
+      function getTopBookedServices(services, topN) {
+        return services
+          .sort((a, b) => b.rank - a.rank)
+          .filter((service) => service.status === "active" && service.subServices?.length > 0)
+          .slice(0, topN);
+      }
 
+      const topBookedServices = getTopBookedServices(response, 10);
+
+      setTopServices(topBookedServices);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  useEffect(() => {
+    gettingServices();
+  }, []);
   return (
     <div className="container mx-auto py-8">
       <Slider {...settings}>
-        {cards.map((card) => (
-          <div key={card.id} className="px-2">
+        {topServices.map((service) => (
+          <div key={service._id} className="px-2">
             <div className="max-w-sm mx-auto bg-white shadow-lg rounded-lg overflow-hidden h-full">
               <div className="p-6">
                 <div className="flex items-center mb-4">
-                  <FaTools className="w-12 h-12 text-blue-500" />
+                  <img
+                    src={service.icon?.url}
+                    alt={service.name}
+                    className="w-16 h-16 rounded mr-4 object-cover drop-shadow-lg"
+                  />
                   <h2 className="ml-4 text-xl font-semibold text-gray-800">
-                    {card.title}
+                    {service.name}
                   </h2>
                 </div>
                 <div className="mb-4">
                   <div className="flex gap-2 items-center my-2">
                     <div className="whitespace-nowrap text-sm">
-                      {card.description}
+                      {service.name}
                     </div>
                     <div className="h-px bg-gray-300 w-full"></div>
                   </div>
                   <div className="flex flex-col   max-h-40 overflow-auto no-scrollbar gap-4">
-                    <div className="flex items-center gap-4   bg-gray-100 p-3 rounded-md">
-                      <img
-                        src={card.image}
-                        alt={card.service}
-                        className="w-16 h-16 rounded mr-4"
-                      />
-                      <span className="text-gray-800 font-medium">
-                        {card.service}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-4   bg-gray-100 p-3 rounded-md">
-                      <img
-                        src={card.image}
-                        alt={card.service}
-                        className="w-16 h-16 rounded mr-4"
-                      />
-                      <span className="text-gray-800 font-medium">
-                        {card.service}
-                      </span>
-                    </div>
+                    {service.subServices?.map((sub, i) => {
+                      return (
+                        <div key={i} className="flex items-center gap-4   bg-gray-100 p-3 rounded-md">
+                          <img
+                            src={sub.icon?.url}
+                            alt={sub.name}
+                            className="w-16 h-16 rounded mr-4 drop-shadow-lg object-cover"
+                          />
+                          <span className="text-gray-800 font-medium">
+                            {sub.name}
+                          </span>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
-                <a href={card.link} target="_blank" rel="noopener noreferrer">
+                <Link href={`/services/${service._id}`} target="_blank">
                   <button className="w-full text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                     View <span className="inline-block ml-2">→</span>
                   </button>
-                </a>
+                </Link>
               </div>
             </div>
           </div>

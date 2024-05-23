@@ -321,9 +321,9 @@ const Services = () => {
                         return (
                           <div className="flex gap-2 items-center hover:bg-gray-300 rounded cursor-pointer transition-all duration-500 p-2">
                             <img
-                              src="/image/sub-service/image2.png"
+                              src={sub.icon?.url}
                               alt=""
-                              className="w-14 h-14 object-cover"
+                              className="w-14 h-14 object-cover rounded shadow-md"
                             />
                             <h4 className="whitespace-nowrap">{sub.name}</h4>
                           </div>
