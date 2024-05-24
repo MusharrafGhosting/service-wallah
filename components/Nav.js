@@ -236,13 +236,12 @@ function NavList() {
         </button>
         
         <Badge content={0} overlap="circular" color="teal" className="text-[0.6rem] p-0 h-4 w-4 flex justify-center items-center">
-          <button
-            onClick={handleOpen2}
+          <Link href={"/cart"}
             variant="gradient"
             className="flex gap-2 border bg-white border-gray-300 hover:bg-gray-200 shadow py-2 px-3 rounded-full justify-center items-center"
           >
             <FaCartShopping size={20} />
-          </button>
+          </Link>
         </Badge>
         <Dialog
           open={open2}

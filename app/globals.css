@@ -46,21 +46,21 @@
   width: 20px;
   height: 20px;
   background: linear-gradient(-45deg, royalblue, slateblue);
-	/* background-size: 400% 400%; */
-	animation: gradient 15s ease infinite;
+  /* background-size: 400% 400%; */
+  animation: gradient 15s ease infinite;
   animation: animate 25s linear infinite;
   bottom: -200px;
 }
 @keyframes gradient {
-	0% {
-		background-position: 0% 50%;
-	}
-	50% {
-		background-position: 100% 50%;
-	}
-	100% {
-		background-position: 0% 50%;
-	}
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .circles li:nth-child(1) {
@@ -181,7 +181,7 @@
 }
 
 .loaction-loader::after {
-  content: '';
+  content: "";
   width: 48px;
   height: 48px;
   left: 0;
@@ -195,7 +195,7 @@
 }
 
 .loaction-loader::before {
-  content: '';
+  content: "";
   box-sizing: border-box;
   position: absolute;
   left: 0;
@@ -228,7 +228,7 @@
     transform: scale(1);
   }
 }
-    
+
 .mt-0-important {
   margin-top: 0 !important;
 }
