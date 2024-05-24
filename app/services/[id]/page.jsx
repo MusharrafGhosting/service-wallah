@@ -13,6 +13,60 @@ import {
   CardFooter,
   Typography,
 } from "@material-tailwind/react";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+
+const NextArrow = ({ onClick }) => {
+  return (
+    <div
+      className="absolute top-1/2 transform -translate-y-1/2 right-0 bg-gray-700 text-white rounded-full p-2 cursor-pointer z-10"
+      onClick={onClick}
+    >
+      <MdChevronRight className="w-6 h-6" />
+    </div>
+  );
+};
+
+const PrevArrow = ({ onClick }) => {
+  return (
+    <div
+      className="absolute top-1/2 transform -translate-y-1/2 left-0 bg-gray-700 text-white rounded-full p-2 cursor-pointer z-10"
+      onClick={onClick}
+    >
+      <MdChevronLeft className="w-6 h-6" />
+    </div>
+  );
+};
+
+const sliderSettings = {
+  dots: true,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 4,
+  slidesToScroll: 1,
+  nextArrow: <NextArrow />,
+  prevArrow: <PrevArrow />,
+  responsive: [
+    {
+      breakpoint: 1024,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 1,
+        infinite: true,
+        dots: true,
+      },
+    },
+    {
+      breakpoint: 600,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1,
+      },
+    },
+  ],
+};
 
 const Service = () => {
   const { id } = useParams();
@@ -137,76 +191,78 @@ const Service = () => {
           AC Service and Repair
           </h1>
         </div>
-        <div className="flex flex-wrap gap-6 justify-center">
-          {service.subServices?.map((service, index) => (
-            <Card className="w-full max-w-xs shadow-lg" key={index}>
-              <CardHeader floated={false} color="blue-gray">
-                <img
-                  src={service.icon.url}
-                  alt="Service Icon"
-                  className="object-cover w-full h-48"
-                />
-              </CardHeader>
-              <CardBody>
-                <div className="mb-1 flex flex-col justify-start gap-2">
-                  <div>
-                    <span
-                      className={`border ${
-                        service.status === "active"
-                          ? "bg-teal-100"
-                          : "bg-red-100"
-                      }  text-xs ${
-                        service.status === "active"
-                          ? "text-teal-700"
-                          : "text-red-700"
-                      }  px-2 py-1 rounded-full`}
-                    >
-                      {service.status}
-                    </span>
+        <div className="relative w-full overflow-hidden">
+          <Slider {...sliderSettings}>
+            {service.subServices?.map((service, index) => (
+              <Card className="mx-2 shadow-lg" key={index}>
+                <CardHeader floated={false} color="blue-gray">
+                  <img
+                    src={service.icon.url}
+                    alt="Service Icon"
+                    className="object-cover md:w-72 h-48"
+                  />
+                </CardHeader>
+                <CardBody>
+                  <div className="mb-1 flex flex-col justify-start gap-2">
+                    <div>
+                      <span
+                        className={`border ${
+                          service.status === "active"
+                            ? "bg-teal-100"
+                            : "bg-red-100"
+                        }  text-xs ${
+                          service.status === "active"
+                            ? "text-teal-700"
+                            : "text-red-700"
+                        }  px-2 py-1 rounded-full`}
+                      >
+                        {service.status}
+                      </span>
+                    </div>
+                    <Typography variant="h6" color="blue-gray" className="font-medium">
+                      {service.name}
+                    </Typography>
                   </div>
-                  <Typography variant="h6" color="blue-gray" className="font-medium">
-                    {service.name}
-                  </Typography>
-                </div>
-                <div className="flex items-center mb-2">
-                  {[...Array(5)].map((star, i) => (
-                    <svg
-                      key={i}
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className={`h-5 w-5 ${
-                        i < service.rating ? "text-yellow-500" : "text-gray-300"
-                      }`}
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M12 17.27l5.18 3.73-1.64-5.67L20 9.91l-5.68-.49L12 4 9.68 9.42 4 9.91l4.46 5.42-1.64 5.67L12 17.27z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  ))}
-                  <Typography color="gray" className="ml-2">
-                    | {service.reviews.length} Reviews
-                  </Typography>
-                </div>
-                <div className="text-2xl font-bold text-teal-500">
-                  ₹{service.price}
-                </div>
-              </CardBody>
-              <CardFooter className="pt-0 flex flex-col gap-2">
-                <Button
-                  size="lg"
-                  fullWidth={true}
-                  variant="gradient"
-                  color="indigo"
-                  className="flex gap-1 items-center justify-center"
-                >
-                  Add +
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
+                  <div className="flex items-center mb-2">
+                    {[...Array(5)].map((star, i) => (
+                      <svg
+                        key={i}
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className={`h-5 w-5 ${
+                          i < service.rating ? "text-yellow-500" : "text-gray-300"
+                        }`}
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M12 17.27l5.18 3.73-1.64-5.67L20 9.91l-5.68-.49L12 4 9.68 9.42 4 9.91l4.46 5.42-1.64 5.67L12 17.27z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    ))}
+                    <Typography color="gray" className="ml-2">
+                      | {service.reviews.length} Reviews
+                    </Typography>
+                  </div>
+                  <div className="text-2xl font-bold text-teal-500">
+                    ₹{service.price}
+                  </div>
+                </CardBody>
+                <CardFooter className="pt-0 flex flex-col gap-2">
+                  <Button
+                    size="lg"
+                    fullWidth={true}
+                    variant="gradient"
+                    color="indigo"
+                    className="flex gap-1 items-center justify-center"
+                  >
+                    View +
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </Slider>
         </div>
       </div>
       <Footer />

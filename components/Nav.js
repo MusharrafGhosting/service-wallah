@@ -39,7 +39,7 @@ import {
   FaTools,
   FaUser,
 } from "react-icons/fa";
-import { FaLocationDot, FaUsersGear } from "react-icons/fa6";
+import { FaCartShopping, FaLocationDot, FaUsersGear } from "react-icons/fa6";
 import { IoIosInformationCircle, IoMdMailUnread, IoMdOpen } from "react-icons/io";
 import { AiFillHome, AiFillWarning } from "react-icons/ai";
 import { BiLogIn } from "react-icons/bi";
