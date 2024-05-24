@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogBody,
   DialogFooter,
+  Badge,
 } from "@material-tailwind/react";
 import {
   ChevronDownIcon,
@@ -40,7 +41,11 @@ import {
   FaUser,
 } from "react-icons/fa";
 import { FaCartShopping, FaLocationDot, FaUsersGear } from "react-icons/fa6";
-import { IoIosInformationCircle, IoMdMailUnread, IoMdOpen } from "react-icons/io";
+import {
+  IoIosInformationCircle,
+  IoMdMailUnread,
+  IoMdOpen,
+} from "react-icons/io";
 import { AiFillHome, AiFillWarning } from "react-icons/ai";
 import { BiLogIn } from "react-icons/bi";
 import Link from "next/link";
@@ -229,13 +234,15 @@ function NavList() {
         >
           <FaSearch />
         </button>
-        <button
-          onClick={handleOpen2}
-          variant="gradient"
-          className="flex gap-2 border bg-white border-gray-300 hover:bg-gray-200 shadow py-2 px-3 rounded-full justify-center items-center"
-        >
-          <FaCartShopping size={20}  />
-        </button>
+        
+        <Badge content={0} overlap="circular" color="teal" className="text-[0.6rem] p-0 h-4 w-4 flex justify-center items-center">
+          <Link href={"/cart"}
+            variant="gradient"
+            className="flex gap-2 border bg-white border-gray-300 hover:bg-gray-200 shadow py-2 px-3 rounded-full justify-center items-center"
+          >
+            <FaCartShopping size={20} />
+          </Link>
+        </Badge>
         <Dialog
           open={open2}
           size="lg"
@@ -246,11 +253,13 @@ function NavList() {
           }}
         >
           <DialogBody className="p-10 min-h-[90vh] bg-gray-100 rounded-xl">
-            <div className="flex gap-3 mb-10 justify-center items-center">
-              <h1 className="text-4xl font-julius uppercase">
+            <div className="flex gap-3 mb-4 md:mb-10 justify-center items-center">
+              <h1 className="text-2xl md:text-4xl font-julius uppercase">
                 Search For Service
               </h1>
-              <h2 className="text-5xl font-cookie text-blue-500">You like</h2>
+              <h2 className="text-3xl md:text-5xl font-cookie text-blue-500">
+                You like
+              </h2>
             </div>
             <Input
               label="Search a Service"
@@ -259,12 +268,12 @@ function NavList() {
             />
             <div>
               <div className="flex gap-2 items-center my-4">
-                <h2 className="whitespace-nowrap text-gray-500">
+                <h2 className="whitespace-nowrap text-gray-500 text-xs">
                   Most Booked Services You may like
                 </h2>
                 <div className="h-px bg-gray-300 w-full"></div>
               </div>
-              <div className="grid gap-4 grid-cols-3">
+              <div className="grid gap-4 grid-cols-2 md:grid-cols-3 h-96 overflow-auto no-scrollbar">
                 {topServices.map((service, index) => {
                   return (
                     <div key={index} className="bg-white rounded-lg py-4 px-4">
@@ -272,20 +281,22 @@ function NavList() {
                         <img
                           src={service.icon.url}
                           alt={service.name}
-                          className="w-16 h-16 rounded-md"
+                          className="w-10 h-10 md:w-16 md:h-16 rounded-md"
                         />
                         <div className="flex flex-col items-center gap-1 w-full">
-                          <h2 className="text-gray-700 font-julius font-semibold">{service.name}</h2>
-                          <p className="text-gray-500">{service.description}</p>
+                          <h2 className="text-gray-700 font-julius font-semibold text-center">
+                            {service.name}
+                          </h2>
+                          {/* <p className="text-gray-500">{service.name}</p> */}
                           <Link href={`/service/${service._id}`}>
-                          <Button
-                            variant="gradient"
-                            color="blue"
-                            className="rounded w-full flex items-center gap-1"
-                            size="sm"
-                          >
-                            View <IoMdOpen />
-                          </Button>
+                            <Button
+                              variant="gradient"
+                              color="blue"
+                              className="rounded w-full flex items-center gap-1"
+                              size="sm"
+                            >
+                              View <IoMdOpen />
+                            </Button>
                           </Link>
                         </div>
                       </div>
@@ -388,7 +399,7 @@ export default function Nav() {
     return otp.toString();
   }
   const [generatedOTP, setGeneratedOtp] = useState();
-  const [type, setType] = useState("paypal");
+  const [type, setType] = useState("card");
   const SendingOtp = async () => {
     if (
       !registerData.name ||
@@ -468,7 +479,6 @@ export default function Nav() {
             password: "",
           });
         }
-
       }
     } catch (err) {
       setRegisterError(`Something went wrong while Regestering`);
@@ -502,7 +512,7 @@ export default function Nav() {
           />
           {/* Service Wallah */}
         </Link>
-        <div className="hidden gap-2 lg:flex lg:items-center">
+        <div className="hidden gap-2 lg:flex lg:items-center lg:justify-end w-full">
           <NavList />
           {user?.role ? (
             <Menu allowHover={true} placement="bottom-start">
@@ -536,11 +546,6 @@ export default function Nav() {
                       History <FaHistory />
                     </MenuItem>
                   </Link>
-                  {/* <Link href={`/mail`} className="outline-none">
-                    <MenuItem className="justify-center flex items-center gap-1">
-                      Mail <IoMdMailUnread />
-                    </MenuItem>
-                  </Link> */}
                   <MenuItem
                     className="text-red-400 justify-center flex items-center gap-1"
                     onClick={() => {
@@ -577,11 +582,6 @@ export default function Nav() {
                       History <FaHistory />
                     </MenuItem>
                   </Link>
-                  {/* <Link href={`/mail`} className="outline-none">
-                    <MenuItem className="justify-center flex items-center gap-1">
-                      Mail <IoMdMailUnread />
-                    </MenuItem>
-                  </Link> */}
                   <MenuItem
                     className="text-red-400 justify-center flex items-center gap-1"
                     onClick={() => {
@@ -622,16 +622,6 @@ export default function Nav() {
                       Manage Payments <MdOutlinePayment />
                     </MenuItem>
                   </Link>
-                  {/* <Link href={`/admin/create-admin`} className="outline-none">
-                    <MenuItem className="justify-center flex items-center gap-1">
-                      Create new Admin <MdAddModerator />
-                    </MenuItem>
-                  </Link> */}
-                  {/* <Link href={`/mail`} className="outline-none">
-                    <MenuItem className="justify-center flex items-center gap-1">
-                      Mail <IoMdMailUnread />
-                    </MenuItem>
-                  </Link> */}
                   <MenuItem
                     className="text-red-400 justify-center flex items-center gap-1"
                     onClick={() => {
@@ -952,26 +942,155 @@ export default function Nav() {
             </div>
           </Dialog>
         </div>
-        <IconButton
-          variant="text"
-          color="blue-gray"
-          className="lg:hidden"
-          onClick={() => setOpenNav(!openNav)}
-        >
-          {openNav ? (
-            <XMarkIcon className="h-6 w-6" strokeWidth={2} />
-          ) : (
-            <Bars3Icon className="h-6 w-6" strokeWidth={2} />
-          )}
-        </IconButton>
+        <div className="flex items-center justify-end gap-1">
+          <IconButton
+            variant="text"
+            color="blue-gray"
+            className="lg:hidden"
+            onClick={() => setOpenNav(!openNav)}
+          >
+            {openNav ? (
+              <XMarkIcon className="h-6 w-6" strokeWidth={2} />
+            ) : (
+              <Bars3Icon className="h-6 w-6" strokeWidth={2} />
+            )}
+          </IconButton>
+          <div className="flex w-fit items-center gap-2 lg:hidden">
+            {user?.role ? (
+              <Menu allowHover={true} placement="bottom-start">
+                <MenuHandler>
+                  {user?.image?.url ? (
+                    <img
+                      src={user.image.url}
+                      alt={user.name}
+                      className="w-12 h-12 rounded-full object-cover cursor-pointer"
+                    />
+                  ) : (
+                    <div className="w-12 h-12 rounded-full flex justify-center items-center font-junge bg-gray-400 cursor-pointer">
+                      {user.name && Array.from(user.name)[0].toUpperCase()}
+                    </div>
+                  )}
+                </MenuHandler>
+                {user.role === "user" ? (
+                  <MenuList>
+                    <Link href={`/user`} className="outline-none">
+                      <MenuItem className="justify-center flex items-center gap-1">
+                        Profile <FaUser size={12} />
+                      </MenuItem>
+                    </Link>
+                    <Link href={`/user/booking`} className="outline-none">
+                      <MenuItem className="justify-center flex items-center gap-1">
+                        Booking <FaCalendarCheck />
+                      </MenuItem>
+                    </Link>
+                    <Link href={`/user/history`} className="outline-none">
+                      <MenuItem className="justify-center flex items-center gap-1">
+                        History <FaHistory />
+                      </MenuItem>
+                    </Link>
+                    <MenuItem
+                      className="text-red-400 justify-center flex items-center gap-1"
+                      onClick={() => {
+                        localStorage.removeItem("token");
+                        window.location.reload();
+                      }}
+                    >
+                      Logout <IoLogOut />
+                    </MenuItem>
+                  </MenuList>
+                ) : user.role === "service-provider" ? (
+                  <MenuList>
+                    <Link
+                      href={`/service-provider/${user._id}`}
+                      className="outline-none"
+                    >
+                      <MenuItem className="justify-center flex items-center gap-1">
+                        Profile <FaUser size={12} />
+                      </MenuItem>
+                    </Link>
+                    <Link
+                      href={`/service-provider/${user._id}/booking`}
+                      className="outline-none"
+                    >
+                      <MenuItem className="justify-center flex items-center gap-1">
+                        Booking <FaCalendarCheck />
+                      </MenuItem>
+                    </Link>
+                    <Link
+                      href={`/service-provider/${user._id}/history`}
+                      className="outline-none"
+                    >
+                      <MenuItem className="justify-center flex items-center gap-1">
+                        History <FaHistory />
+                      </MenuItem>
+                    </Link>
+                    <MenuItem
+                      className="text-red-400 justify-center flex items-center gap-1"
+                      onClick={() => {
+                        localStorage.removeItem("token");
+                        window.location.reload();
+                      }}
+                    >
+                      Logout <IoLogOut />
+                    </MenuItem>
+                  </MenuList>
+                ) : (
+                  <MenuList>
+                    <Link href={`/admin`} className="outline-none">
+                      <MenuItem className="justify-center flex items-center gap-1">
+                        Dashboard <MdDashboardCustomize />
+                      </MenuItem>
+                    </Link>
+                    <Link href={`/admin/services`} className="outline-none">
+                      <MenuItem className="justify-center flex items-center gap-1">
+                        Manage Services <MdOutlineManageHistory />
+                      </MenuItem>
+                    </Link>
+                    <Link href={`/admin/users`} className="outline-none">
+                      <MenuItem className="justify-center flex items-center gap-1">
+                        Manage Users <MdManageAccounts />
+                      </MenuItem>
+                    </Link>
+                    <Link
+                      href={`/admin/service-providers`}
+                      className="outline-none"
+                    >
+                      <MenuItem className="justify-center flex items-center gap-1">
+                        Service Provider <FaUsersGear />
+                      </MenuItem>
+                    </Link>
+                    <Link href={`/admin/payments`} className="outline-none">
+                      <MenuItem className="justify-center flex items-center gap-1">
+                        Manage Payments <MdOutlinePayment />
+                      </MenuItem>
+                    </Link>
+                    <MenuItem
+                      className="text-red-400 justify-center flex items-center gap-1"
+                      onClick={() => {
+                        localStorage.removeItem("token");
+                        window.location.reload();
+                      }}
+                    >
+                      Logout <IoLogOut />
+                    </MenuItem>
+                  </MenuList>
+                )}
+              </Menu>
+            ) : (
+              <Button
+                variant="gradient"
+                size="sm"
+                fullWidth
+                onClick={handleOpen3}
+              >
+                Log In
+              </Button>
+            )}
+          </div>
+        </div>
       </div>
       <Collapse open={openNav}>
         <NavList />
-        <div className="flex w-full flex-nowrap items-center gap-2 lg:hidden">
-          <Button variant="gradient" size="sm" fullWidth onClick={handleOpen3}>
-            Log In
-          </Button>
-        </div>
       </Collapse>
     </div>
   );
