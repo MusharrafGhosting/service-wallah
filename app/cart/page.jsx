@@ -1,58 +1,136 @@
 "use client";
 import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
+import { Button, ButtonGroup } from "@material-tailwind/react";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
-import { RxCross1 } from "react-icons/rx";
+import { RiErrorWarningFill } from "react-icons/ri";
+import { RxCross1, RxCross2 } from "react-icons/rx";
 
 const Cart = () => {
   const router = useRouter();
+  const [products, setProducts] = useState([
+    {
+      name: "Breathable slim sport vest",
+      color: "Blue",
+      size: "S",
+      price: 59.0,
+      quantity: 2,
+      image:
+        "https://img.freepik.com/free-photo/medium-shot-smiley-man-posing_23-2149915892.jpg?t=st=1716364756~exp=1716368356~hmac=6861a2a425d375a48ca9f795b11f41a4f960f25bad703b6898d9b2959c3d23ca&w=360",
+    },
+    {
+      name: "Breathable slim sport vest",
+      color: "Pink",
+      size: "S",
+      price: 39.0,
+      quantity: 1,
+      image:
+        "https://img.freepik.com/free-photo/beautiful-male-half-length-portrait-isolated-white-studio-background-young-emotional-hindu-man-blue-shirt-facial-expression-human-emotions-advertising-concept-standing-smiling_155003-25250.jpg?t=st=1716364719~exp=1716368319~hmac=546ca7bf121267955fa0beaa40b7945c65ddc621f33d8bbe5734070783a628cf&w=996",
+    },
+    {
+      name: "Breathable slim sport vest",
+      color: "Brown",
+      size: "S",
+      price: 39.0,
+      quantity: 1,
+      image:
+        "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+    {
+      name: "Breathable slim sport vest",
+      color: "Brown",
+      size: "S",
+      price: 39.0,
+      quantity: 1,
+      image:
+        "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+    {
+      name: "Breathable slim sport vest",
+      color: "Brown",
+      size: "S",
+      price: 39.0,
+      quantity: 1,
+      image:
+        "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+    {
+      name: "Breathable slim sport vest",
+      color: "Brown",
+      size: "S",
+      price: 39.0,
+      quantity: 1,
+      image:
+        "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+    {
+      name: "Breathable slim sport vest",
+      color: "Brown",
+      size: "S",
+      price: 39.0,
+      quantity: 1,
+      image:
+        "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+  ]);
+
+  const [validationMessage, setValidationMessage] = useState("");
+
+  const handleQuantityChange = (index, change) => {
+    setProducts((prevProducts) => {
+      const updatedProducts = prevProducts.map((product, i) => {
+        if (i === index) {
+          const newQuantity = product.quantity + change;
+          if (newQuantity < 1 || newQuantity > 10) {
+            setValidationMessage("Quantity should be between 1 and 10.");
+            return product;
+          }
+          setValidationMessage("");
+          return {
+            ...product,
+            quantity: newQuantity,
+          };
+        }
+        return product;
+      });
+      return updatedProducts;
+    });
+  };
+
+  const handleRemoveProduct = (index) => {
+    setProducts((prevProducts) => prevProducts.filter((_, i) => i !== index));
+  };
+
   return (
     <>
       <Head>
         <title>Shopping Cart</title>
       </Head>
       <Nav />
-      <div className="flex px-10  h-full justify-between gap-10 my-10">
-        <div className="w-2/3 h-auto bg-white p-6 shadow-lg rounded-lg">
-          <div
-            className="flex items-center gap-1 cursor-pointer text-gray-700 mb-6"
-            onClick={() => router.back()}
-          >
-            <FaArrowLeftLong />
-            <div>Cart</div>
+      <div className="flex flex-col lg:flex-row px-10 h-full justify-between gap-10 my-10">
+        <div className="w-full lg:w-2/3 min-h-auto max-h-[78vh] no-scrollbar overflow-auto bg-white pb-6 shadow-lg rounded-lg">
+          <div className="flex items-center justify-between gap-1 cursor-pointer text-gray-700 mb-6 sticky px-6 py-4 top-0 bg-white">
+            <div
+              className="flex items-center gap-1 cursor-pointer"
+              onClick={() => router.back()}
+            >
+              <FaArrowLeftLong />
+              <div>Cart</div>
+            </div>
+            <div
+              className={`text-red-500 flex items-center gap-1 transition-all duration-700 ${
+                validationMessage ? "translate-x-0" : "translate-x-96"
+              }`}
+            >
+              <RiErrorWarningFill />
+              {validationMessage}
+            </div>
           </div>
-          <div className="mt-4 space-y-6">
-            {[
-              {
-                name: "Breathable slim sport vest",
-                color: "Blue",
-                size: "S",
-                price: 59.0,
-                quantity: 1,
-                image:
-                  "https://img.freepik.com/free-photo/medium-shot-smiley-man-posing_23-2149915892.jpg?t=st=1716364756~exp=1716368356~hmac=6861a2a425d375a48ca9f795b11f41a4f960f25bad703b6898d9b2959c3d23ca&w=360",
-              },
-              {
-                name: "Breathable slim sport vest",
-                color: "Pink",
-                size: "S",
-                price: 39.0,
-                quantity: 1,
-                image:
-                  "https://img.freepik.com/free-photo/beautiful-male-half-length-portrait-isolated-white-studio-background-young-emotional-hindu-man-blue-shirt-facial-expression-human-emotions-advertising-concept-standing-smiling_155003-25250.jpg?t=st=1716364719~exp=1716368319~hmac=546ca7bf121267955fa0beaa40b7945c65ddc621f33d8bbe5734070783a628cf&w=996",
-              },
-              {
-                name: "Breathable slim sport vest",
-                color: "Brown",
-                size: "S",
-                price: 39.0,
-                quantity: 1,
-                image:
-                  "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-              },
-            ].map((product, index) => (
+          <div className="mt-4 space-y-6 px-6">
+            {products.map((product, index) => (
               <div
                 key={index}
                 className="flex items-center justify-between border-b pb-4"
@@ -73,41 +151,65 @@ const Cart = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center">
-                  <button className="px-3 py-1 border rounded">-</button>
-                  <input
-                    min="1"
-                    defaultValue={product.quantity}
-                    className="w-12 text-center border mx-2"
-                  />
-                  <button className="px-3 py-1 border rounded">+</button>
+                <div className="flex w-max flex-col gap-4">
+                  <ButtonGroup variant="gradient" color="light-blue" size="sm">
+                    <Button onClick={() => handleQuantityChange(index, -1)}>
+                      -
+                    </Button>
+                    <div className="px-4 flex items-center">
+                      {product.quantity}
+                    </div>
+                    <Button onClick={() => handleQuantityChange(index, 1)}>
+                      +
+                    </Button>
+                  </ButtonGroup>
                 </div>
                 <div className="font-semibold">
-                ₹{(product.price * product.quantity).toFixed(2)}
+                  ₹{(product.price * product.quantity).toFixed(2)}
                 </div>
-                <button className="text-red-500 mr-4 p-4 hover:bg-gray-200 rounded-lg transition-all" title="Remove Service">
-                  <RxCross1 />
+                <button
+                  onClick={() => handleRemoveProduct(index)}
+                  className="bg-red-400 text-white mr-4 w-8 h-8 flex items-center justify-center hover:scale-110 rounded-full transition-all"
+                  title="Remove Service"
+                >
+                  <RxCross2 />
                 </button>
               </div>
             ))}
           </div>
         </div>
-        <div className="w-1/3 h-full bg-white p-6 shadow-lg rounded-lg">
+        <div className="w-full lg:w-1/3 h-full bg-white p-6 shadow-lg rounded-lg">
           <h2 className="text-lg font-semibold border-b pb-4">Summary</h2>
           <div className="mt-4 space-y-6">
             <div className="flex justify-between">
               <span>Subtotal</span>
-              <span>$137.00</span>
+              <span>
+                ₹
+                {products
+                  .reduce(
+                    (acc, product) => acc + product.price * product.quantity,
+                    0
+                  )
+                  .toFixed(2)}
+              </span>
             </div>
             <div className="flex justify-between">
               <span>International Shipping</span>
-              <span>$18.00</span>
+              <span>₹18.00</span>
             </div>
             <div className="flex justify-between font-semibold text-lg">
               <span>Total</span>
-              <span>$155.00</span>
+              <span>
+                ₹
+                {(
+                  products.reduce(
+                    (acc, product) => acc + product.price * product.quantity,
+                    0
+                  ) + 18
+                ).toFixed(2)}
+              </span>
             </div>
-            <button className="w-full py-3 bg-black text-white rounded-lg hover:bg-gray-800">
+            <button className="w-full py-3 hover:bg-gray-800 transition-all text-white rounded-lg bg-gray-700">
               CHECK OUT
             </button>
             <button className="w-full py-3 border rounded-lg flex items-center justify-center space-x-2">
@@ -128,7 +230,6 @@ const Cart = () => {
           </div>
         </div>
       </div>
-
       <Footer />
     </>
   );
