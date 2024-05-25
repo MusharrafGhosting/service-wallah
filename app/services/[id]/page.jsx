@@ -19,7 +19,6 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
-import { FaTrash } from "react-icons/fa";
 
 const NextArrow = ({ onClick }) => {
   return (
@@ -44,7 +43,7 @@ const PrevArrow = ({ onClick }) => {
 };
 
 const sliderSettings = {
-  dots: true,
+  // dots: true,
   infinite: true,
   speed: 500,
   slidesToShow: 4,
@@ -58,7 +57,7 @@ const sliderSettings = {
         slidesToShow: 2,
         slidesToScroll: 1,
         infinite: true,
-        dots: true,
+        // dots: true,
       },
     },
     {
@@ -206,58 +205,66 @@ const Service = () => {
 
       <div className="px-4 md:px-20 my-6 flex flex-col gap-6">
         <div className="flex flex-col lg:flex-row gap-6 w-full">
-          <div className="lg:w-2/3 w-full p-4 grid grid-cols-1 gap-4 rounded-lg">
-            <div className="flex flex-col items-center  ">
+          <div className="w-2/3 p-4 grid grid-cols-1 gap-4 rounded-lg">
+            <div className="flex items-center gap-2">
               <img
-                src="/image/service-logos/ac.svg" // Replace with actual path
+                src={service.icon?.url} // Replace with actual path
                 alt="Service Icon"
                 className="w-20 h-20 object-cover"
               />
-              <h2 className="lg:text-4xl md:text-5xl sm:text-5xl text-4xl leading-tight text-gray-700 font-bold text-center">
-                AC Service and Repair
-              </h2>
+              <div>
+                <h2 className="lg:text-4xl md:text-5xl sm:text-5xl text-4xl leading-tight text-gray-700 font-bold text-center">
+                  {service.name}
+                </h2>
+                <div className="flex items-center">
+                  {[...Array(5)].map((star, i) => (
+                    <svg
+                      key={i}
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className={`h-5 w-5 ${
+                        i < service.rating ? "text-orange-500" : "text-gray-300"
+                      }`}
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M12 17.27l5.18 3.73-1.64-5.67L20 9.91l-5.68-.49L12 4 9.68 9.42 4 9.91l4.46 5.42-1.64 5.67L12 17.27z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  ))}
+                  <span className="text-gray-500 ml-2">| 5 Reviews</span>
+                </div>
+              </div>
             </div>
             <div className="flex gap-2 items-center  ">
-              <div className="whitespace-nowrap text-sm">Choose a service</div>
+              <div className="whitespace-nowrap text-sm">Reviews & Ratings</div>
               <div className="h-px bg-gray-300 w-full"></div>
             </div>
-            <div className="max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
-  <div className="flex flex-col sm:flex-row items-center bg-white shadow-lg rounded-lg p-4">
-    <div className="flex-shrink-0">
-      <img
-        src="/image/calendar 1.svg" // Replace with actual path
-        alt="Bookings Icon"
-        className="w-12 h-12 mr-4"
-      />
-    </div>
-    <div className="mt-4 sm:mt-0">
-      <span className="text-orange-500 text-xl font-bold mr-4">
-        8,000 Bookings
-      </span>
-      <div className="flex items-center">
-        {[...Array(5)].map((star, i) => (
-          <svg
-            key={i}
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className={`h-5 w-5 ${
-              i < service.rating ? "text-orange-500" : "text-gray-300"
-            }`}
-          >
-            <path
-              fillRule="evenodd"
-              d="M12 17.27l5.18 3.73-1.64-5.67L20 9.91l-5.68-.49L12 4 9.68 9.42 4 9.91l4.46 5.42-1.64 5.67L12 17.27z"
-              clipRule="evenodd"
-            />
-          </svg>
-        ))}
-        <span className="text-gray-500 ml-2">| 5 Reviews</span>
-      </div>
-    </div>
-  </div>
-</div>
-
+            <div className="flex flex-col items-center gap-6 h-fit bg-white shadow-lg rounded-lg p-4">
+              <div className="flex items-center gap-2">
+                <img
+                  src="/image/calendar 1.svg" // Replace with actual path
+                  alt="Bookings Icon"
+                  className="w-12 h-12"
+                />
+                <span className="text-orange-500 text-xl font-bold">
+                  8,000 Bookings
+                </span>
+              </div>
+              <div className="h-px bg-gray-300 w-full"></div>
+              <div className="flex items-center gap-2">
+                <img
+                  src="/image/calendar 1.svg" // Replace with actual path
+                  alt="Bookings Icon"
+                  className="w-12 h-12"
+                />
+                <span className="text-orange-500 text-xl font-bold">
+                  8,000 Bookings
+                </span>
+              </div>
+            </div>
           </div>
 
           <Carousel
@@ -329,13 +336,12 @@ const Service = () => {
             AC Service and Repair
           </h1>
         </div>
-        <div className="relative w-full overflow-hidden">
+        <div className="container mx-auto">
           <Slider {...sliderSettings}>
             {service.subServices?.map((service, index) => (
               <div key={index} className="px-3">
-                {" "}
-                <Card className=" ">
-                  <CardHeader floated={false} color=" ">
+                <Card className="mb-3">
+                  <CardHeader floated={false}>
                     <img
                       src={service.icon.url}
                       alt="Service Icon"
@@ -412,8 +418,8 @@ const Service = () => {
         </div>
       </div>
       <div className="flex justify-center bg-gray-100 ">
-        <div className="w-96">
-          <div className="my-6 p-1 bg-white shadow rounded-lg  p-4 shadow rounded-lg   space-x-4">
+        <div className="w-9/12 mb-8">
+          <div className="p-4 bg-white shadow rounded-lg space-x-4">
             <h3 className="text-2xl font-bold mb-4 text-center">
               Submit Your Review
             </h3>
@@ -434,7 +440,7 @@ const Service = () => {
                   onChange={(e) =>
                     setNewReview({ ...newReview, review: e.target.value })
                   }
-                  className="mt-1 block w-full border-2 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xl"
+                  className="resize-none mt-1 block w-full border-2 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xl"
                   rows="4"
                   required
                 ></textarea>
