@@ -30,7 +30,7 @@ const formattedDate = getCurrentDateFormatted();
 export async function POST(request, { params }) {
   const { id } = params;
   const { name, status, price, icon } = await request.json();
-  console.log(name, status, price, icon, id);
+  // console.log(name, status, price, icon, id);
   await connectMongoDB();
   const service = await Service.findById(id);
   service.subServices.push({

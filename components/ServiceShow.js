@@ -1,13 +1,12 @@
 "use client";
-import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { FaTools } from "react-icons/fa";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 import Link from "next/link";
+import { IoMdOpen } from "react-icons/io";
 
-const ServiceShow = () => {
+const ServiceShow = ({topServices}) => {
   const settings = {
     dots: true,
     infinite: true,
@@ -35,36 +34,7 @@ const ServiceShow = () => {
       },
     ],
   };
-  const [topServices, setTopServices] = useState([]);
-  const gettingServices = async () => {
-    try {
-      const fetchedData = await fetch("/api/services", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const response = await fetchedData.json();
-      function getTopBookedServices(services, topN) {
-        return services
-          .sort((a, b) => b.rank - a.rank)
-          .filter(
-            (service) =>
-              service.status === "active" && service.subServices?.length > 0
-          )
-          .slice(0, topN);
-      }
-
-      const topBookedServices = getTopBookedServices(response, 10);
-
-      setTopServices(topBookedServices);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-  useEffect(() => {
-    gettingServices();
-  }, []);
+  
   return (
     <div className="container mx-auto py-8">
       <Slider {...settings}>
@@ -111,8 +81,9 @@ const ServiceShow = () => {
                 </div>
               </div>
               <Link href={`/services/${service._id}`} target="_blank">
-                <button className="w-full text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                  View <span className="inline-block ml-2">→</span>
+                <button className="flex items-center gap-1 justify-center w-full text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                  View
+                  <IoMdOpen />
                 </button>
               </Link>
             </div>

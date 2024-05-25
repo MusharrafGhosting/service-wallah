@@ -23,7 +23,6 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import {
-  Card,
   CardBody,
   Input,
   Tabs,
@@ -43,10 +42,9 @@ import {
 import { FaCartShopping, FaLocationDot, FaUsersGear } from "react-icons/fa6";
 import {
   IoIosInformationCircle,
-  IoMdMailUnread,
   IoMdOpen,
 } from "react-icons/io";
-import { AiFillHome, AiFillWarning } from "react-icons/ai";
+import { AiFillHome } from "react-icons/ai";
 import { BiLogIn } from "react-icons/bi";
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -56,7 +54,6 @@ import {
   MdOutlineManageHistory,
   MdOutlinePayment,
 } from "react-icons/md";
-import { AiOutlineShoppingCart } from "react-icons/ai";
 import { IoLogOut } from "react-icons/io5";
 import { RxCross1 } from "react-icons/rx";
 import axios from "axios";
@@ -288,7 +285,7 @@ function NavList() {
                             {service.name}
                           </h2>
                           {/* <p className="text-gray-500">{service.name}</p> */}
-                          <Link href={`/service/${service._id}`}>
+                          <Link href={`/services/${service._id}`}>
                             <Button
                               variant="gradient"
                               color="blue"
