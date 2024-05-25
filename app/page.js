@@ -244,20 +244,20 @@ export default function Home() {
         <ServiceSection />
       </div>
       <div className="flex flex-col items-center justify-center bg-gray-100 py-10 px-4 sm:px-6 lg:px-8 mx-auto max-w-3xl">
-        <button className="lg:w-full md:w-full sm:w-full w-full bg-blue-500 text-white font-semibold py-3 px-6 rounded-md mb-6">
+        <Link href={"/services"} className="lg:w-full text-center md:w-full sm:w-full w-full outline transition-all duration-700   hoverbg-gradient-to-r hover:from-transparent hover:to-transparent hover:text-blue-600 outline-none hover:outline-blue-600 hover:outline-2 bg-gradient-to-tr from-blue-400 to-blue-600 font-semibold text-white font-semibold py-3 px-6 rounded-md mb-6">
           Book a Service »
-        </button>
+        </Link>
         <div className="flex items-center lg:w-full md:w-full sm:w-full w-full mb-6">
           <hr className="flex-grow border-gray-300" />
           <span className="px-4 text-gray-500 font-medium">or</span>
           <hr className="flex-grow border-gray-300" />
         </div>
-        <button className="lg:w-full md:w-full sm:w-full w-full border border-blue-500 text-blue-500 font-semibold py-3 px-6 rounded-md flex items-center justify-center">
+        <Link href={`/service-provider/create`} className="lg:w-full md:w-full sm:w-full w-full border transition-all duration-700    hover:bg-gradient-to-r hover:from-blue-400 hover:to-blue-600 hover:text-white outline outline-2 outline-blue-500 text-blue-500 font-semibold py-3 px-6 rounded-md flex items-center justify-center">
           Become a service provider{" "}
           <span className="ml-2">
             <FaUserPlus />
           </span>
-        </button>
+        </Link>
       </div>
       <div className="w-full flex flex-col justify-center items-center py-4 px-4">
         <h1 className="font-julius  lg:text-5xl md:text-4xl sm:text-3xl text-3xl text-center text-gray-700">

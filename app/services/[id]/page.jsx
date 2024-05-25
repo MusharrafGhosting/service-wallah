@@ -3,6 +3,8 @@ import Nav from "@/components/Nav";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Footer from "@/components/Footer";
+import Image from "next/image";
+import { Rating } from "@material-tailwind/react";
 import {
   Button,
   Carousel,
@@ -17,6 +19,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+import { FaTrash } from "react-icons/fa";
 
 const NextArrow = ({ onClick }) => {
   return (
@@ -68,12 +71,86 @@ const sliderSettings = {
   ],
 };
 
+const reviews = [
+  {
+    id: 1,
+    name: "Musharraf Jamal",
+    review: "Service provider were soo delicate to his work.",
+    rating: 4,
+    img: "/image/hero1.webp", // Replace with the path to your first image
+  },
+  {
+    id: 2,
+    name: "Angila",
+    review: "Good in work but behavior is not friendly at all.",
+    rating: 3,
+    img: "/image/hero1.webp", // Replace with the path to your second image
+  },
+  {
+    id: 3,
+    name: "Angila",
+    review: "Good in work but behavior is not friendly at all.",
+    rating: 3,
+    img: "/image/hero1.webp", // Replace with the path to your second image
+  },
+  {
+    id: 4,
+    name: "Musharraf Jamal",
+    review: "Service provider were soo delicate to his work.",
+    rating: 4,
+    img: "/image/hero1.webp", // Replace with the path to your first image
+  },
+];
+const ReviewCard = ({ name, review, rating, img }) => (
+  <div className="w-full md:w-1/2 p-2">
+    <div className="bg-white p-4 shadow rounded-lg flex items-start space-x-4">
+      <div className="relative w-12 h-12">
+        <Image
+          src={img}
+          alt={name}
+          layout="fill"
+          objectFit="cover"
+          className="rounded-full"
+        />
+      </div>
+      <div className="flex-1">
+        <div className="flex justify-between items-center">
+          <div>
+            <h3 className="font-bold">{name}</h3>
+            <div className="flex items-center">
+              {Array(rating)
+                .fill()
+                .map((_, i) => (
+                  <span key={i} className="text-orange-500">
+                    ★
+                  </span>
+                ))}
+              {Array(5 - rating)
+                .fill()
+                .map((_, i) => (
+                  <span key={i} className="text-gray-300">
+                    ★
+                  </span>
+                ))}
+            </div>
+          </div>
+        </div>
+        <p className="text-gray-600">{review}</p>
+      </div>
+    </div>
+  </div>
+);
 const Service = () => {
   const { id } = useParams();
 
   const [service, setService] = useState({});
   const [totalEarning, setTotalEarning] = useState(0);
   const [formattedDate, setFormattedDate] = useState("");
+  const [newReview, setNewReview] = useState({
+    name: "",
+    review: "",
+    rating: 0,
+  });
 
   const getService = async () => {
     try {
@@ -85,7 +162,40 @@ const Service = () => {
       console.log(err);
     }
   };
-
+  const handleReviewSubmit = async (e) => {
+    e.preventDefault();
+    // Assuming you have an endpoint to submit a review
+    try {
+      const res = await fetch(`/api/reviews`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...newReview,
+          serviceId: id,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        // Add the new review to the existing reviews
+        setService((prev) => ({
+          ...prev,
+          reviews: [...prev.reviews, data],
+        }));
+        // Reset the new review form
+        setNewReview({
+          name: "",
+          review: "",
+          rating: 0,
+        });
+      } else {
+        console.log(data.message);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   useEffect(() => {
     getService();
   }, []);
@@ -97,32 +207,59 @@ const Service = () => {
       <div className="px-4 md:px-20 my-6 flex flex-col gap-6">
         <div className="flex flex-col lg:flex-row gap-6 w-full">
           <div className="lg:w-2/3 w-full p-4 grid grid-cols-1 gap-4 rounded-lg">
-            <h2 className="lg:text-5xl md:text-5xl sm:text-5xl text-4xl leading-tight text-gray-700 font-bold">
-              AC Service and Repair
-            </h2>
-            <div className="flex gap-2 items-center">
+            <div className="flex flex-col items-center  ">
+              <img
+                src="/image/service-logos/ac.svg" // Replace with actual path
+                alt="Service Icon"
+                className="w-20 h-20 object-cover"
+              />
+              <h2 className="lg:text-4xl md:text-5xl sm:text-5xl text-4xl leading-tight text-gray-700 font-bold text-center">
+                AC Service and Repair
+              </h2>
+            </div>
+            <div className="flex gap-2 items-center  ">
               <div className="whitespace-nowrap text-sm">Choose a service</div>
               <div className="h-px bg-gray-300 w-full"></div>
             </div>
-            <div className="flex flex-col w-3/4 max-h-40 overflow-auto gap-4">
-              {service.subServices?.map((sub, index) => {
-                return (
-                  <Button
-                    key={index}
-                    variant="outlined"
-                    className="flex bg-gray-200 items-center justify-between px-4 py-2 rounded-lg shadow-md"
-                  >
-                    <img
-                      src={sub.icon?.url}
-                      alt={sub.name}
-                      className="w-12 h-12 object-cover rounded-lg"
-                    />
-                    <span>{sub.name}</span>
-                  </Button>
-                );
-              })}
-            </div>
+            <div className="max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
+  <div className="flex flex-col sm:flex-row items-center bg-white shadow-lg rounded-lg p-4">
+    <div className="flex-shrink-0">
+      <img
+        src="/image/calendar 1.svg" // Replace with actual path
+        alt="Bookings Icon"
+        className="w-12 h-12 mr-4"
+      />
+    </div>
+    <div className="mt-4 sm:mt-0">
+      <span className="text-orange-500 text-xl font-bold mr-4">
+        8,000 Bookings
+      </span>
+      <div className="flex items-center">
+        {[...Array(5)].map((star, i) => (
+          <svg
+            key={i}
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className={`h-5 w-5 ${
+              i < service.rating ? "text-orange-500" : "text-gray-300"
+            }`}
+          >
+            <path
+              fillRule="evenodd"
+              d="M12 17.27l5.18 3.73-1.64-5.67L20 9.91l-5.68-.49L12 4 9.68 9.42 4 9.91l4.46 5.42-1.64 5.67L12 17.27z"
+              clipRule="evenodd"
+            />
+          </svg>
+        ))}
+        <span className="text-gray-500 ml-2">| 5 Reviews</span>
+      </div>
+    </div>
+  </div>
+</div>
+
           </div>
+
           <Carousel
             className="rounded-md w-full max-h-auto overflow-hidden"
             loop
@@ -230,30 +367,6 @@ const Service = () => {
                         {service.name}
                       </Typography>
                     </div>
-                    <div className="flex items-center mb-2">
-                      {[...Array(5)].map((star, i) => (
-                        <svg
-                          key={i}
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                          className={`h-5 w-5 ${
-                            i < service.rating
-                              ? "text-yellow-500"
-                              : "text-gray-300"
-                          }`}
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M12 17.27l5.18 3.73-1.64-5.67L20 9.91l-5.68-.49L12 4 9.68 9.42 4 9.91l4.46 5.42-1.64 5.67L12 17.27z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      ))}
-                      <Typography color="gray" className="ml-2">
-                        | {service.reviews.length} Reviews
-                      </Typography>
-                    </div>
                     <div className="text-2xl font-bold text-teal-500">
                       ₹{service.price}
                     </div>
@@ -275,6 +388,67 @@ const Service = () => {
           </Slider>
         </div>
       </div>
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-2xl font-bold mb-4">Reviews by users</h2>
+          <div className="flex items-center mb-4">
+            <div className="flex items-center">
+              {Array(4)
+                .fill()
+                .map((_, i) => (
+                  <span key={i} className="text-orange-500 text-xl">
+                    ★
+                  </span>
+                ))}
+              <span className="text-gray-500 text-xl">★</span>
+            </div>
+            <span className="ml-2 text-gray-700">(4 reviews)</span>
+          </div>
+        </div>
+        <div className="flex flex-wrap -m-2">
+          {reviews.map((review) => (
+            <ReviewCard key={review.id} {...review} />
+          ))}
+        </div>
+      </div>
+      <div className="flex justify-center bg-gray-100 ">
+        <div className="w-96">
+          <div className="my-6 p-1 bg-white shadow rounded-lg  p-4 shadow rounded-lg   space-x-4">
+            <h3 className="text-2xl font-bold mb-4 text-center">
+              Submit Your Review
+            </h3>
+            <form onSubmit={handleReviewSubmit} className="space-y-4">
+              <div className="flex gap-5">
+                <label className="block text-xl font-medium text-gray-700">
+                  Rating
+                </label>
+                <Rating value={4} />
+              </div>
+              <div className="flex gap-5">
+                <label className="block text-xl font-medium text-gray-700">
+                  Review
+                </label>
+                <textarea
+                  name="review"
+                  value={newReview.review}
+                  onChange={(e) =>
+                    setNewReview({ ...newReview, review: e.target.value })
+                  }
+                  className="mt-1 block w-full border-2 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xl"
+                  rows="4"
+                  required
+                ></textarea>
+              </div>
+              <div className="flex justify-end">
+                <Button type="submit" color="blue">
+                  Submit Review
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
       <Footer />
     </div>
   );
