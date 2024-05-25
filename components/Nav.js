@@ -40,10 +40,7 @@ import {
   FaUser,
 } from "react-icons/fa";
 import { FaCartShopping, FaLocationDot, FaUsersGear } from "react-icons/fa6";
-import {
-  IoIosInformationCircle,
-  IoMdOpen,
-} from "react-icons/io";
+import { IoIosInformationCircle, IoMdOpen } from "react-icons/io";
 import { AiFillHome } from "react-icons/ai";
 import { BiLogIn } from "react-icons/bi";
 import Link from "next/link";
@@ -57,6 +54,7 @@ import {
 import { IoLogOut } from "react-icons/io5";
 import { RxCross1 } from "react-icons/rx";
 import axios from "axios";
+import Fuse from "fuse.js";
 
 const services = [
   {
@@ -155,6 +153,9 @@ function NavList() {
   const handleOpen2 = () => setOpen2(!open2);
 
   const [topServices, setTopServices] = useState([]);
+  const [allServices, setAllServices] = useState([]);
+  const [searchedData, setSearchedData] = useState([]);
+  const [searchError, setSearchError] = useState("");
   const gettingServices = async () => {
     try {
       const fetchedData = await fetch("/api/services", {
@@ -172,7 +173,7 @@ function NavList() {
       }
 
       const topBookedServices = getTopBookedServices(response, 6);
-
+      setAllServices(response);
       setTopServices(topBookedServices);
     } catch (err) {
       console.error(err);
@@ -181,6 +182,40 @@ function NavList() {
   useEffect(() => {
     gettingServices();
   }, []);
+
+  const fuseOptions = {
+    keys: ["name", "subServices.name"],
+    includeScore: true,
+    threshold: 0.3,
+  };
+
+  // Flatten the data array to include both services and their sub-services
+  const flattenedData = allServices.flatMap((service) => [
+    service,
+    ...service.subServices.map((subService) => ({
+      ...subService,
+      parentServiceName: service.name,
+      parentServiceId: service._id,
+    })),
+  ]);
+
+  const fuse = new Fuse(flattenedData, fuseOptions);
+  console.log(flattenedData);
+  function handleSerch(query) {
+    if (!query) {
+      setSearchError("");
+      setSearchedData([]);
+      return;
+    }
+
+    const result = fuse.search(query);
+
+    if (result.length === 0) {
+      setSearchError("No matching service found");
+    }
+    setSearchedData(result);
+  }
+
   return (
     <List className="mt-4 mb-6 p-0 lg:mt-0 lg:mb-0 lg:flex-row lg:p-1 md:gap-4">
       <ServicesList />
@@ -231,9 +266,15 @@ function NavList() {
         >
           <FaSearch />
         </button>
-        
-        <Badge content={0} overlap="circular" color="teal" className="text-[0.6rem] p-0 h-4 w-4 flex justify-center items-center">
-          <Link href={"/cart"}
+
+        <Badge
+          content={0}
+          overlap="circular"
+          color="teal"
+          className="text-[0.6rem] p-0 h-4 w-4 flex justify-center items-center"
+        >
+          <Link
+            href={"/cart"}
             variant="gradient"
             className="flex gap-2 border bg-white border-gray-300 hover:bg-gray-200 shadow py-2 px-3 rounded-full justify-center items-center"
           >
@@ -261,6 +302,7 @@ function NavList() {
             <Input
               label="Search a Service"
               color="blue"
+              onChange={(e) => handleSerch(e.target.value)}
               icon={<FaSearch className="cursor-pointer text-blue-500" />}
             />
             <div>
@@ -271,35 +313,81 @@ function NavList() {
                 <div className="h-px bg-gray-300 w-full"></div>
               </div>
               <div className="grid gap-4 grid-cols-2 md:grid-cols-3 h-96 overflow-auto no-scrollbar">
-                {topServices.map((service, index) => {
-                  return (
-                    <div key={index} className="bg-white rounded-lg py-4 px-4">
-                      <div className="flex flex-col items-center gap-2">
-                        <img
-                          src={service.icon.url}
-                          alt={service.name}
-                          className="w-10 h-10 md:w-16 md:h-16 rounded-md"
-                        />
-                        <div className="flex flex-col items-center gap-1 w-full">
-                          <h2 className="text-gray-700 font-julius font-semibold text-center">
-                            {service.name}
-                          </h2>
-                          {/* <p className="text-gray-500">{service.name}</p> */}
-                          <Link href={`/services/${service._id}`}>
-                            <Button
-                              variant="gradient"
-                              color="blue"
-                              className="rounded w-full flex items-center gap-1"
-                              size="sm"
-                            >
-                              View <IoMdOpen />
-                            </Button>
-                          </Link>
+                {searchError ? (
+                  <div>{searchError}</div>
+                ) : searchedData.length <= 0 ? (
+                  topServices.map((service, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="bg-white rounded-lg py-4 px-4"
+                      >
+                        <div className="flex flex-col items-center gap-2">
+                          <img
+                            src={service.icon.url}
+                            alt={service.name}
+                            className="w-10 h-10 md:w-16 md:h-16 rounded-md"
+                          />
+                          <div className="flex flex-col items-center gap-1 w-full">
+                            <h2 className="text-gray-700 font-julius font-semibold text-center">
+                              {service.name}
+                            </h2>
+                            {/* <p className="text-gray-500">{service.name}</p> */}
+                            <Link href={`/services/${service._id}`}>
+                              <Button
+                                variant="gradient"
+                                color="blue"
+                                className="rounded w-full flex items-center gap-1"
+                                size="sm"
+                              >
+                                View <IoMdOpen />
+                              </Button>
+                            </Link>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })
+                ) : (
+                  searchedData.map((service, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="bg-white rounded-lg py-4 px-4 h-fit"
+                      >
+                        <div className="flex flex-col items-center gap-2">
+                          <img
+                            src={service.item.icon.url}
+                            alt={service.item.name}
+                            className="w-10 h-10 md:w-16 md:h-16 rounded-md"
+                          />
+                          <div className="flex flex-col items-center gap-1 w-full">
+                            <h2 className="text-gray-700 font-julius font-semibold text-center">
+                              {service.item.name}
+                            </h2>
+                            {/* <p className="text-gray-500">{service.item.name}</p> */}
+                            <Link
+                              href={`/services/${
+                                service.item.parentServiceId
+                                  ? service.item.parentServiceId
+                                  : service.item._id
+                              }`}
+                            >
+                              <Button
+                                variant="gradient"
+                                color="blue"
+                                className="rounded w-full flex items-center gap-1"
+                                size="sm"
+                              >
+                                View <IoMdOpen />
+                              </Button>
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
               </div>
             </div>
           </DialogBody>

@@ -311,7 +311,7 @@ const Services = () => {
                       </div>
                     </div>
                   </div>
-                  <div>
+                  <div className="max-h-56 overflow-auto no-scrollbar">
                     {serv.subServices.length === 0 ? (
                       <div className="text-center text-xl">
                         🚫Uh oh, There are no Sub services yet.
