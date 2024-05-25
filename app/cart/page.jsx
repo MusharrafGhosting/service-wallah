@@ -77,7 +77,7 @@ const Cart = () => {
     },
   ]);
 
-  const [validationMessage, setValidationMessage] = useState("");
+  const [validationMessage, setValidationMessage] = useState(false);
 
   const handleQuantityChange = (index, change) => {
     setProducts((prevProducts) => {
@@ -85,7 +85,7 @@ const Cart = () => {
         if (i === index) {
           const newQuantity = product.quantity + change;
           if (newQuantity < 1 || newQuantity > 10) {
-            setValidationMessage("Quantity should be between 1 and 10.");
+            setValidationMessage(true);
             return product;
           }
           setValidationMessage("");
@@ -105,7 +105,7 @@ const Cart = () => {
   };
 
   return (
-    <>
+    <div>
       <Head>
         <title>Shopping Cart</title>
       </Head>
@@ -126,7 +126,7 @@ const Cart = () => {
               }`}
             >
               <RiErrorWarningFill />
-              {validationMessage}
+              Quantity should be between 1 and 10.
             </div>
           </div>
           <div className="mt-4 space-y-6 px-6">
@@ -231,7 +231,7 @@ const Cart = () => {
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 };
 

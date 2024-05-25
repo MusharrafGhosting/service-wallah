@@ -6,5 +6,6 @@ export async function GET(request, { params }) {
   const { id } = params;
   await connectMongoDB();
   const service = await Service.findById(id);
+  console.log(service)
   return NextResponse.json(service , { status: 201 });
 }
