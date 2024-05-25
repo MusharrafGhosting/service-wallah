@@ -17,16 +17,17 @@ const Service = ({ iconSrc, title, services, link }) => {
           <div className="whitespace-nowrap text-sm">{title}</div>
           <div className="h-px bg-gray-300 w-full"></div>
         </div>
-        <div>
+        <div className="flex flex-col   max-h-44 overflow-auto no-scrollbar gap-4">
           {services.length === 0 ? (
             <div className="text-center my-4">
               🫠Uh oh, There is no services in {title}
             </div>
           ) : (
+            
             services.map((service, index) => (
               <div
                 key={index}
-                className="flex items-center gap-4 bg-gray-100 p-3 rounded-md"
+                className="flex items-center gap-4 bg-gray-100 p-3 rounded-md "
               >
                 <img
                   src={service.icon?.url}
