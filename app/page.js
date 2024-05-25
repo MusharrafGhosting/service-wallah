@@ -213,11 +213,6 @@ export default function Home() {
             )}
           >
             <img
-              src="/image/slider1.webp"
-              alt="image 1"
-              className="h-[32rem] w-full object-cover"
-            />
-            <img
               src="/image/slider2.webp"
               alt="image 2"
               className="h-[32rem] w-full object-cover"
