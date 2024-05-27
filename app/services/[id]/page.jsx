@@ -155,7 +155,7 @@ const Service = () => {
     rating: 0,
   });
 
-  const getService = async () => {
+const getService = async () => {
     try {
       const res = await fetch(`/api/services/${id}`);
       const data = await res.json();
@@ -169,7 +169,7 @@ const Service = () => {
     e.preventDefault();
     // Assuming you have an endpoint to submit a review
     try {
-      const res = await fetch(`/api/reviews`, {
+      const res = await fetch("/api/reviews", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -217,7 +217,7 @@ const Service = () => {
                 className="w-20 h-20 object-cover"
               />
               <div>
-                <h2 className="lg:text-4xl md:text-5xl sm:text-5xl text-4xl leading-tight text-gray-700 font-bold text-center">
+                <h2 className="lg:text-4xl md:text-5xl sm:text-5xl  text-4xl leading-tight text-gray-700 font-bold  ">
                   {service.name}
                 </h2>
                 <div className="flex items-center">
@@ -246,10 +246,10 @@ const Service = () => {
               <div className="whitespace-nowrap text-sm">Reviews & Ratings</div>
               <div className="h-px bg-gray-300 w-full"></div>
             </div>
-            <div className="flex flex-col items-center gap-6 h-fit bg-white shadow-lg rounded-lg p-4">
+            <div className="flex flex-col  items-start gap-6 h-fit bg-white shadow-lg rounded-lg p-4">
               <div className="flex items-center gap-2">
                 <img
-                  src="/image/calendar 1.svg" // Replace with actual path
+                  src="/icons/booking.png" // Replace with actual path
                   alt="Bookings Icon"
                   className="w-12 h-12"
                 />
@@ -260,18 +260,18 @@ const Service = () => {
               <div className="h-px bg-gray-300 w-full"></div>
               <div className="flex items-center gap-2">
                 <img
-                  src="/icons/shooting-star.png" // Replace with actual path
+                  src="/icons/star.png" // Replace with actual path
                   alt="Star Icon"
                   className="w-12 h-12"
                 />
-                <span className="text-gray-500 text-xl font-bold">
+                <span className="text-gray-600 text-xl font-bold">
                   4.3 | 120 reviews
                 </span>
               </div>
             </div>
           </div>
 
-          <Carousel
+<Carousel
             className="rounded-md w-full max-h-auto overflow-hidden"
             loop
             prevArrow={({ handlePrev }) => (
@@ -382,7 +382,8 @@ const Service = () => {
                     </div>
                   </CardBody>
                   <CardFooter className="pt-0 flex flex-col gap-2">
-                    <Button
+
+<Button
                       size="lg"
                       fullWidth={true}
                       variant="gradient"
