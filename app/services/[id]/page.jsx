@@ -47,7 +47,7 @@ const sliderSettings = {
   dots: true,
   infinite: true,
   speed: 500,
-  slidesToShow: 4,
+  slidesToShow: Math.min(service.subServices?.length, 3),
   slidesToScroll: 1,
   nextArrow: <NextArrow />,
   prevArrow: <PrevArrow />,
@@ -222,42 +222,43 @@ const Service = () => {
               <div className="h-px bg-gray-300 w-full"></div>
             </div>
             <div className="max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
-  <div className="flex flex-col sm:flex-row items-center bg-white shadow-lg rounded-lg p-4">
-    <div className="flex-shrink-0">
-      <img
-        src="/image/calendar 1.svg" // Replace with actual path
-        alt="Bookings Icon"
-        className="w-12 h-12 mr-4"
-      />
-    </div>
-    <div className="mt-4 sm:mt-0">
-      <span className="text-orange-500 text-xl font-bold mr-4">
-        8,000 Bookings
-      </span>
-      <div className="flex items-center">
-        {[...Array(5)].map((star, i) => (
-          <svg
-            key={i}
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className={`h-5 w-5 ${
-              i < service.rating ? "text-orange-500" : "text-gray-300"
-            }`}
-          >
-            <path
-              fillRule="evenodd"
-              d="M12 17.27l5.18 3.73-1.64-5.67L20 9.91l-5.68-.49L12 4 9.68 9.42 4 9.91l4.46 5.42-1.64 5.67L12 17.27z"
-              clipRule="evenodd"
-            />
-          </svg>
-        ))}
-        <span className="text-gray-500 ml-2">| 5 Reviews</span>
-      </div>
-    </div>
-  </div>
-</div>
-
+              <div className="flex flex-col sm:flex-row items-center bg-white shadow-lg rounded-lg p-4">
+                <div className="flex-shrink-0">
+                  <img
+                    src="/image/calendar 1.svg" // Replace with actual path
+                    alt="Bookings Icon"
+                    className="w-12 h-12 mr-4"
+                  />
+                </div>
+                <div className="mt-4 sm:mt-0">
+                  <span className="text-orange-500 text-xl font-bold mr-4">
+                    8,000 Bookings
+                  </span>
+                  <div className="flex items-center">
+                    {[...Array(5)].map((star, i) => (
+                      <svg
+                        key={i}
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className={`h-5 w-5 ${
+                          i < service.rating
+                            ? "text-orange-500"
+                            : "text-gray-300"
+                        }`}
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M12 17.27l5.18 3.73-1.64-5.67L20 9.91l-5.68-.49L12 4 9.68 9.42 4 9.91l4.46 5.42-1.64 5.67L12 17.27z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    ))}
+                    <span className="text-gray-500 ml-2">| 5 Reviews</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <Carousel
