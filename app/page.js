@@ -48,13 +48,21 @@ export default function Home() {
   }, []);
   return (
     <>
-      <div className={`grid place-items-center min-h-screen absolute w-full bg-white transition-all duration-700 top-0 ${loading ? "opacity-100" : "opacity-0"} ${loading ? "z-50" : "-z-50"}`}>
+      <div
+        className={`grid place-items-center min-h-screen absolute w-full bg-white transition-all duration-700 top-0 ${
+          loading ? "opacity-100" : "opacity-0"
+        } ${loading ? "z-50" : "-z-50"}`}
+      >
         <div className="flex flex-col items-center gap-4">
           <div className="loaction-loader"></div>
           <div className="text-2xl font-julius">Loading</div>
         </div>
       </div>
-      <main className={`${loading ? "hidden" : "bloack"} transition-all duration-700`}>
+      <main
+        className={`${
+          loading ? "hidden" : "bloack"
+        } transition-all duration-700`}
+      >
         <Nav />
         <div className="flex flex-col lg:flex-row">
           {/* Left half */}

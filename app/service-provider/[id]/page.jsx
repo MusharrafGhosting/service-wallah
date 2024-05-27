@@ -4,6 +4,8 @@ import Nav from "@/components/Nav";
 import { useState, useEffect } from "react";
 import { FaArrowLeft, FaHistory } from "react-icons/fa";
 import { useParams, useRouter } from "next/navigation";
+import { Rating } from "@material-tailwind/react";
+import Image from "next/image";
 import {
   Button,
   Dialog,
@@ -29,6 +31,105 @@ import {
 import { storage } from "@/firebase";
 import { IoSettings } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
+import Footer from "@/components/Footer";
+
+const reviews = [
+  {
+    id: 1,
+    name: "Musharraf Jamal",
+    review: "Service provider were soo delicate to his work.",
+    rating: 4,
+    img: "/image/hero1.webp", // Replace with the path to your first image
+  },
+  {
+    id: 2,
+    name: "Angila",
+    review: "Good in work but behavior is not friendly at all.",
+    rating: 3,
+    img: "/image/hero1.webp", // Replace with the path to your second image
+  },
+  {
+    id: 3,
+    name: "Angila",
+    review: "Good in work but behavior is not friendly at all.",
+    rating: 3,
+    img: "/image/hero1.webp", // Replace with the path to your second image
+  },
+  {
+    id: 4,
+    name: "Musharraf Jamal",
+    review: "Service provider were soo delicate to his work.",
+    rating: 4,
+    img: "/image/hero1.webp", // Replace with the path to your first image
+  },
+  {
+    id: 5,
+    name: "Musharraf Jamal",
+    review: "Service provider were soo delicate to his work.",
+    rating: 4,
+    img: "/image/hero1.webp", // Replace with the path to your first image
+  },
+  {
+    id: 6,
+    name: "Musharraf Jamal",
+    review: "Service provider were soo delicate to his work.",
+    rating: 4,
+    img: "/image/hero1.webp", // Replace with the path to your first image
+  },
+  {
+    id: 7,
+    name: "Musharraf Jamal",
+    review: "Service provider were soo delicate to his work.",
+    rating: 4,
+    img: "/image/hero1.webp", // Replace with the path to your first image
+  },
+  {
+    id: 8,
+    name: "Musharraf Jamal",
+    review:
+      "Service provider were soo delicate to his work.Service provider were soo delicate to his work.Service provider were soo delicate to his work.Service provider were soo delicate to his work.",
+    rating: 4,
+    img: "/image/hero1.webp", // Replace with the path to your first image
+  },
+  {
+    id: 9,
+    name: "Musharraf Jamal",
+    review: "Service provider were soo delicate to his work.",
+    rating: 4,
+    img: "/image/hero1.webp", // Replace with the path to your first image
+  },
+];
+const ReviewCard = ({ name, review, rating, img }) => (
+  <div className="w-full md:w-1/2 p-2">
+    <div className="bg-white p-4 h-52 shadow rounded-lg flex items-start space-x-4">
+      <div className="relative w-12 h-12">
+        <Image
+          src={img}
+          alt={name}
+          layout="fill"
+          objectFit="cover"
+          className="rounded-full"
+        />
+      </div>
+      <div className="flex-1">
+        <div className="flex justify-between items-center">
+          <div>
+            <h3 className="font-bold">{name}</h3>
+            <div className="flex items-center">
+              <Rating value={4} />
+            </div>
+          </div>
+        </div>
+        <p className="text-gray-600">{review}</p>
+      </div>
+    </div>
+  </div>
+);
+const locations = [
+  "Panch shiv mandir, doctor colony, Kankarbagh, 800020",
+  "Another location, another address, Another city, 123456",
+  "Yet another location, yet another address, Yet another city, 654321",
+];
 
 const ServiceProvider = () => {
   const { id } = useParams();
@@ -301,8 +402,8 @@ const ServiceProvider = () => {
                   </div>
                 </div>
                 <div className="w-full flex flex-col gap-4">
-                  <div className="flex items-center justify-between w-full">
-                    <div className="flex items-center gap-4 w-full">
+                  <div className="flex items-center md:flex-row flex-col  justify-between w-full">
+                    <div className="flex items-center md:flex-row flex-col  gap-4 w-full">
                       <div className="bg-red-100 px-4 py-2 text-red-800 rounded-md w-fit flex items-center gap-10">
                         <div className="flex items-center gap-1 w-full">
                           <FaHistory />
@@ -320,7 +421,7 @@ const ServiceProvider = () => {
                     </div>
                     <button
                       onClick={handleOpen}
-                      className="px-4 py-2 whitespace-nowrap bg-gray-800 text-white font-bold rounded shadow"
+                      className="px-4 py-2 mt-3 whitespace-nowrap bg-gray-800 text-white font-bold rounded shadow"
                     >
                       Edit Profile
                     </button>
@@ -473,8 +574,8 @@ const ServiceProvider = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between w-full">
-                  <h1 className="flex items-center gap-1 text-2xl font-bold text-gray-700">
+                <div className="flex items-center md:flex-row flex-col justify-between w-full">
+                  <h1 className="flex items-center gap-1 text-2xl md:flex-row    font-bold text-gray-700">
                     <IoSettings size={30} /> Services You Provide
                   </h1>
                   <button
@@ -570,9 +671,10 @@ const ServiceProvider = () => {
                   </Dialog>
                 </div>
                 <div className="p-4 bg-white rounded-lg">
-                  {UpdatedServices?.map((service,index) => {
+                  {UpdatedServices?.map((service, index) => {
                     return (
-                      <ListItem key={index}
+                      <ListItem
+                        key={index}
                         ripple={false}
                         className="py-2 text-blue-gray-500 text-xl"
                       >
@@ -597,9 +699,54 @@ const ServiceProvider = () => {
                     );
                   })}
                 </div>
+                <div className="bg-gray-200 p-4 py-6 rounded shadow-md">
+                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+                    <h2 className="text-2xl font-bold text-gray-700 mb-4 md:mb-0">
+                      Your available locations
+                    </h2>
+                    <button className="px-4 py-2 whitespace-nowrap bg-gray-800 text-white font-bold rounded shadow">
+                      Add new location
+                    </button>
+                  </div>
+                  {locations.map((location, index) => (
+                    <div
+                      key={index}
+                      className="flex flex-col md:flex-row justify-between items-start md:items-center mt-4 md:mt-2 bg-gray-300 p-4 rounded shadow"
+                    >
+                      <p className="mb-2 md:mb-0 w-full md:w-auto">
+                        {location}
+                      </p>
+                      <button className="bg-red-500 text-white flex justify-center gap-1.5 px-4  w-fit py-2 rounded-lg items-center">
+                        delete
+                        <MdDelete size={20} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <div className="container mx-auto px-4 py-8 ">
+                  <div className="flex items-center md:flex-row flex-col justify-between mb-4">
+                    <h2 className="text-2xl font-bold mb-4">
+                      Reviews by users
+                    </h2>
+                    <div className="flex items-center mb-4">
+                      <div className="flex items-center">
+                        <Rating value={4} />
+                      </div>
+                      <span className="ml-2 text-gray-700">(4 reviews)</span>
+                    </div>
+                  </div>
+                  <div className="overflow-auto h-96">
+                    <div className="flex flex-wrap m-2 ">
+                      {reviews.map((review) => (
+                        <ReviewCard key={review.id} {...review} />
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+          <Footer />
         </div>
       )}
     </>

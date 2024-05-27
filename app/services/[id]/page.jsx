@@ -155,7 +155,7 @@ const Service = () => {
     rating: 0,
   });
 
-const getService = async () => {
+  const getService = async () => {
     try {
       const res = await fetch(`/api/services/${id}`);
       const data = await res.json();
@@ -271,7 +271,7 @@ const getService = async () => {
             </div>
           </div>
 
-<Carousel
+          <Carousel
             className="rounded-md w-full max-h-auto overflow-hidden"
             loop
             prevArrow={({ handlePrev }) => (
@@ -382,8 +382,7 @@ const getService = async () => {
                     </div>
                   </CardBody>
                   <CardFooter className="pt-0 flex flex-col gap-2">
-
-<Button
+                    <Button
                       size="lg"
                       fullWidth={true}
                       variant="gradient"
@@ -404,14 +403,7 @@ const getService = async () => {
           <h2 className="text-2xl font-bold mb-4">Reviews by users</h2>
           <div className="flex items-center mb-4">
             <div className="flex items-center">
-              {Array(4)
-                .fill()
-                .map((_, i) => (
-                  <span key={i} className="text-orange-500 text-xl">
-                    ★
-                  </span>
-                ))}
-              <span className="text-gray-500 text-xl">★</span>
+            <Rating value={4} />
             </div>
             <span className="ml-2 text-gray-700">(4 reviews)</span>
           </div>
