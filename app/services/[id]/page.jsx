@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Footer from "@/components/Footer";
 import Image from "next/image";
-import { Rating } from "@material-tailwind/react";
+import { Rating, Textarea } from "@material-tailwind/react";
 import {
   Button,
   Carousel,
@@ -146,6 +146,10 @@ const Service = () => {
   const [totalEarning, setTotalEarning] = useState(0);
   const [formattedDate, setFormattedDate] = useState("");
   const [newReview, setNewReview] = useState({
+    image: {
+      url: "",
+      name: "",
+    },
     name: "",
     review: "",
     rating: 0,
@@ -256,12 +260,12 @@ const Service = () => {
               <div className="h-px bg-gray-300 w-full"></div>
               <div className="flex items-center gap-2">
                 <img
-                  src="/image/calendar 1.svg" // Replace with actual path
-                  alt="Bookings Icon"
+                  src="/icons/shooting-star.png" // Replace with actual path
+                  alt="Star Icon"
                   className="w-12 h-12"
                 />
-                <span className="text-orange-500 text-xl font-bold">
-                  8,000 Bookings
+                <span className="text-gray-500 text-xl font-bold">
+                  4.3 | 120 reviews
                 </span>
               </div>
             </div>
@@ -424,27 +428,22 @@ const Service = () => {
               Submit Your Review
             </h3>
             <form onSubmit={handleReviewSubmit} className="space-y-4">
-              <div className="flex gap-5">
-                <label className="block text-xl font-medium text-gray-700">
+              <div className="flex gap-2">
+                <label className="block text-lg font-medium text-gray-700">
                   Rating
                 </label>
                 <Rating value={4} />
               </div>
-              <div className="flex gap-5">
-                <label className="block text-xl font-medium text-gray-700">
-                  Review
-                </label>
-                <textarea
-                  name="review"
-                  value={newReview.review}
-                  onChange={(e) =>
-                    setNewReview({ ...newReview, review: e.target.value })
-                  }
-                  className="resize-none mt-1 block w-full border-2 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xl"
-                  rows="4"
-                  required
-                ></textarea>
-              </div>
+              <Textarea
+                label="Message"
+                value={newReview.review}
+                color="blue-gray"
+                onChange={(e) =>
+                  setNewReview({ ...newReview, review: e.target.value })
+                }
+                required
+                rows="5"
+              />
               <div className="flex justify-end">
                 <Button type="submit" color="blue">
                   Submit Review
