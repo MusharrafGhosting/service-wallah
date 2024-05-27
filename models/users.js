@@ -75,11 +75,9 @@ const userSchema = new Schema(
     },
     messages: {
       type: [Schema.Types.ObjectId], // Assuming these are references to other documents
-      default: [],
     },
     addresses: {
       type: Array, // Assuming these are references to other documents
-      default: [],
     },
   },
   {

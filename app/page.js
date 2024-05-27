@@ -157,13 +157,13 @@ export default function Home() {
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-4">
                 <img
-                  className="  ml-auto rounded-lg"
+                  className="ml-auto rounded-lg"
                   src="/image/hero1.webp"
                   alt=""
                 />
                 <div className="ml-auto">
                   <img
-                    className="float-right     rounded-lg"
+                    className="float-right rounded-lg"
                     src="/image/hero3.webp"
                     alt=""
                   />
@@ -187,7 +187,7 @@ export default function Home() {
               </div>
               <div className="grid gap-4">
                 <img
-                  className="    w-full rounded-lg"
+                  className="w-full rounded-lg"
                   src="/image/hero5.webp"
                   alt=""
                 />
