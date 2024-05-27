@@ -12,7 +12,7 @@ export async function GET(request, { params }) {
 
 export async function POST(request) {
   const data = await request.json();
-  console.log(data);
+  // console.log(data);
   await connectMongoDB();
   await User.findByIdAndUpdate(data._id, data);
   return NextResponse.json("Service Provider Updated", { status: 201 });

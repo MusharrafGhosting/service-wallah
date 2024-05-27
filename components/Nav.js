@@ -200,7 +200,6 @@ function NavList() {
   ]);
 
   const fuse = new Fuse(flattenedData, fuseOptions);
-  console.log(flattenedData);
   function handleSerch(query) {
     if (!query) {
       setSearchError("");

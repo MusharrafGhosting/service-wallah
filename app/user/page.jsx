@@ -22,6 +22,7 @@ import {
   deleteObject,
 } from "firebase/storage";
 import { storage } from "@/firebase";
+import axios from "axios";
 
 const User = () => {
   const [user, setUser] = useState({
@@ -47,18 +48,10 @@ const User = () => {
     },
   });
   const gettingUser = async () => {
-    const response = await fetch(
-      "/api/users/user",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id: localStorage.getItem("token") }),
-      },
-      { cache: "no-store" }
-    );
-    const data = await response.json();
+    const id = localStorage.getItem("token");
+    const response = await axios.get(`/api/users/${id}`);
+    const data = await response.data;
+    console.log(data);
     setUser(data);
   };
   function formatDate(dateString) {
@@ -131,31 +124,23 @@ const User = () => {
   useEffect(() => {
     setUpdateUser({ ...user });
   }, [user]);
-  useEffect(() => {
-    // setUpdateUser({ ...updateUser, image: uploadedImageObject });
-    console.log({ updateUser });
-  }, [updateUser]);
   const chechingAuthorization = async () => {
     const id = localStorage.getItem("token");
     if (!id) {
       window.location.href = "/";
       return;
     }
-    const response = await fetch(`/api/users/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await response.json();
+    const response = await axios.get(`/api/users/${id}`);
+    const data = response.data;
+
     if (data.role !== "user") {
       window.location.href = "/";
     }
   };
   const [loading, setLoading] = useState(true);
-  const loadingFunction = async () => {
-    await chechingAuthorization();
-    await gettingUser();
+  const loadingFunction = () => {
+    chechingAuthorization();
+    gettingUser();
     setLoading(false);
   };
   useEffect(() => {
@@ -185,18 +170,24 @@ const User = () => {
               <div className="flex flex-col justify-center gap-4">
                 <div className="flex gap-4 items-center w-full">
                   {updateUser.image.url || user.image.url ? (
-                    <img
-                      src={updateUser.image.url || user.image.url}
-                      alt=""
-                      className="w-32 h-32 rounded-full object-cover"
-                    />
+                    <Badge
+                      content={<div className="h-3 w-h-3"></div>}
+                      overlap="circular"
+                      className="bg-gradient-to-tr from-green-400 to-green-600 border-2 border-white shadow-lg shadow-black/20"
+                    >
+                      <Avatar
+                        src={updateUser.image.url || user.image.url}
+                        alt="profile picture"
+                        className="w-32 h-32 object-cover"
+                      />
+                    </Badge>
                   ) : (
-                    <span className="w-32 h-32 rounded-full font-junge bg-gray-400 flex justify-center text-4xl items-center shadow">
+                    <div className="bg-gray-700 h-full w-full font-junge text-white font-bold text-7xl flex justify-center items-center rounded-xl">
                       {user.name && Array.from(user.name)[0].toUpperCase()}
-                    </span>
+                    </div>
                   )}
                   <div className="flex gap-1 flex-col justify-center">
-                    <span className="text-6xl font-semibold text-gray-800">
+                    <span className="text-4xl font-semibold text-gray-800">
                       Hey👋
                     </span>
                     <span className="text-indigo-500 font-semibold text-3xl font-itim tracking-wider">
@@ -314,25 +305,18 @@ const User = () => {
                           />
                         </div>
                         <figure className="relative h-72 w-3/5 rounded-md">
-                          {updateUser.image.url || user.image.url ? (
-                            <Badge
-                              content={<div className="h-3 w-h-3"></div>}
-                              overlap="circular"
-                              className="bg-gradient-to-tr from-green-400 to-green-600 border-2 border-white shadow-lg shadow-black/20"
-                            >
-                              <Avatar
-                                src={updateUser.image.url || user.image.url}
-                                alt="profile picture"
-                                className="w-32 h-32 object-cover"
-                              />
-                            </Badge>
+                        {updateUser?.image?.url || user?.image?.url ? (
+                            <img
+                              className="h-full w-full rounded-xl object-cover object-center"
+                              src={updateUser?.image?.url || user?.image?.url}
+                              alt="Profile image"
+                            />
                           ) : (
                             <div className="bg-gray-700 h-full w-full font-junge text-white font-bold text-7xl flex justify-center items-center rounded-xl">
-                              {user.name &&
-                                Array.from(user.name)[0].toUpperCase()}
+                              {user?.name &&
+                                Array.from(user?.name)[0].toUpperCase()}
                             </div>
                           )}
-
                           <figcaption className="absolute bottom-4 left-2/4 flex w-[calc(100%-4rem)] -translate-x-2/4 justify-between rounded-lg text-gray-700 font-medium border border-white bg-white/75 py-4 px-6 shadow-lg shadow-black/5 saturate-200 backdrop-blur-sm">
                             <label
                               className="w-full h-full text-center cursor-pointer"
@@ -364,9 +348,9 @@ const User = () => {
                           variant="gradient"
                           color="green"
                           loading={!profileUploaded}
-                          onClick={handleOpen}
+                          onClick={handleUpdate}
                         >
-                          <span onClick={handleUpdate}>Update</span>
+                          <span>Update</span>
                         </Button>
                       </DialogFooter>
                     </Dialog>
