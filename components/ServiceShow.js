@@ -80,7 +80,7 @@ const ServiceShow = ({topServices}) => {
                   </div>
                 </div>
               </div>
-              <Link href={`/services/${service._id}`} target="_blank">
+              <Link href={`/services/${service._id}`}>
                 <button className="flex items-center gap-1 justify-center w-full text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                   View
                   <IoMdOpen />

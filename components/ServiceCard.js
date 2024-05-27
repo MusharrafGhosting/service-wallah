@@ -9,7 +9,7 @@ const ServiceCard = ({ title, description, buttonText, imageUrl, medalIcon }) =>
       </div>
       <div className="ml-0 sm:ml-6 sm:w-full flex-1 px-4 sm:px-0 text-left">
         <h1 className="text-2xl sm:text-3xl font-semibold text-blue-500">{title}</h1>
-        <p className="mt-2 text-gray-600 lg:pr-[125px] sm:pr-4  ">{description}</p>
+        <p className="mt-2 text-gray-600 lg:pr-[125px] sm:pr-4">{description}</p>
         {buttonText && <button className="mt-4 px-4 py-2 w-full md:w-fit outline transition-all duration-700 flex justify-center items-center rounded-md gap-1 hoverbg-gradient-to-r hover:from-transparent hover:to-transparent hover:text-blue-600 outline-none hover:outline-blue-600 hover:outline-2 bg-gradient-to-tr from-blue-400 to-blue-600 font-semibold text-white">
           {buttonText}
         </button>}

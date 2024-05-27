@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Footer from "@/components/Footer";
 import Image from "next/image";
-import { Rating, Textarea } from "@material-tailwind/react";
+import { Drawer, Rating, Textarea } from "@material-tailwind/react";
 import {
   Button,
   Carousel,
@@ -19,6 +19,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+import { FaCartArrowDown } from "react-icons/fa";
 
 const NextArrow = ({ onClick }) => {
   return (
@@ -100,6 +101,7 @@ const reviews = [
     img: "/image/hero1.webp", // Replace with the path to your first image
   },
 ];
+
 const ReviewCard = ({ name, review, rating, img }) => (
   <div className="w-full md:w-1/2 p-2">
     <div className="bg-white p-4 shadow rounded-lg flex items-start space-x-4">
@@ -203,13 +205,69 @@ const Service = () => {
     getService();
   }, []);
 
+  const [cartItems, setCartItems] = useState([]);
+  const [open, setOpen] = React.useState(false);
+ 
+  const openDrawer = () => setOpen(true);
+  const closeDrawer = () => setOpen(false);
+  const handleAddingCart = (subService) => {
+    const existingItem = cartItems.find((item) => item._id === subService._id);
+    if (existingItem) {
+      setCartItems(
+        cartItems.map((item) =>
+          item._id === subService._id // Use _id here
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        )
+      );
+    } else {
+      setCartItems([...cartItems, { ...subService, quantity: 1 }]);
+      openDrawer()
+    }
+  };
+
+  useEffect(() => {
+    console.log(cartItems);
+  }, [cartItems]);
   return (
     <div>
       <Nav />
-
+      <Drawer open={open} onClose={closeDrawer} className="p-4 shadow-lg" dismiss={{enabled: false}} overlay={false} placement="right">
+        <div className="mb-6 flex items-center justify-between">
+          <Typography variant="h5" color="blue-gray">
+            Cart Services
+          </Typography>
+          <IconButton variant="text" color="blue-gray" onClick={closeDrawer}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="h-5 w-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </IconButton>
+        </div>
+        <Typography color="gray" className="mb-8 pr-4 font-normal">
+          Material Tailwind features multiple React and HTML components, all
+          written with Tailwind CSS classes and Material Design guidelines.
+        </Typography>
+        <div className="flex gap-2">
+          <Button size="sm" variant="outlined">
+            Documentation
+          </Button>
+          <Button size="sm">Get Started</Button>
+        </div>
+      </Drawer>
       <div className="px-4 md:px-20 my-6 flex flex-col gap-6">
         <div className="flex flex-col lg:flex-row gap-6 w-full">
-          <div className="w-2/3 p-4 grid grid-cols-1 gap-4 rounded-lg">
+          <div className="w-2/3 p-4 flex flex-col justify-center gap-6 rounded-lg">
             <div className="flex items-center gap-2">
               <img
                 src={service.icon?.url} // Replace with actual path
@@ -220,53 +278,28 @@ const Service = () => {
                 <h2 className="lg:text-4xl md:text-5xl sm:text-5xl  text-4xl leading-tight text-gray-700 font-bold  ">
                   {service.name}
                 </h2>
-                <div className="flex items-center">
-                  {[...Array(5)].map((star, i) => (
-                    <svg
-                      key={i}
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className={`h-5 w-5 ${
-                        i < service.rating ? "text-orange-500" : "text-gray-300"
-                      }`}
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M12 17.27l5.18 3.73-1.64-5.67L20 9.91l-5.68-.49L12 4 9.68 9.42 4 9.91l4.46 5.42-1.64 5.67L12 17.27z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  ))}
-                  <span className="text-gray-500 ml-2">| 5 Reviews</span>
-                </div>
               </div>
             </div>
             <div className="flex gap-2 items-center  ">
               <div className="whitespace-nowrap text-sm">Reviews & Ratings</div>
               <div className="h-px bg-gray-300 w-full"></div>
             </div>
-            <div className="flex flex-col  items-start gap-6 h-fit bg-white shadow-lg rounded-lg p-4">
-              <div className="flex items-center gap-2">
+            <div className="flex items-start gap-6 ">
+              <div className="flex flex-col w-full items-center gap-2 bg-white h-fit  shadow-lg rounded-lg p-4 cursor-pointer hover:scale-105 transition-all">
                 <img
-                  src="/icons/booking.png" // Replace with actual path
+                  src="/icons/cargo.png" // Replace with actual path
                   alt="Bookings Icon"
-                  className="w-12 h-12"
+                  className="w-20 object-cover"
                 />
-                <span className="text-orange-500 text-xl font-bold">
-                  8,000 Bookings
-                </span>
+                <span className="text-gray-600 text-xl">8,000 Bookings</span>
               </div>
-              <div className="h-px bg-gray-300 w-full"></div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-col w-full items-center gap-2 bg-white h-fit  shadow-lg rounded-lg p-4 cursor-pointer hover:scale-105 transition-all">
                 <img
                   src="/icons/star.png" // Replace with actual path
                   alt="Star Icon"
-                  className="w-12 h-12"
+                  className="w-20 object-cover"
                 />
-                <span className="text-gray-600 text-xl font-bold">
-                  4.3 | 120 reviews
-                </span>
+                <span className="text-gray-600 text-xl">4.3 | 120 reviews</span>
               </div>
             </div>
           </div>
@@ -341,13 +374,13 @@ const Service = () => {
           </h1>
         </div>
         <div className="container mx-auto">
-          <Slider {...sliderSettings}>
-            {service.subServices?.map((service, index) => (
-              <div key={index} className="px-3">
+          {service.subServices?.length <= 4 ? (
+            service.subServices?.map((subService, index) => (
+              <div key={index} className="grid grid-cols-4 gap-4 px-10">
                 <Card className="mb-3">
                   <CardHeader floated={false}>
                     <img
-                      src={service.icon.url}
+                      src={subService.icon?.url}
                       alt="Service Icon"
                       className="object-cover md:w-full h-48"
                     />
@@ -357,16 +390,16 @@ const Service = () => {
                       <div>
                         <span
                           className={`border ${
-                            service.status === "active"
+                            subService.status === "active"
                               ? "bg-teal-100"
                               : "bg-red-100"
-                          }  text-xs ${
-                            service.status === "active"
+                          } text-xs ${
+                            subService.status === "active"
                               ? "text-teal-700"
                               : "text-red-700"
-                          }  px-2 py-1 rounded-full`}
+                          } px-2 py-1 rounded-full`}
                         >
-                          {service.status}
+                          {subService.status}
                         </span>
                       </div>
                       <Typography
@@ -374,11 +407,11 @@ const Service = () => {
                         color="blue-gray"
                         className="font-medium"
                       >
-                        {service.name}
+                        {subService.name}
                       </Typography>
                     </div>
                     <div className="text-2xl font-bold text-teal-500">
-                      ₹{service.price}
+                      ₹{subService.price}
                     </div>
                   </CardBody>
                   <CardFooter className="pt-0 flex flex-col gap-2">
@@ -387,15 +420,90 @@ const Service = () => {
                       fullWidth={true}
                       variant="gradient"
                       color="indigo"
-                      className="flex gap-1 items-center justify-center"
+                      className="flex gap-2 items-center justify-center"
+                      onClick={() => handleAddingCart(subService)}
+                      disabled={cartItems.some(
+                        (sub) => sub._id === subService._id
+                      )}
                     >
-                      View +
+                      {cartItems.some((sub) => sub._id === subService._id) ? (
+                          <span>Item Added</span>
+                        ) : (
+                          <span>Add to cart</span>
+                        )}
+                      <FaCartArrowDown size={20} />
                     </Button>
                   </CardFooter>
                 </Card>
               </div>
-            ))}
-          </Slider>
+            ))
+          ) : (
+            <Slider {...sliderSettings}>
+              {service.subServices?.map((subService, index) => (
+                <div key={index} className="px-3">
+                  <Card className="mb-3">
+                    <CardHeader floated={false}>
+                      <img
+                        src={subService.icon.url}
+                        alt="Service Icon"
+                        className="object-cover md:w-full h-48"
+                      />
+                    </CardHeader>
+                    <CardBody>
+                      <div className="mb-1 flex flex-col justify-start gap-2">
+                        <div>
+                          <span
+                            className={`border ${
+                              subService.status === "active"
+                                ? "bg-teal-100"
+                                : "bg-red-100"
+                            } text-xs ${
+                              subService.status === "active"
+                                ? "text-teal-700"
+                                : "text-red-700"
+                            } px-2 py-1 rounded-full`}
+                          >
+                            {subService.status}
+                          </span>
+                        </div>
+                        <Typography
+                          variant="h6"
+                          color="blue-gray"
+                          className="font-medium"
+                        >
+                          {subService.name}
+                        </Typography>
+                      </div>
+                      <div className="text-2xl font-bold text-teal-500">
+                        ₹{subService.price}
+                      </div>
+                    </CardBody>
+                    <CardFooter className="pt-0 flex flex-col gap-2">
+                      <Button
+                        size="lg"
+                        fullWidth={true}
+                        variant="gradient"
+                        color="indigo"
+                        className="flex gap-2 items-center justify-center"
+                        onClick={() => handleAddingCart(subService)}
+                        disabled={cartItems.some(
+                          (sub) => sub._id === subService._id
+                        )}
+                      >
+                        {cartItems.some((sub) => sub._id === subService._id) ? (
+                          <span>Item Added</span>
+                        ) : (
+                          <span>Add to cart</span>
+                        )}
+
+                        <FaCartArrowDown size={20} />
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                </div>
+              ))}
+            </Slider>
+          )}
         </div>
       </div>
       <div className="container mx-auto px-4 py-8">

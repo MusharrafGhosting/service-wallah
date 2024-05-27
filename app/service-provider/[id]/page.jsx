@@ -513,7 +513,7 @@ const ServiceProvider = () => {
                               className="w-full h-full text-center cursor-pointer"
                               htmlFor="profile"
                             >
-                              Chnage Profile Image
+                              Change Profile Image
                             </label>
                             <input
                               type="file"
@@ -597,7 +597,7 @@ const ServiceProvider = () => {
                       All Services
                     </h2>
                     <div className="p-6 flex gap-4 items-center h-full">
-                      <div className="grid grid-cols-4">
+                      <div className="grid grid-cols-3">
                         {allServices.map((service, index) => {
                           return (
                             <ListItem className="p-0" key={index}>
@@ -670,8 +670,8 @@ const ServiceProvider = () => {
                     </DialogFooter>
                   </Dialog>
                 </div>
-                <div className="p-4 bg-white rounded-lg">
-                  {UpdatedServices?.map((service, index) => {
+                <div className="p-4 bg-white rounded-lg shadow-lg">
+                  {UpdatedServices?.map((service,index) => {
                     return (
                       <ListItem
                         key={index}
