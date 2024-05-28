@@ -145,7 +145,7 @@ function ServicesList() {
   );
 }
 
-function NavList() {
+function NavList({cartItems}) {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
 
@@ -267,7 +267,7 @@ function NavList() {
         </button>
 
         <Badge
-          content={0}
+          content={cartItems?.length || 0}
           overlap="circular"
           color="teal"
           className="text-[0.6rem] p-0 h-4 w-4 flex justify-center items-center"
@@ -396,10 +396,9 @@ function NavList() {
   );
 }
 
-export default function Nav() {
+export default function Nav({cartItems}) {
   const [openNav, setOpenNav] = useState(false);
   const [open3, setOpen3] = useState(false);
-
   const [user, setUser] = useState({
     image: {
       url: "",
@@ -1174,7 +1173,7 @@ export default function Nav() {
         </div>
       </div>
       <Collapse open={openNav}>
-        <NavList />
+        <NavList cartItems={cartItems} />
       </Collapse>
     </div>
   );
