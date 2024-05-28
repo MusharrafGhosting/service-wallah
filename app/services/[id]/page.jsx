@@ -103,11 +103,18 @@ const reviews = [
     rating: 4,
     img: "/image/hero1.webp", // Replace with the path to your first image
   },
+  {
+    id: 5,
+    name: "Musharraf Jamal",
+    review: "Service provider were soo delicate to his work.",
+    rating: 4,
+    img: "/image/hero1.webp", // Replace with the path to your first image
+  },
 ];
 
 const ReviewCard = ({ name, review, rating, img }) => (
   <div className="w-full md:w-1/2 p-2">
-    <div className="bg-white p-4 shadow rounded-lg flex items-start space-x-4">
+    <div className="bg-white p-4 h-52 shadow rounded-lg flex items-start space-x-4">
       <div className="relative w-12 h-12">
         <Image
           src={img}
@@ -122,20 +129,7 @@ const ReviewCard = ({ name, review, rating, img }) => (
           <div>
             <h3 className="font-bold">{name}</h3>
             <div className="flex items-center">
-              {Array(rating)
-                .fill()
-                .map((_, i) => (
-                  <span key={i} className="text-orange-500">
-                    ★
-                  </span>
-                ))}
-              {Array(5 - rating)
-                .fill()
-                .map((_, i) => (
-                  <span key={i} className="text-gray-300">
-                    ★
-                  </span>
-                ))}
+              <Rating value={4} />
             </div>
           </div>
         </div>

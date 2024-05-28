@@ -1,4 +1,5 @@
-// components/Footer.js
+import React, { useState } from "react";
+import emailjs from "emailjs-com";
 import { SlSocialFacebook } from "react-icons/sl";
 import { PiTwitterLogoLight } from "react-icons/pi";
 import { IoLogoInstagram } from "react-icons/io";
@@ -8,13 +9,65 @@ import { RiMenuUnfold3Line2 } from "react-icons/ri";
 import { Input, Textarea } from "@material-tailwind/react";
 
 const Footer = () => {
+  const [formData, setFormData] = useState({
+    fullname: "",
+    phone: "",
+    email: "",
+    message: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const templateParams = {
+      to_name: "Recipient Name", // You can set this dynamically if needed
+      fullname: formData.fullname,
+      phone: formData.phone,
+      email: formData.email,
+      message: formData.message,
+    };
+
+    emailjs
+      .send(
+        "service_amzk9zb",
+        "template_e95jwec",
+        templateParams,
+        "JjJ9NS_6nst0X7Nbb"
+      )
+      .then(
+        (response) => {
+          console.log("SUCCESS!", response.status, response.text);
+          alert("Your message has been sent successfully!");
+          setFormData({
+            fullname: "",
+            phone: "",
+            email: "",
+            message: "",
+          });
+        },
+        (err) => {
+          console.log("FAILED...", err);
+          alert("There was an error sending your message. Please try again.");
+        }
+      );
+  };
+
   return (
     <footer className="bg-gray-300 shadow-inner text-black py-10">
-      <div className=" px-14 flex items-center justify-between flex-col md:flex-row ">
+      <div className="px-14 flex   justify-between flex-col md:flex-row ">
         {/* Company Description */}
         <div className="md:w-1/3 mb-6 lg:mb-0 px-4 w-full">
-          <h2 className="text-2xl font-bold mb-4 flex gap-1">
-            <RiMenuUnfold3Line2 /> Service Wallah
+          <h2 className="text-2xl items-center font-bold mb-4 flex gap-1">
+            <img
+              className="h-full w-12 rounded-xl object-cover object-center"
+              src="/icon.ico"
+              alt="Profile image"
+            />{" "}
+            Service Wallah
           </h2>
           <p className="mb-4">
             Hi! My name is Dmitrii Rogoza and I’m an expert in web design and
@@ -83,11 +136,38 @@ const Footer = () => {
         {/* Contact Form */}
         <div className="md:w-1/3 w-full mb-6 lg:mb-0">
           <h3 className="text-xl text-center font-bold mb-4">Contact us</h3>
-          <form className="space-y-4">
-            <Input label="Fullname" />
-            <Input label="Phone Number" />
-            <Input label="Email" />
-            <Textarea label="Message" />
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            <Input
+              label="Fullname"
+              name="fullname"
+              minLength={4}
+              maxLength={30}
+              value={formData.fullname}
+              onChange={handleChange}
+            />
+
+            <Input
+              label="Phone Number"
+              name="phone"
+              minLength={10}
+              maxLength={10}
+              value={formData.phone}
+              onChange={handleChange}
+            />
+            <Input
+              label="Email"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+            />
+            <Textarea
+              label="Message"
+              name="message"
+              value={formData.message}
+              maxLength={150}
+              onChange={handleChange}
+            />
             <button
               type="submit"
               className="w-full py-2 bg-black text-white rounded-md"
@@ -98,7 +178,6 @@ const Footer = () => {
         </div>
 
         {/* Company Links */}
-
         <div className="flex flex-col items-center lg:items-start md:W-1/3 mx-auto w-fit">
           <h3 className="text-xl font-bold mb-4">Company</h3>
           <ul className="space-y-2 text-center lg:text-left">
