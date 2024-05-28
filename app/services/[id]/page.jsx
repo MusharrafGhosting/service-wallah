@@ -100,11 +100,18 @@ const reviews = [
     rating: 4,
     img: "/image/hero1.webp", // Replace with the path to your first image
   },
+  {
+    id: 5,
+    name: "Musharraf Jamal",
+    review: "Service provider were soo delicate to his work.",
+    rating: 4,
+    img: "/image/hero1.webp", // Replace with the path to your first image
+  },
 ];
 
 const ReviewCard = ({ name, review, rating, img }) => (
   <div className="w-full md:w-1/2 p-2">
-    <div className="bg-white p-4 shadow rounded-lg flex items-start space-x-4">
+    <div className="bg-white p-4 h-52 shadow rounded-lg flex items-start space-x-4">
       <div className="relative w-12 h-12">
         <Image
           src={img}
@@ -119,20 +126,7 @@ const ReviewCard = ({ name, review, rating, img }) => (
           <div>
             <h3 className="font-bold">{name}</h3>
             <div className="flex items-center">
-              {Array(rating)
-                .fill()
-                .map((_, i) => (
-                  <span key={i} className="text-orange-500">
-                    ★
-                  </span>
-                ))}
-              {Array(5 - rating)
-                .fill()
-                .map((_, i) => (
-                  <span key={i} className="text-gray-300">
-                    ★
-                  </span>
-                ))}
+              <Rating value={4} />
             </div>
           </div>
         </div>
@@ -207,7 +201,7 @@ const Service = () => {
 
   const [cartItems, setCartItems] = useState([]);
   const [open, setOpen] = React.useState(false);
- 
+
   const openDrawer = () => setOpen(true);
   const closeDrawer = () => setOpen(false);
   const handleAddingCart = (subService) => {
@@ -222,7 +216,7 @@ const Service = () => {
       );
     } else {
       setCartItems([...cartItems, { ...subService, quantity: 1 }]);
-      openDrawer()
+      openDrawer();
     }
   };
 
@@ -232,7 +226,14 @@ const Service = () => {
   return (
     <div>
       <Nav />
-      <Drawer open={open} onClose={closeDrawer} className="p-4 shadow-lg" dismiss={{enabled: false}} overlay={false} placement="right">
+      <Drawer
+        open={open}
+        onClose={closeDrawer}
+        className="p-4 shadow-lg"
+        dismiss={{ enabled: false }}
+        overlay={false}
+        placement="right"
+      >
         <div className="mb-6 flex items-center justify-between">
           <Typography variant="h5" color="blue-gray">
             Cart Services
@@ -427,10 +428,10 @@ const Service = () => {
                       )}
                     >
                       {cartItems.some((sub) => sub._id === subService._id) ? (
-                          <span>Item Added</span>
-                        ) : (
-                          <span>Add to cart</span>
-                        )}
+                        <span>Item Added</span>
+                      ) : (
+                        <span>Add to cart</span>
+                      )}
                       <FaCartArrowDown size={20} />
                     </Button>
                   </CardFooter>
@@ -506,20 +507,22 @@ const Service = () => {
           )}
         </div>
       </div>
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-4">
+      <div className="container mx-auto px-4 py-8 ">
+        <div className="flex items-center md:flex-row flex-col justify-between mb-4">
           <h2 className="text-2xl font-bold mb-4">Reviews by users</h2>
           <div className="flex items-center mb-4">
             <div className="flex items-center">
-            <Rating value={4} />
+              <Rating value={4} />
             </div>
             <span className="ml-2 text-gray-700">(4 reviews)</span>
           </div>
         </div>
-        <div className="flex flex-wrap -m-2">
-          {reviews.map((review) => (
-            <ReviewCard key={review.id} {...review} />
-          ))}
+        <div className="overflow-auto h-96">
+          <div className="flex flex-wrap m-2 ">
+            {reviews.map((review) => (
+              <ReviewCard key={review.id} {...review} />
+            ))}
+          </div>
         </div>
       </div>
       <div className="flex justify-center bg-gray-100 ">

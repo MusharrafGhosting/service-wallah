@@ -23,6 +23,7 @@ import {
 } from "firebase/storage";
 import { storage } from "@/firebase";
 import axios from "axios";
+import Footer from "@/components/Footer";
 
 const User = () => {
   const [user, setUser] = useState({
@@ -359,6 +360,7 @@ const User = () => {
               </div>
             </div>
           </div>
+          <Footer />
         </div>
       )}
     </>
