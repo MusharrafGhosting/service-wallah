@@ -42,7 +42,7 @@ const About = () => {
           <div className="md:w-1/2 mt-8 md:mt-0 flex justify-center relative">
             <div className="relative w-80 h-full md:w-96 md:h-full   shadow-lg  z-10">
               <Image
-                src="/image/slider6.jpg" // Replace with the path to your first image
+                src="/image/slider5.webp" // Replace with the path to your first image
                 alt="A person working"
                 layout="fill"
                 objectFit="cover"
@@ -51,7 +51,7 @@ const About = () => {
             </div>
             <div className="absolute top-24 left-8 w-80 h-96 md:w-80 md:h-96 shadow-lg    z-20">
               <Image
-                src="/image/slider7.jpg" // Replace with the path to your second image
+                src="/image/slider6.webp" // Replace with the path to your second image
                 alt="A person working"
                 layout="fill"
                 objectFit="cover"

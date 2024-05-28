@@ -206,7 +206,7 @@ const Service = () => {
   };
 
   const [cartItems, setCartItems] = useState([]);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const openDrawer = () => setOpen(true);
   const closeDrawer = () => setOpen(false);
@@ -222,6 +222,10 @@ const Service = () => {
       );
     } else {
       setCartItems([...cartItems, { ...subService, quantity: 1 }]);
+      localStorage.setItem(
+        "cartItems",
+        JSON.stringify([...cartItems, { ...subService, quantity: 1 }])
+      );
       openDrawer();
     }
   };
@@ -229,6 +233,7 @@ const Service = () => {
   useEffect(() => {
     getService();
     setLoading(false);
+    setCartItems(JSON.parse(localStorage.getItem("cartItems")) || []);
   }, []);
   return (
     <>
@@ -291,10 +296,7 @@ const Service = () => {
                     <h2 className="text-xl leading-tight text-gray-700 font-bold w-full">
                       {item.name}
                     </h2>
-                    <Typography
-                      color="teal"
-                      variant="h5"
-                    >
+                    <Typography color="teal" variant="h5">
                       ₹{item.price}
                     </Typography>
                     <Button color="red" variant="text">
@@ -441,7 +443,10 @@ const Service = () => {
           <div className="container mx-auto">
             {service.subServices?.length <= 4 ? (
               service.subServices?.map((subService, index) => (
-                <div key={index} className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 px-10">
+                <div
+                  key={index}
+                  className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 px-10"
+                >
                   <Card className="mb-3 max-w-60">
                     <CardHeader floated={false}>
                       <img

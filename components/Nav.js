@@ -145,7 +145,7 @@ function ServicesList() {
   );
 }
 
-function NavList({cartItems}) {
+function NavList({ cartItems }) {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
 
@@ -214,7 +214,13 @@ function NavList({cartItems}) {
     }
     setSearchedData(result);
   }
-
+  const [cartCount, setCartCount] = useState(0);
+  useEffect(() => {
+    setCartCount(cartItems?.length || 0);
+  }, [cartItems]);
+  useEffect(() => {
+    console.log(cartCount);
+  }, [cartCount]);
   return (
     <List className="mt-4 mb-6 p-0 lg:mt-0 lg:mb-0 lg:flex-row lg:p-1 md:gap-4">
       <ServicesList />
@@ -261,25 +267,23 @@ function NavList({cartItems}) {
         <button
           onClick={handleOpen2}
           variant="gradient"
-          className="flex gap-2 border bg-white border-gray-300 hover:bg-gray-200 shadow py-2 px-3 rounded-full justify-center items-center"
+          className="flex gap-2 border bg-white border-gray-300 hover:bg-gray-200 shadow py-2 px-4 rounded-full justify-center items-center"
         >
           <FaSearch />
         </button>
 
-        <Badge
-          content={cartItems?.length || 0}
-          overlap="circular"
-          color="teal"
-          className="text-[0.6rem] p-0 h-4 w-4 flex justify-center items-center"
-        >
+        <div className="relative">
+          <span className="bg-teal-400 w-5 h-5 text-xs text-white rounded-full absolute top-0 right-0 flex justify-center items-center">
+            {cartCount}
+          </span>
           <Link
             href={"/cart"}
             variant="gradient"
-            className="flex gap-2 border bg-white border-gray-300 hover:bg-gray-200 shadow py-2 px-3 rounded-full justify-center items-center"
+            className="flex gap-2 border bg-white border-gray-300 hover:bg-gray-200 shadow py-3 px-3 rounded-full justify-center items-center"
           >
             <FaCartShopping size={20} />
           </Link>
-        </Badge>
+        </div>
         <Dialog
           open={open2}
           size="lg"
@@ -396,7 +400,7 @@ function NavList({cartItems}) {
   );
 }
 
-export default function Nav({cartItems}) {
+export default function Nav({ cartItems }) {
   const [openNav, setOpenNav] = useState(false);
   const [open3, setOpen3] = useState(false);
   const [user, setUser] = useState({
