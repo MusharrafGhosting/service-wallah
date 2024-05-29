@@ -1,4 +1,5 @@
 "use client";
+import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
 import { storage } from "@/firebase";
 import {
@@ -480,6 +481,7 @@ const [otpError, setOtpError] = useState("")
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

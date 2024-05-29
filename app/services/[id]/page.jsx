@@ -587,27 +587,22 @@ const Service = () => {
             )}
           </div>
         </div>
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex items-center justify-between mb-4">
+        <div className="container mx-auto px-4 py-8 ">
+          <div className="flex items-center md:flex-row flex-col justify-between mb-4">
             <h2 className="text-2xl font-bold mb-4">Reviews by users</h2>
             <div className="flex items-center mb-4">
               <div className="flex items-center">
-                {Array(4)
-                  .fill()
-                  .map((_, i) => (
-                    <span key={i} className="text-orange-500 text-xl">
-                      ★
-                    </span>
-                  ))}
-                <span className="text-gray-500 text-xl">★</span>
+                <Rating value={4} />
               </div>
               <span className="ml-2 text-gray-700">(4 reviews)</span>
             </div>
           </div>
-          <div className="flex flex-wrap -m-2">
-            {reviews.map((review) => (
-              <ReviewCard key={review.id} {...review} />
-            ))}
+          <div className="overflow-auto h-96">
+            <div className="flex flex-wrap m-2 ">
+              {reviews.map((review) => (
+                <ReviewCard key={review.id} {...review} />
+              ))}
+            </div>
           </div>
         </div>
         <div className="flex justify-center bg-gray-100 ">
