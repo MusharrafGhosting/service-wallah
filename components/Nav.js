@@ -12,10 +12,7 @@ import {
   MenuList,
   MenuItem,
   Dialog,
-  DialogHeader,
   DialogBody,
-  DialogFooter,
-  Badge,
 } from "@material-tailwind/react";
 import {
   ChevronDownIcon,
@@ -55,6 +52,7 @@ import { IoLogOut } from "react-icons/io5";
 import { RxCross1 } from "react-icons/rx";
 import axios from "axios";
 import Fuse from "fuse.js";
+import Map from "./Map";
 
 const services = [
   {
@@ -145,7 +143,7 @@ function ServicesList() {
   );
 }
 
-function NavList({ cartItems }) {
+function NavList() {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
 
@@ -214,68 +212,71 @@ function NavList({ cartItems }) {
     }
     setSearchedData(result);
   }
-  const [cartCount, setCartCount] = useState(0);
+  const [address, setAddress] = useState("");
+  const getAddress = async ({ lat, lng }) => {
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
+      );
+      const data = await response.json();
+      if (data.results && data.results.length > 0) {
+        setAddress(data.results[0].address_components[1].short_name);
+        console.log(data.results[0].address_components);
+      } else {
+        setAddress("Address not found");
+        console.log("Address not found");
+      }
+    } catch (error) {
+      console.error("Error fetching address:", error);
+      setAddress("Error fetching address");
+    }
+  };
   useEffect(() => {
-    setCartCount(cartItems?.length || 0);
-  }, [cartItems]);
-  useEffect(() => {
-    console.log(cartCount);
-  }, [cartCount]);
+    const location = JSON.parse(localStorage.getItem("location"));
+    if (location) {
+      getAddress(location);
+    }
+  }, []);
   return (
     <List className="mt-4 mb-6 p-0 lg:mt-0 lg:mb-0 lg:flex-row lg:p-1 md:gap-4">
       <ServicesList />
       <div className="flex gap-2 justify-evenly">
-        <button
-          onClick={handleOpen}
+        <Link
+          href={"/location"}
+          // onClick={handleOpen}
           variant="gradient"
           className="flex gap-2 w-full border bg-white border-gray-300 hover:bg-gray-200 shadow py-2 px-4 rounded-md justify-center items-center"
         >
-          Location
+          {address ? address : "Location"}
           <FaLocationDot size={18} color="#F44336" />
-        </button>
+        </Link>
         <Dialog
+          size="lg"
           open={open}
           handler={handleOpen}
+          className="bg-gray-100"
           animate={{
             mount: { scale: 1, y: 0 },
             unmount: { scale: 0.9, y: -100 },
           }}
         >
-          <DialogHeader>Find Location</DialogHeader>
           <DialogBody>
-            <input
-              type="text"
-              placeholder="Enter your location"
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
-            />
+            <Map />
           </DialogBody>
-          <DialogFooter>
-            <Button
-              variant="text"
-              color="red"
-              onClick={handleOpen}
-              className="mr-1"
-            >
-              <span>Cancel</span>
-            </Button>
-            <Button variant="gradient" color="green" onClick={handleOpen}>
-              <span>Confirm</span>
-            </Button>
-          </DialogFooter>
         </Dialog>
 
         <button
           onClick={handleOpen2}
           variant="gradient"
-          className="flex gap-2 border bg-white border-gray-300 hover:bg-gray-200 shadow py-2 px-4 rounded-full justify-center items-center"
+          className="flex gap-2 border bg-white border-gray-300 hover:bg-gray-200 shadow py-3 px-4 rounded-full justify-center items-center"
         >
           <FaSearch />
         </button>
 
         <div className="relative">
-          <span className="bg-teal-400 w-5 h-5 text-xs text-white rounded-full absolute top-0 right-0 flex justify-center items-center">
+          {/* <span className="bg-teal-400 w-5 h-5 text-xs text-white rounded-full absolute top-0 right-0 flex justify-center items-center">
             {cartCount}
-          </span>
+          </span> */}
           <Link
             href={"/cart"}
             variant="gradient"
@@ -400,7 +401,7 @@ function NavList({ cartItems }) {
   );
 }
 
-export default function Nav({ cartItems }) {
+export default function Nav() {
   const [openNav, setOpenNav] = useState(false);
   const [open3, setOpen3] = useState(false);
   const [user, setUser] = useState({
@@ -1177,7 +1178,7 @@ export default function Nav({ cartItems }) {
         </div>
       </div>
       <Collapse open={openNav}>
-        <NavList cartItems={cartItems} />
+        <NavList />
       </Collapse>
     </div>
   );
