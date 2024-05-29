@@ -2,9 +2,33 @@
 import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
 import { IoMdInformationCircleOutline } from "react-icons/io";
-import React from "react";
+import React, { useState } from "react";
 
 function Shipping() {
+  // Initialize state variables
+  const [formData, setFormData] = useState({
+    fullName: '',
+    phone: '',
+    address: '',
+    date: '',
+    time: ''
+  });
+
+  // Create handler functions
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle form submission
+    console.log(formData);
+  };
+
   return (
     <div>
       <Nav />
@@ -13,61 +37,45 @@ function Shipping() {
           <h2 className="font-julius lg:text-4xl md:text-4xl sm:text-3xl text-3xl mb-4 text-gray-700">
             01. SHIPPING
           </h2>
-          <form className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input
-                type="text"
-                placeholder="First name"
-                className="p-2 border border-gray-300 rounded"
-              />
-              <input
-                type="text"
-                placeholder="Last name"
-                className="p-2 border border-gray-300 rounded"
-              />
-            </div>
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <input
               type="text"
+              name="fullName"
+              placeholder="Full name"
+              value={formData.fullName}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+            <input
+              type="text"
+              name="phone"
+              placeholder="Phone number"
+              value={formData.phone}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+            <input
+              type="text"
+              name="address"
               placeholder="Address"
+              value={formData.address}
+              onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded"
             />
             <input
-              type="text"
-              placeholder="Apt, suite, etc. (optional)"
+              type="date"
+              name="date"
+              value={formData.date}
+              onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded"
             />
             <input
-              type="text"
-              placeholder="City"
+              type="time"
+              name="time"
+              value={formData.time}
+              onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded"
             />
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <select className="p-2 border border-gray-300 rounded">
-                <option>Country</option>
-              </select>
-              <input
-                type="text"
-                placeholder="State"
-                className="p-2 border border-gray-300 rounded"
-              />
-              <input
-                type="text"
-                placeholder="Zip Code"
-                className="p-2 border border-gray-300 rounded"
-              />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input
-                type="email"
-                placeholder="Email"
-                className="p-2 border border-gray-300 rounded"
-              />
-              <input
-                type="text"
-                placeholder="Phone"
-                className="p-2 border border-gray-300 rounded"
-              />
-            </div>
             <div className="text-sm text-gray-600 flex items-center gap-1">
               <IoMdInformationCircleOutline />
               <p>
@@ -75,7 +83,7 @@ function Shipping() {
                 there is an issue with your order.
               </p>
             </div>
-            <button className="w-full bg-black text-white p-2 rounded mt-4">
+            <button className="w-full bg-black text-white p-2 rounded mt-4" type="submit">
               SAVE & CONTINUE
             </button>
           </form>
