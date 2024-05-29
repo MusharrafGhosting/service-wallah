@@ -18,7 +18,7 @@ import {
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+import { MdChevronLeft, MdChevronRight, MdDelete } from "react-icons/md";
 import { FaCartArrowDown } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import Link from "next/link";
@@ -223,6 +223,15 @@ const Service = () => {
       openDrawer();
     }
   };
+  const removingCartItem = (id) => {
+    setCartItems(cartItems.filter((item) => item._id !== id));
+
+    localStorage.setItem(
+      "cartItems",
+      JSON.stringify(cartItems.filter((item) => item._id !== id))
+    );
+    if ((cartItems.length == 1)) closeDrawer();
+  };
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     getService();
@@ -246,7 +255,7 @@ const Service = () => {
           loading ? "hidden" : "bloack"
         } transition-all duration-700`}
       >
-        <Nav cartItems={cartItems} />
+        <Nav />
         <Drawer
           open={open}
           onClose={closeDrawer}
@@ -286,15 +295,21 @@ const Service = () => {
                     alt="Service Icon"
                     className="w-28 h-28 object-cover rounded shadow"
                   />
-                  <div>
+                  <div className="flex flex-col gap-1">
                     <h2 className="text-xl leading-tight text-gray-700 font-bold w-full">
                       {item.name}
                     </h2>
                     <Typography color="teal" variant="h5">
                       ₹{item.price}
                     </Typography>
-                    <Button color="red" variant="text">
-                      Remove
+                    <Button
+                      onClick={() => removingCartItem(item._id)}
+                      color="deep-orange"
+                      variant="gradient"
+                      size="sm"
+                      className="rounded w-fit flex items-center gap-1"
+                    >
+                      Remove <MdDelete />
                     </Button>
                   </div>
                 </div>
