@@ -4,6 +4,9 @@ import Nav from "@/components/Nav";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import React, { useEffect, useState } from "react";
 import {
+  Button,
+  Dialog,
+  IconButton,
   Input,
   List,
   ListItem,
@@ -12,6 +15,12 @@ import {
   Textarea,
   Typography,
 } from "@material-tailwind/react";
+import Link from "next/link";
+import { MdOutlineMyLocation } from "react-icons/md";
+import { RxCross1 } from "react-icons/rx";
+import { SiPhonepe } from "react-icons/si";
+import { Player, Controls } from "@lottiefiles/react-lottie-player";
+import { VscDebugContinue } from "react-icons/vsc";
 
 function Shipping() {
   const [formData, setFormData] = useState({
@@ -19,7 +28,7 @@ function Shipping() {
     phoneNumber: "",
     address: "",
     date: "",
-    time: "",
+    time: 0,
   });
 
   const [dates, setDates] = useState([]);
@@ -32,15 +41,6 @@ function Shipping() {
       ...formData,
       [name]: value,
     });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (formData.time <= getCurrentTime()) {
-      alert("Please select a time after the current time");
-      return;
-    }
-    console.log(formData);
   };
 
   // Function to generate the four days including the current date
@@ -66,7 +66,8 @@ function Shipping() {
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, "0");
     const minutes = String(now.getMinutes()).padStart(2, "0");
-    return `${hours}:${minutes}`;
+    console.log(parseFloat(hours) + 1, parseFloat(minutes));
+    return `${parseFloat(hours) + 1}:${parseFloat(minutes)}`;
   };
 
   const getAddress = async ({ lat, lng }) => {
@@ -128,6 +129,26 @@ function Shipping() {
     console.log(formData);
   }, [formData]);
 
+  const [paymentDailog, setPaymentDailog] = useState(false);
+  const handlePaymentDailog = () => setPaymentDailog(!paymentDailog);
+
+  const [completedDailog, setCompletedDailog] = useState(false);
+  const handleCompletedDailog = () => setCompletedDailog(!completedDailog);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (formData.time <= getCurrentTime()) {
+      alert("Please select a time after 1 hour of the current time at least.");
+      return;
+    }
+    handlePaymentDailog();
+  };
+  const handleSumbitOrderViaCash = () => {
+    handleCompletedDailog();
+
+    console.log(formData);
+  };
+
   return (
     <div>
       <Nav />
@@ -148,7 +169,7 @@ function Shipping() {
                   <h3 className="font-bold">{item.name}</h3>
                   <p className="text-sm">Qty: {item.quantity}</p>
                   <p className="text-sm font-bold text-teal-500">
-                    ₹{item.price}.00
+                    ₹{(item.price * item.quantity).toFixed(2)}
                   </p>
                 </div>
               </div>
@@ -189,7 +210,7 @@ function Shipping() {
         </div>
         <div className="w-full md:w-1/2 bg-white p-6 rounded-xl shadow-lg">
           <h2 className="font-julius text-center lg:text-4xl md:text-4xl sm:text-3xl text-3xl mb-4 text-gray-700">
-            SHIPPING
+            Checkout
           </h2>
           <form className="space-y-4" onSubmit={handleSubmit}>
             <Input
@@ -212,15 +233,28 @@ function Shipping() {
               maxLength={10}
               minLength={10}
             />
-            <Textarea
-              label="Address"
-              className="bg-white"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              required
-              minLength={4}
-            />
+            <div className="relative">
+              <Textarea
+                label="Address"
+                className="bg-white"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                required
+                minLength={4}
+              />
+              <Link href={"/location"} className="absolute bottom-4 right-3">
+                <Button
+                  size="sm"
+                  color="deep-orange"
+                  variant="gradient"
+                  className="flex gap-1 rounded-md items-center"
+                >
+                  Change address <MdOutlineMyLocation size={18} />
+                </Button>
+              </Link>
+            </div>
+            <h2>Available Dates</h2>
             <List className="grid grid-cols-2 2xl:grid-cols-4 bg-white rounded-lg">
               {dates.map((date) => (
                 <ListItem key={date} className="p-0">
@@ -262,18 +296,91 @@ function Shipping() {
               className="w-full p-2 border border-gray-300 rounded"
             />
             <div className="text-sm text-gray-600 flex items-center gap-1">
-              <IoMdInformationCircleOutline />
-              <p>
+              <IoMdInformationCircleOutline size={20} />
+              <p className="text-xs">
                 Your privacy is important to us. We will only contact you if
                 there is an issue with your order.
               </p>
             </div>
             <button
-              className="w-full bg-black text-white p-2 rounded mt-4"
+              className="w-full bg-gray-700 transition-all hover:bg-gray-800 text-white p-2 rounded mt-4"
               type="submit"
             >
-              SAVE & CONTINUE
+              Continue to payements
             </button>
+            <Dialog
+              size="sm"
+              open={paymentDailog}
+              handler={handlePaymentDailog}
+              dismiss={{ enabled: false }}
+              className="p-6 bg-gray-100"
+            >
+              <div className="flex justify-between items-center mb-6">
+                <Typography variant="h5" className="text-gray-700">
+                  Payment Options
+                </Typography>
+                <IconButton variant="text" onClick={handlePaymentDailog}>
+                  <RxCross1 size={20} />
+                </IconButton>
+              </div>
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-2 justify-between cursor-pointer bg-white hover:scale-105 transition-all shadow-lg border px-4 py-6 rounded-lg">
+                  <div className="font-medium text-xl font-itim text-indigo-500">
+                    Pay with phone pay / UPi
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <SiPhonepe size={30} color="#6739b7" />
+                    <img
+                      src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg"
+                      className="w-16 object-cover"
+                    />
+                  </div>
+                </div>
+                <div
+                  onClick={handleSumbitOrderViaCash}
+                  className="flex items-center gap-2 justify-between cursor-pointer bg-white hover:scale-105 transition-all shadow-lg border p-4 rounded-lg"
+                >
+                  <div className="font-medium text-xl font-itim text-indigo-500">
+                    Pay with cash
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <img
+                      src="/icons/payment.png"
+                      className="w-12 object-cover"
+                    />
+                  </div>
+                </div>
+                <Dialog
+                  open={completedDailog}
+                  handler={handleCompletedDailog}
+                  dismiss={{ enabled: false }}
+                  className="p-3 bg-gray-100"
+                  size="xs"
+                >
+                  <div className="flex justify-center items-center">
+                    <Typography variant="h5" className="text-teal-500">
+                      Service Booked Successfully
+                    </Typography>
+                  </div>
+                  <Player
+                    autoplay
+                    // loop
+                    keepLastFrame={true}
+                    src="/lottie/tick1.json"
+                  ></Player>
+                  <Link href={"/booking"}>
+                    <Button
+                      fullWidth
+                      color="teal"
+                      variant="gradient"
+                      className="flex gap-1 transition-all hover:gap-2 items-center justify-center"
+                    >
+                      Continue <VscDebugContinue size={17} />
+                    </Button>
+                  </Link>
+                </Dialog>
+              </div>
+            </Dialog>
           </form>
         </div>
       </div>
