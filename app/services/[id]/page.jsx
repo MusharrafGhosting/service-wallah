@@ -217,7 +217,7 @@ const Service = () => {
     } else {
       setCartItems([...cartItems, { ...subService, quantity: 1 }]);
       localStorage.setItem(
-        "cartItems",
+        "cart",
         JSON.stringify([...cartItems, { ...subService, quantity: 1 }])
       );
       openDrawer();
@@ -227,7 +227,7 @@ const Service = () => {
     setCartItems(cartItems.filter((item) => item._id !== id));
 
     localStorage.setItem(
-      "cartItems",
+      "cart",
       JSON.stringify(cartItems.filter((item) => item._id !== id))
     );
     if ((cartItems.length == 1)) closeDrawer();
@@ -236,7 +236,7 @@ const Service = () => {
   useEffect(() => {
     getService();
     setLoading(false);
-    setCartItems(JSON.parse(localStorage.getItem("cartItems")) || []);
+    setCartItems(JSON.parse(localStorage.getItem("cart")) || []);
   }, []);
   return (
     <>
@@ -259,10 +259,10 @@ const Service = () => {
         <Drawer
           open={open}
           onClose={closeDrawer}
-          className="p-4 shadow-lg"
+          className="p-4 shadow-lg overflow-auto"
           dismiss={{ enabled: false }}
           overlay={false}
-          size={400}
+          size={420}
           placement="right"
         >
           <div className="mb-6 flex items-center justify-between">
@@ -318,7 +318,7 @@ const Service = () => {
           </div>
           <div className="flex gap-2 mt-4">
             <Button
-              size="sm"
+              size="lg"
               variant="outlined"
               className="rounded flex items-center gap-1"
               onClick={closeDrawer}
@@ -327,7 +327,7 @@ const Service = () => {
             </Button>
             <Link href={"/cart"}>
               <Button
-                size="sm"
+                size="lg"
                 color="gray"
                 variant="gradient"
                 className="rounded flex items-center gap-1"

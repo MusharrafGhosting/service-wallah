@@ -1,4 +1,5 @@
 "use client"
+import Nav from "@/components/Nav";
 import React, { useEffect } from "react";
 
 const Booking = () => {
@@ -15,14 +16,18 @@ const Booking = () => {
       },
     });
     const data = await response.json();
-    if (data.role !== "service-provider") {
+    if (!data) {
       window.location.href = "/";
     }
   };
   useEffect(() => {
     chechingAuthorization();
   }, []);
-  return <div>Booking</div>;
+  return (
+    <div className="userpage-bg min-h-screen">
+      <Nav /> Booking
+    </div>
+  );
 };
 
 export default Booking;

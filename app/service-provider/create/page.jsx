@@ -321,7 +321,7 @@ const [otpError, setOtpError] = useState("")
           </div>
         )}
       </Dialog>
-      <div className="min-h-full flex justify-center">
+      <div className="min-h-full flex justify-center mb-8">
         <div className="flex w-full md:w-2/5 flex-col gap-5 items-center px-8 py-6 h-[85vh] no-scrollbar overflow-auto bg-white bg-opacity-75 border shadow-lg backdrop-blur-sm rounded-xl">
           <div className="w-full flex flex-col items-center justify-center">
             <h2 className="uppercase font-bold text-3xl font-julius text-blue-600">

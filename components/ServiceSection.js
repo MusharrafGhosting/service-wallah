@@ -14,6 +14,7 @@ const ServiceSection = () => {
                 title="Find the service"
                 description="Choose from various amounts of services that fit your needs and expectations."
                 buttonText="Book a Service »"
+                url="/services"
                 imageUrl={personIcon}
                 medalIcon={medalIcon}
             />
