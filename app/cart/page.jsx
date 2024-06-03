@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { RiErrorWarningFill } from "react-icons/ri";
-import { RxCross1, RxCross2 } from "react-icons/rx";
 import { VscDebugContinue } from "react-icons/vsc";
 
 const Cart = () => {
@@ -21,7 +20,7 @@ const Cart = () => {
     }
     console.log(cart);
   }, []);
-  const [validationMessage, setValidationMessage] = useState(false);
+  const [validationMessage, setValidationMessage] = useState("");
 
   const handleQuantityChange = (index, change) => {
     setProducts((prevProducts) => {
@@ -29,7 +28,7 @@ const Cart = () => {
         if (i === index) {
           const newQuantity = product.quantity + change;
           if (newQuantity < 1 || newQuantity > 10) {
-            setValidationMessage(true);
+            setValidationMessage("Quantity should be between 1 and 10.");
             return product;
           }
           setValidationMessage("");
@@ -66,23 +65,21 @@ const Cart = () => {
       </Head>
       <Nav />
       <div className="flex flex-col lg:flex-row px-4 lg:px-10 h-full justify-between gap-6 lg:gap-10 my-6 lg:my-10">
-        <div className="w-full lg:w-2/3 min-h-auto max-h-[78vh] no-scrollbar overflow-auto bg-white pb-6 shadow-lg rounded-lg">
-          <div className="flex items-center justify-between gap-1 cursor-pointer text-gray-700 mb-6 sticky px-6 py-4 top-0 bg-white">
+        <div className="w-full lg:w-2/3 min-h-auto max-h-[78vh] overflow-auto bg-white pb-6 shadow-lg rounded-lg">
+          <div className="flex items-center justify-between gap-9 sticky px-6 py-4 top-0 bg-white z-10">
             <div
-              className="flex items-center gap-1 cursor-pointer"
+              className="flex items-center gap-1 cursor-pointer text-gray-700"
               onClick={() => router.back()}
             >
               <FaArrowLeftLong />
               <div>Cart</div>
             </div>
-            <div
-              className={`text-red-500 flex items-center gap-1 transition-all duration-700 ${
-                validationMessage ? "translate-x-0" : "translate-x-96"
-              }`}
-            >
-              <RiErrorWarningFill />
-              Quantity should be between 1 and 10.
-            </div>
+            {validationMessage && (
+              <div className="text-red-500 flex items-center gap-1 transition-all duration-700">
+                <RiErrorWarningFill />
+                {validationMessage}
+              </div>
+            )}
           </div>
           <div className="mt-4 space-y-6 px-6">
             {products.map((product, index) => (
@@ -124,7 +121,7 @@ const Cart = () => {
                   className="bg-[#FA7070] hover:bg-[#FD5D5D] shadow-lg shadow-[#ffb6b69a] text-white px-4 py-2 rounded-md flex items-center justify-center gap-1 transition-all mt-4 lg:mt-0"
                   title="Remove Service"
                 >
-                  Remove service
+                  Remove 
                 </button>
               </div>
             ))}
@@ -169,7 +166,7 @@ const Cart = () => {
             <div className="text-sm text-gray-500">
               <p className="text-base">About Service Providers</p>
               <p>
-                Our service providers are hihgly qualified and designed to
+                Our service providers are highly qualified and designed to
                 provide customers with a variety of services.
               </p>
             </div>
