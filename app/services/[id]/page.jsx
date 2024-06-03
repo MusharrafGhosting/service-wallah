@@ -113,7 +113,7 @@ const reviews = [
 ];
 
 const ReviewCard = ({ name, review, rating, img }) => (
-  <div className="w-full md:w-1/2 p-2">
+  <div className="w-full md:w-1/2 p-2 ">
     <div className="bg-white p-4 h-52 shadow rounded-lg flex items-start space-x-4">
       <div className="relative w-12 h-12">
         <Image
@@ -339,7 +339,7 @@ const Service = () => {
         </Drawer>
         <div className="px-4 md:px-20 my-6 flex flex-col gap-6">
           <div className="flex flex-col lg:flex-row gap-6 w-full">
-            <div className="w-2/3 p-4 flex flex-col justify-center gap-6 rounded-lg">
+            <div className="w-full lg:w-2/3 p-4 flex flex-col justify-center gap-6 rounded-lg">
               <div className="flex items-center gap-2">
                 <img
                   src={service.icon?.url} // Replace with actual path
@@ -461,7 +461,7 @@ const Service = () => {
                       <img
                         src={subService.icon?.url}
                         alt="Service Icon"
-                        className="object-cover md:w-full h-48 shadow-lg"
+                        className="object-cover md:w-full h-48 shadow-lg "
                       />
                     </CardHeader>
                     <CardBody>
@@ -519,7 +519,7 @@ const Service = () => {
             ) : (
               <Slider {...sliderSettings}>
                 {service.subServices?.map((subService, index) => (
-                  <div key={index} className="px-3">
+                  <div key={index} className="px-3 ">
                     <Card className="mb-3">
                       <CardHeader floated={false}>
                         <img
