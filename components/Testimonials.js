@@ -46,7 +46,7 @@ const Testimonials = () => {
   return (
     <div className="container my-12 mx-auto md:px-6">
       <section className="text-center">
-        <div className="relative bg-white h-96 flex justify-center items-center rounded-xl shadow-lg overflow-hidden">
+        <div className="relative bg-white h-96  flex justify-center items-center rounded-xl shadow-lg overflow-hidden">
           {testimonials.map((testimonial, index) => (
             <div
               key={index}
@@ -56,7 +56,7 @@ const Testimonials = () => {
               style={{ transitionProperty: "opacity, transform" }}
             >
               <img
-                className="mx-auto mb-6 rounded-full shadow-lg dark:shadow-black/20 w-40 h-40 object-cover"
+                className="mx-auto mb-6 rounded-full shadow-lg dark:shadow-black/20 w-28 h-28 object-cover"
                 src={testimonial.image}
                 alt="avatar"
               />
@@ -65,7 +65,7 @@ const Testimonials = () => {
                   <h5 className="mb-2 text-4xl font-bold font-cookie text-blue-500">
                     {testimonial.name}
                   </h5>
-                  <p className="mb-6 text-gray-600">
+                  <p className="mb-6 text-gray-600 text-justify">
                     {testimonial.testimonial}
                   </p>
                 </div>

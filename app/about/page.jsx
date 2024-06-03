@@ -16,7 +16,7 @@ const About = () => {
             <h1 className="font-cookie text-blue-500 text-4xl sm:text-5xl md:text-6xl lg:text-6xl">
               About Us
             </h1>
-            <h2 className="font-julius text-center text-gray-700 text-3xl sm:text-3xl md:text-4xl lg:text-3xl mb-4">
+            <h2 className="font-julius  text-gray-700 text-3xl sm:text-3xl md:text-4xl lg:text-3xl mb-4">
               Your Trusted Home Service Partner
             </h2>
             <p className="mb-4 text-gray-700">
@@ -79,10 +79,10 @@ const About = () => {
           alt=""
         />
       </div>
-      <div className="px-4 lg:px-20 pb-6 w-full">
+      <div className="px-4 lg:px-20  w-full">
         <ServiceSection />
       </div>
-      <section className="py-12 bg-gray-100">
+      <section className="pb-12 bg-gray-100">
         <div className="container mx-auto px-4 text-center">
           <div className="w-full flex flex-col justify-center items-center py-4 px-4">
             <h1 className="font-julius text-center text-gray-700 text-3xl sm:text-3xl md:text-4xl lg:text-5xl mb-2 flex">
