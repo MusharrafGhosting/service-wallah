@@ -624,7 +624,7 @@ export default function Nav() {
                       Profile <FaUser size={12} />
                     </MenuItem>
                   </Link>
-                  <Link href={`/user/booking`} className="outline-none">
+                  <Link href={`/booking`} className="outline-none">
                     <MenuItem className="justify-center flex items-center gap-1">
                       Booking <FaCalendarCheck />
                     </MenuItem>
@@ -655,7 +655,7 @@ export default function Nav() {
                     </MenuItem>
                   </Link>
                   <Link
-                    href={`/service-provider/${user._id}/booking`}
+                    href={`/booking`}
                     className="outline-none"
                   >
                     <MenuItem className="justify-center flex items-center gap-1">
@@ -747,7 +747,7 @@ export default function Nav() {
               <Tabs value={type} className="">
                 <div className="flex justify-between items-center mb-4">
                   <h1 className="text-md text-center text-gray-800">
-                    Welcome to Service Wallah
+                    Login / Register
                   </h1>
                   <RxCross1
                     size={20}

@@ -161,7 +161,7 @@ const Cart = () => {
                 ).toFixed(2)}
               </span>
             </div>
-            <Link href={"/shipping"}>
+            <Link href={"/checkout"}>
               <button className="w-full py-3 mt-3 flex items-center gap-1 hover:gap-2 justify-center hover:bg-gray-800 transition-all text-white rounded-lg bg-gray-700">
                 Continue <VscDebugContinue />
               </button>
