@@ -3,7 +3,7 @@ import Nav from "@/components/Nav";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Footer from "@/components/Footer";
-import Image from "next/image";
+import { FaArrowDown } from "react-icons/fa";
 import { Drawer, Rating, Textarea } from "@material-tailwind/react";
 import {
   Button,
@@ -77,9 +77,8 @@ const sliderSettings = {
   ],
 };
 
-
 const ReviewCard = ({ name, review, rating, image }) => (
-  <div className="w-full md:w-1/2 p-2 ">
+  <div className="w-full p-2 h-full">
     <div className="bg-white p-4 h-full shadow rounded-lg flex items-start space-x-4">
       <div className="relative w-12 h-12">
         <img
@@ -182,7 +181,10 @@ const Service = () => {
         ...service,
         reviews: [...service.reviews, updatedReview],
       };
-      const res = await axios.post(`/api/services/${id}/update`, updatedService);
+      const res = await axios.post(
+        `/api/services/${id}/update`,
+        updatedService
+      );
       if (res.status === 201) {
         // Add the new review to the existing reviews
         setService(updatedService);
@@ -414,13 +416,10 @@ const Service = () => {
             </h1>
           </div>
           <div className="container mx-auto">
-            {service.subServices?.length <= 4 ? (
-              service.subServices?.map((subService, index) => (
-                <div
-                  key={index}
-                  className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 px-10"
-                >
-                  <Card className="mb-3 max-w-60">
+            {service.subServices?.length <= 5 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 place-items-center">
+                {service.subServices?.map((subService, index) => (
+                  <Card className="mb-3 max-w-72" key={index}>
                     <CardHeader floated={false}>
                       <img
                         src={subService.icon?.url}
@@ -485,8 +484,8 @@ const Service = () => {
                       )}
                     </CardFooter>
                   </Card>
-                </div>
-              ))
+                ))}
+              </div>
             ) : (
               <Slider {...sliderSettings}>
                 {service.subServices?.map((subService, index) => (
@@ -572,18 +571,34 @@ const Service = () => {
               <span className="ml-2 text-gray-700">(4 reviews)</span>
             </div>
           </div>
-          <div className="overflow-auto h-96">
-            <div className="flex flex-wrap m-2 ">
-              {service.reviews?.map((review) => (
-                <ReviewCard key={review.id} {...review} />
-              ))}
+          <div className="overflow-auto h-96 no-scrollbar">
+            <div className="flex flex-wrap m-2 h-full">
+              {service?.reviews?.length === 0 ? (
+                <div className="w-full h-full flex gap-2 flex-col justify-center items-center">
+                  <div className="font-julius text-2xl">
+                    Uh oh, There is no review yet.
+                  </div>
+                  <div className="flex gap-1 items-center text-gray-700">
+                    Make sure to give a review, if you liked {service.name}{" "}
+                    <FaArrowDown />
+                  </div>
+                </div>
+              ) : (
+                <div className="w-full grid grid-cols-2 gap-4">
+                  {service.reviews?.map((review, index) => (
+                    <div key={index} className="w-full h-full">
+                      <ReviewCard key={review.id} {...review} />
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
         <div className="flex justify-center bg-gray-100 ">
           <div className="w-9/12 mb-8">
             <div className="p-4 bg-white shadow rounded-lg space-x-4">
-              <h3 className="text-2xl font-bold mb-4 text-center">
+              <h3 className="text-2xl text-blue-500 font-semibold mb-4 text-center">
                 Give a Review
               </h3>
               <form onSubmit={handleReviewSubmit} className="space-y-4">
@@ -593,6 +608,7 @@ const Service = () => {
                   </label>
                   <Rating
                     value={review.rating}
+                    required
                     onChange={(e) => setReview({ ...review, rating: e })}
                   />
                 </div>

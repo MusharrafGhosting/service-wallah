@@ -195,40 +195,46 @@ function Shipping() {
       status: false,
       otp,
     };
-    const response = await axios.post("/api/bookings/add", postData);
 
-    const updatedUser = {
-      ...user,
-      bookings: [...user.bookings, response.data._id],
-    };
-    let previousId;
-    cartItems.map(async (item) => {
-      const serviceId = item.serviceId;
-      console.log(serviceId);
-      console.log(previousId);
-      if (previousId !== undefined || serviceId === previousId) return;
-      previousId = serviceId;
-      const updatedItem = {
-        ...item,
-        bookings: [
-          ...item.bookings,
-          { orderId: response.data._id, subService: item },
-        ],
+    try {
+      const response = await axios.post("/api/bookings/add", postData);
+      const updatedUser = {
+        ...user,
+        bookings: [...user.bookings, response.data._id],
       };
-      // Maybe url is not working later fix it
-      try {
-        const res = await axios.post(
-          `/api/services/${serviceId}/update`,
-          updatedItem
-        );
-        console.log(res);
-      } catch (error) {
-        console.error(`Error updating service ${serviceId}:`, error);
-      }
-    });
-    // localStorage.removeItem("cart");
-    gettingUser();
-    await axios.post("/api/users/update", updatedUser);
+      await axios.post("/api/users/update", updatedUser);
+      gettingUser();
+      const res = await axios.post(`/api/services/update-bookings`, {
+        cartItems,
+        orderId: response.data._id,
+      });
+      localStorage.removeItem("cart");
+    } catch (error) {
+      console.error(`Error updating service ${serviceId}:`, error);
+    }
+
+    // const promises = cartItems.map(async (item) => {
+    //   const serviceId = item.serviceId;
+    //   const updatedItem = {
+    //     ...item,
+    //     bookings: [
+    //       ...item.bookings,
+    //       { orderId: response.data._id, subService: item },
+    //     ],
+    //   };
+
+    //   // Remove _id field from updatedItem if it exists
+    //   const { _id, ...restUpdatedItem } = updatedItem;
+
+    //   try {
+    //     return await axios.post(`/api/services/${serviceId}/update`, restUpdatedItem);
+    //   } catch (error) {
+    //     console.error(`Error updating service ${serviceId}:`, error);
+    //   }
+    // });
+
+    // const results = await Promise.all(promises);
+    // results.forEach((res) => console.log(res));
   };
 
   return (
@@ -435,7 +441,7 @@ function Shipping() {
                 <Dialog
                   open={completedDailog}
                   handler={handleCompletedDailog}
-                  // dismiss={{ enabled: false }}
+                  dismiss={{ enabled: false }}
                   className="p-3 bg-gray-100"
                   size="xs"
                 >
