@@ -5,7 +5,6 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
 const Booking = () => {
-  const [otp, setOtp] = useState("");
 
   const checkingAuthorization = async () => {
     const id = localStorage.getItem("token");
@@ -27,13 +26,13 @@ const Booking = () => {
 
   useEffect(() => {
     checkingAuthorization();
-    setOtp(Math.floor(1000 + Math.random() * 9000).toString());
   }, []);
 
   return (
     <div className="userpage-bg min-h-screen">
       <Nav />
-      <div className="max-w-5xl bg-white bg-opacity-25 shadow-lg shadow-indigo-900/40 backdrop-blur-sm backdrop-filter backdrop-opacity-1 rounded-lg border border-opacity-20 border-white mx-auto my-8 bg-white p-6 rounded-xl shadow-lg">
+      {/* Users Booking Section */}
+      {/* <div className="max-w-5xl bg-white bg-opacity-25 shadow-lg shadow-indigo-900/40 backdrop-blur-sm backdrop-filter backdrop-opacity-1 rounded-lg border border-opacity-20 border-white mx-auto my-8 p-6">
         <header className="mb-8 flex flex-col sm:flex-row items-center justify-center mx-auto gap-2">
           <h1 className="font-julius text-center lg:text-4xl md:text-4xl sm:text-3xl text-3xl text-gray-700 font-bold">
             Booking Details
@@ -76,9 +75,7 @@ const Booking = () => {
               </p>
               <p className="text-gray-800 font-bold flex items-center gap-2">
                 Status:{" "}
-                <strong className="    text-teal-500 rounded-md">
-                  Confirmed
-                </strong>
+                <span className="text-teal-500 rounded-md">Confirmed</span>
               </p>
             </div>
             <div className="leading-9">
@@ -89,15 +86,13 @@ const Booking = () => {
                 </strong>
               </p>
               <p>
-                Timing:{" "}
-                <strong className="text-gray-600">10:00 AM - 02:00 PM</strong>
+                Timing: <strong className="text-gray-600">10:00 AM</strong>
               </p>
               <p>
                 Quantity: <strong className="text-gray-600">1</strong>
               </p>
               <p className="text-gray-800 font-bold flex items-center gap-2">
-                Verification OTP:{" "}
-                <strong className="    text-teal-500 rounded-md">{otp}</strong>
+                Verification OTP: <span className="text-teal-500">1234</span>
               </p>
             </div>
           </div>
@@ -141,7 +136,9 @@ const Booking = () => {
             </button>
           </div>
         </section>
-      </div>
+      </div> */}
+      {/* Service provider Booking Section */}
+      
       <Footer />
     </div>
   );
