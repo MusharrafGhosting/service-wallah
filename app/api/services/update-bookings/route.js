@@ -5,7 +5,6 @@ import { NextResponse } from "next/server";
 export async function POST(request) {
   const { cartItems, orderId } = await request.json();
 
-  console.log(cartItems);
   await connectMongoDB();
   Promise.all(
     cartItems.map(async (service) => {

@@ -4,8 +4,9 @@ import Nav from "@/components/Nav";
 import { GrFormView } from "react-icons/gr";
 import { TiTickOutline } from "react-icons/ti";
 import { MdOutlineCancel } from "react-icons/md";
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import { Dialog, IconButton } from "@material-tailwind/react";
+import { RxCross1 } from "react-icons/rx";
 
 const Booking = () => {
   const checkingAuthorization = async () => {
@@ -30,11 +31,14 @@ const Booking = () => {
     checkingAuthorization();
   }, []);
 
+  const [open, setOpen] = useState(false);
+  const handleOpenDailog = () => setOpen(!open);
+
   return (
     <div className="userpage-bg min-h-screen">
       <Nav />
       {/* Users Booking Section */}
-       <div className="max-w-5xl bg-white bg-opacity-25 shadow-lg shadow-gray-400 backdrop-blur-sm backdrop-filter backdrop-opacity-1 rounded-lg border border-opacity-20 border-white mx-auto my-8 p-6">
+      {/* <div className="max-w-5xl bg-white bg-opacity-25 shadow-lg shadow-gray-400 backdrop-blur-sm backdrop-filter backdrop-opacity-1 rounded-lg border border-opacity-20 border-white mx-auto my-8 p-6">
         <header className="mb-8 flex flex-col sm:flex-row items-center justify-center mx-auto gap-2">
           <h1 className="font-julius text-center lg:text-4xl md:text-4xl sm:text-3xl text-3xl text-gray-700 font-bold">
             Booking Details
@@ -137,7 +141,7 @@ const Booking = () => {
             </button>
           </div>
         </section>
-      </div>    
+      </div>     */}
       {/* Service provider Booking Section */}
       <div className="py-12">
         <div className="max-w-5xl   bg-opacity-25 shadow-lg shadow-gray-400 backdrop-blur-sm backdrop-filter backdrop-opacity-1 rounded-lg border border-opacity-20   mx-auto my-8 ">
@@ -157,7 +161,6 @@ const Booking = () => {
                 </div>
               </div>
               <div className="flex space-x-4 overflow-auto py-3">
-                
                 <button className="px-4 py-2 flex gap-1 items-center rounded-md bg-red-500 text-white hover:bg-red-600 transition-colors duration-200">
                   Reject
                   <MdOutlineCancel fontSize={23} />
@@ -166,9 +169,25 @@ const Booking = () => {
                   Accept
                   <TiTickOutline fontSize={23} />
                 </button>
-                <button className="px-4 py-2 flex  gap-1 items-center rounded-md bg-purple-500 text-white hover:bg-purple-600 transition-colors duration-200">
+                <button
+                  onClick={handleOpenDailog}
+                  className="px-4 py-2 flex  gap-1 items-center rounded-md bg-purple-500 text-white hover:bg-purple-600 transition-colors duration-200"
+                >
                   View <GrFormView fontSize={23} />
                 </button>
+                <Dialog
+                  open={open}
+                  handler={handleOpenDailog}
+                  dismiss={{enabled: false}}
+                  className="bg-gray-100 p-6"
+                >
+                  <div className="flex justify-between items-center">
+                    <div className="font-julius text-2xl font-bold">Booking Details</div>
+                    <IconButton variant="text" onClick={handleOpenDailog}>
+                      <RxCross1 size={20} />
+                    </IconButton>
+                  </div>
+                </Dialog>
               </div>
             </div>
           </div>
