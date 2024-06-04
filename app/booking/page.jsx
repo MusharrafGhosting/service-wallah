@@ -1,11 +1,13 @@
 "use client";
 import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
+import { GrFormView } from "react-icons/gr";
+import { TiTickOutline } from "react-icons/ti";
+import { MdOutlineCancel } from "react-icons/md";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
 const Booking = () => {
-
   const checkingAuthorization = async () => {
     const id = localStorage.getItem("token");
     if (!id) {
@@ -32,7 +34,7 @@ const Booking = () => {
     <div className="userpage-bg min-h-screen">
       <Nav />
       {/* Users Booking Section */}
-      {/* <div className="max-w-5xl bg-white bg-opacity-25 shadow-lg shadow-indigo-900/40 backdrop-blur-sm backdrop-filter backdrop-opacity-1 rounded-lg border border-opacity-20 border-white mx-auto my-8 p-6">
+       <div className="max-w-5xl bg-white bg-opacity-25 shadow-lg shadow-gray-400 backdrop-blur-sm backdrop-filter backdrop-opacity-1 rounded-lg border border-opacity-20 border-white mx-auto my-8 p-6">
         <header className="mb-8 flex flex-col sm:flex-row items-center justify-center mx-auto gap-2">
           <h1 className="font-julius text-center lg:text-4xl md:text-4xl sm:text-3xl text-3xl text-gray-700 font-bold">
             Booking Details
@@ -99,13 +101,12 @@ const Booking = () => {
         </section>
 
         <section className="mb-8">
-          <table className="min-w-full bg-white">
+          <table className="min-w-full  ">
             <thead>
               <tr>
-                <th className="py-2 px-4 border-b font-julius lg:text-2xl md:text-xl sm:text-xl text-xl text-gray-700 font-bold">
+                <th className="py-2 px-4   text-left font-julius lg:text-2xl md:text-xl sm:text-xl text-xl text-gray-700 font-bold">
                   Summary
                 </th>
-                <th className="py-2 px-4 border-b text-right font-julius lg:text-2xl md:text-xl sm:text-xl text-xl text-gray-700 font-bold"></th>
               </tr>
             </thead>
             <tbody>
@@ -126,7 +127,7 @@ const Booking = () => {
         </section>
 
         <section className="mb-8">
-          <p className="font-bold text-red-600">
+          <p className="font-medium text-red-600">
             Note: Order can be cancelled up to 10 minutes before the scheduled
             time.
           </p>
@@ -136,9 +137,43 @@ const Booking = () => {
             </button>
           </div>
         </section>
-      </div> */}
+      </div>    
       {/* Service provider Booking Section */}
-      
+      <div className="py-12">
+        <div className="max-w-5xl   bg-opacity-25 shadow-lg shadow-gray-400 backdrop-blur-sm backdrop-filter backdrop-opacity-1 rounded-lg border border-opacity-20   mx-auto my-8 ">
+          <div className="rounded-lg   overflow-hidden">
+            <div className="px-6 py-8 lg:flex md:flex items-center justify-between">
+              <div className="flex items-center">
+                <div className="mr-4">
+                  <img
+                    src="/image/hero5.webp"
+                    alt="Avatar"
+                    className="w-16 h-16 rounded-full"
+                  />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-semibold">AC Installation</h2>
+                  <p className="text-gray-600">Price: $618</p>
+                </div>
+              </div>
+              <div className="flex space-x-4 overflow-auto py-3">
+                
+                <button className="px-4 py-2 flex gap-1 items-center rounded-md bg-red-500 text-white hover:bg-red-600 transition-colors duration-200">
+                  Reject
+                  <MdOutlineCancel fontSize={23} />
+                </button>
+                <button className="px-4 py-2 flex gap-1 items-center rounded-md bg-green-500 text-white hover:bg-green-700 transition-colors duration-200">
+                  Accept
+                  <TiTickOutline fontSize={23} />
+                </button>
+                <button className="px-4 py-2 flex  gap-1 items-center rounded-md bg-purple-500 text-white hover:bg-purple-600 transition-colors duration-200">
+                  View <GrFormView fontSize={23} />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <Footer />
     </div>
   );
