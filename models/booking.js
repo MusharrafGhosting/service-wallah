@@ -1,30 +1,31 @@
 import mongoose, { Schema } from "mongoose";
 
-const orderSchema = new Schema(
+const bookingSchema = new Schema(
   {
-    service: {
-      type: String,
+    cartItems: {
+      type: [],
       required: true,
     },
-    quantity: {
-      type: Object,
-    },
-    confirmed: {
+    status: {
       type: Boolean,
       required: true,
-      default: false,
     },
     completed: {
       type: Boolean,
       required: true,
       default: false,
     },
+    fullname: { type: String, required: true },
+    phoneNumber: { type: String, required: true },
+    email: { type: String, required: true },
     address: {
+      type: String,
+    },
+    profileImage: {
       type: Object,
     },
     complain: {
       type: String,
-      required: true,
     },
     date: {
       type: String,
@@ -32,12 +33,10 @@ const orderSchema = new Schema(
     time: {
       type: String,
     },
-    customerInfo: {
-      type: Object,
-    },
-    OTP: {
+    otp: {
       type: String,
     },
+    paymentMethod: { type: String, required: true },
     VerificationImage: {
       type: Object,
       default: {
@@ -45,12 +44,15 @@ const orderSchema = new Schema(
         name: "",
       },
     },
+    location: {
+      type: Object,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-const Order = mongoose.models.Order || mongoose.model("Order", orderSchema);
+const Booking = mongoose.models.Booking || mongoose.model("Booking", bookingSchema);
 
-export default Order;
+export default Booking;

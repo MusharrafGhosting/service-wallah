@@ -65,19 +65,12 @@ const userSchema = new Schema(
       type: [Schema.Types.ObjectId], // Assuming these are references to other documents
       default: [],
     },
-    bookingHistory: {
-      type: [Schema.Types.ObjectId], // Assuming these are references to other documents
-      default: [],
-    },
     payments: {
       type: [Schema.Types.ObjectId], // Assuming these are references to other documents
       default: [],
     },
     messages: {
       type: [Schema.Types.ObjectId], // Assuming these are references to other documents
-    },
-    addresses: {
-      type: Array, // Assuming these are references to other documents
     },
   },
   {

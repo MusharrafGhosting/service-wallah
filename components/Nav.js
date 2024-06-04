@@ -497,7 +497,6 @@ export default function Nav() {
       setRegisterError("Invalid data");
       return;
     }
-    console.log(" Sending OTP function triggered");
     const authkey = "15d7c1359e59f369";
     const name = "service wallah account";
     const mobile = registerData.phoneNumber;
@@ -654,10 +653,7 @@ export default function Nav() {
                       Profile <FaUser size={12} />
                     </MenuItem>
                   </Link>
-                  <Link
-                    href={`/booking`}
-                    className="outline-none"
-                  >
+                  <Link href={`/booking`} className="outline-none">
                     <MenuItem className="justify-center flex items-center gap-1">
                       Booking <FaCalendarCheck />
                     </MenuItem>

@@ -183,7 +183,7 @@ const User = () => {
                       />
                     </Badge>
                   ) : (
-                    <div className="bg-gray-700 h-full w-full font-junge text-white font-bold text-7xl flex justify-center items-center rounded-xl">
+                    <div className="bg-gray-700 h-32 w-32 font-junge text-white font-bold text-7xl flex justify-center items-center rounded-full">
                       {user.name && Array.from(user.name)[0].toUpperCase()}
                     </div>
                   )}

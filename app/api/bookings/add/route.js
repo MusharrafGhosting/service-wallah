@@ -1,11 +1,10 @@
 import connectMongoDB from "@/libs/mongodb";
-import User from "@/models/users";
+import Booking from "@/models/booking";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
   const data = await request.json();
-  // console.log(data);
   await connectMongoDB();
-  const user = await User.findByIdAndUpdate(data._id, data);
-  return NextResponse.json(user, { status: 201 });
+  const booking = await Booking.create(data);
+  return NextResponse.json(booking, { status: 201 });
 }

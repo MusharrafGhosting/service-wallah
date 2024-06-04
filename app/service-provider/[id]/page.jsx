@@ -388,7 +388,7 @@ const ServiceProvider = () => {
                       />
                     </Badge>
                   ) : (
-                    <span className="w-32 h-32 rounded-full font-junge bg-gray-400 flex justify-center text-4xl items-center shadow">
+                    <span className="bg-gray-700 h-32 w-32 font-junge text-white font-bold text-7xl flex justify-center items-center rounded-full">
                       {user?.name && Array.from(user.name)[0].toUpperCase()}
                     </span>
                   )}

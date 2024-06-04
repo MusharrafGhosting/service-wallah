@@ -19,12 +19,14 @@ import Link from "next/link";
 import { MdOutlineMyLocation } from "react-icons/md";
 import { RxCross1 } from "react-icons/rx";
 import { SiPhonepe } from "react-icons/si";
-import { Player, Controls } from "@lottiefiles/react-lottie-player";
-import { VscDebugContinue } from "react-icons/vsc";
+import { Player } from "@lottiefiles/react-lottie-player";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 function Shipping() {
   const [formData, setFormData] = useState({
     fullname: "",
+    profileImage: {},
     phoneNumber: "",
     address: "",
     date: "",
@@ -66,16 +68,47 @@ function Shipping() {
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, "0");
     const minutes = String(now.getMinutes()).padStart(2, "0");
-    console.log(parseFloat(hours) + 1, parseFloat(minutes));
     return `${parseFloat(hours) + 1}:${parseFloat(minutes)}`;
   };
 
-  const getAddress = async ({ lat, lng }) => {
+  const getAddress = async () => {
     try {
+      let location = JSON.parse(localStorage.getItem("location"));
+
+      if (!location) {
+        if (navigator.geolocation) {
+          location = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                const { latitude, longitude } = position.coords;
+                const newLocation = { lat: latitude, lng: longitude };
+                localStorage.setItem("location", JSON.stringify(newLocation));
+                resolve(newLocation);
+              },
+              (error) => {
+                console.error("Error getting the location:", error);
+                alert("Please enable geolocation to use this feature.");
+                reject(error);
+              }
+            );
+          });
+        } else {
+          throw new Error("Geolocation is not supported by this browser.");
+        }
+      }
+
+      const { lat, lng } = location;
+
       const response = await fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
       );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
       const data = await response.json();
+
       if (data.results && data.results.length > 0) {
         setFormData((prevFormData) => ({
           ...prevFormData,
@@ -89,34 +122,40 @@ function Shipping() {
       }
     } catch (error) {
       console.error("Error fetching address:", error);
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        address: "Error fetching address",
+      }));
     }
   };
-
+  const [user, setUser] = useState({});
   const gettingUser = async () => {
-    const id = localStorage.getItem("token");
-    const response = await fetch(`/api/users/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await response.json();
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      fullname: data.name || "Name",
-      phoneNumber: data.phoneNumber || "Phone Number",
-      email: data.email || "Email",
-    }));
-  };
+    try {
+      const id = localStorage.getItem("token");
+      const response = await axios.get(`/api/users/${id}`);
+      const data = await response.data;
+      setUser(data);
 
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        fullname: data.name || "Name",
+        profileImage: data.image || { url: "", name: "" },
+        phoneNumber: data.phoneNumber || "Phone Number",
+        email: data.email || "Email",
+      }));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const router = useRouter();
   useEffect(() => {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    if (cart.length === 0) router.back();
     setCartItems(cart);
     gettingUser();
     const dates = getFourDays();
     setDates(dates);
-    const location = JSON.parse(localStorage.getItem("location"));
-    getAddress(location);
+    getAddress();
 
     // Set the initial date in formData
     setFormData((prevFormData) => ({
@@ -124,10 +163,6 @@ function Shipping() {
       date: dates[0],
     }));
   }, []);
-
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
 
   const [paymentDailog, setPaymentDailog] = useState(false);
   const handlePaymentDailog = () => setPaymentDailog(!paymentDailog);
@@ -143,10 +178,57 @@ function Shipping() {
     }
     handlePaymentDailog();
   };
-  const handleSumbitOrderViaCash = () => {
+  function generateOTP() {
+    // Generate a random number between 1000 and 9999
+    const otp = Math.floor(1000 + Math.random() * 9000);
+    return otp.toString();
+  }
+  const handleSumbitOrderViaCash = async () => {
     handleCompletedDailog();
+    const location = JSON.parse(localStorage.getItem("location"));
+    const otp = generateOTP();
+    const postData = {
+      ...formData,
+      paymentMethod: "Via Cash",
+      location,
+      cartItems,
+      status: false,
+      otp,
+    };
+    const response = await axios.post("/api/bookings/add", postData);
 
-    console.log(formData);
+    const updatedUser = {
+      ...user,
+      bookings: [...user.bookings, response.data._id],
+    };
+    let previousId;
+    cartItems.map(async (item) => {
+      const serviceId = item.serviceId;
+      console.log(serviceId);
+      console.log(previousId);
+      if (previousId !== undefined || serviceId === previousId) return;
+      previousId = serviceId;
+      const updatedItem = {
+        ...item,
+        bookings: [
+          ...item.bookings,
+          { orderId: response.data._id, subService: item },
+        ],
+      };
+      // Maybe url is not working later fix it
+      try {
+        const res = await axios.post(
+          `/api/services/${serviceId}/update`,
+          updatedItem
+        );
+        console.log(res);
+      } catch (error) {
+        console.error(`Error updating service ${serviceId}:`, error);
+      }
+    });
+    // localStorage.removeItem("cart");
+    gettingUser();
+    await axios.post("/api/users/update", updatedUser);
   };
 
   return (
@@ -353,12 +435,15 @@ function Shipping() {
                 <Dialog
                   open={completedDailog}
                   handler={handleCompletedDailog}
-                  dismiss={{ enabled: false }}
+                  // dismiss={{ enabled: false }}
                   className="p-3 bg-gray-100"
                   size="xs"
                 >
                   <div className="flex justify-center items-center">
-                    <Typography variant="h5" className="text-teal-500">
+                    <Typography
+                      variant="h5"
+                      className="text-teal-500 text-center"
+                    >
                       Service Booked Successfully
                     </Typography>
                   </div>
@@ -375,7 +460,7 @@ function Shipping() {
                       variant="gradient"
                       className="flex gap-1 transition-all hover:gap-2 items-center justify-center"
                     >
-                      Continue <VscDebugContinue size={17} />
+                      Go to Bookings
                     </Button>
                   </Link>
                 </Dialog>

@@ -84,50 +84,74 @@ const Cart = () => {
               Quantity should be between 1 and 10.
             </div>
           </div>
-          <div className="mt-4 space-y-6 px-6">
-            {products.map((product, index) => (
-              <div
-                key={index}
-                className="flex flex-col lg:flex-row items-start lg:items-center justify-between border-b pb-4"
-              >
-                <div className="flex items-start lg:items-center">
-                  <img
-                    src={product.icon?.url}
-                    alt={product.name}
-                    className="w-20 h-20 object-cover rounded"
-                  />
-                  <div className="ml-4">
-                    <div className="font-semibold">{product.name}</div>
-                    <div className="text-gray-500 text-sm">
-                      ₹{parseFloat(product.price).toFixed(2)}
+          <div className="mt-4 space-y-6 px-6 h-full">
+            {products.length === 0 ? (
+              <div className="flex flex-col gap-4 items-center h-full md:pt-24">
+                <div className="text-2xl font-julius text-center">
+                  Uh oh, There is no Service in Your Cart
+                </div>
+                <div className="flex gap-4 items-center flex-col md:flex-row">
+                  <div>Please Choose a Service First</div>
+                  <Link href={"/services"}>
+                    <Button
+                      color="indigo"
+                      variant="gradient"
+                      className="rounded whitespace-nowrap"
+                    >
+                      Choose a service
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              products.map((product, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col lg:flex-row items-start lg:items-center justify-between border-b pb-4"
+                >
+                  <div className="flex items-start lg:items-center">
+                    <img
+                      src={product.icon?.url}
+                      alt={product.name}
+                      className="w-20 h-20 object-cover rounded"
+                    />
+                    <div className="ml-4">
+                      <div className="font-semibold">{product.name}</div>
+                      <div className="text-gray-500 text-sm">
+                        ₹{parseFloat(product.price).toFixed(2)}
+                      </div>
                     </div>
                   </div>
+                  <div className="flex w-full lg:w-max flex-col lg:flex-row gap-4 mt-4 lg:mt-0">
+                    <ButtonGroup
+                      variant="gradient"
+                      color="light-blue"
+                      size="sm"
+                    >
+                      <Button onClick={() => handleQuantityChange(index, -1)}>
+                        -
+                      </Button>
+                      <div className="px-4 flex items-center">
+                        {product.quantity}
+                      </div>
+                      <Button onClick={() => handleQuantityChange(index, 1)}>
+                        +
+                      </Button>
+                    </ButtonGroup>
+                  </div>
+                  <div className="font-semibold mt-4 lg:mt-0">
+                    ₹{(product.price * product.quantity).toFixed(2)}
+                  </div>
+                  <button
+                    onClick={() => handleRemoveProduct(index)}
+                    className="bg-[#FA7070] hover:bg-[#FD5D5D] shadow-lg shadow-[#ffb6b69a] text-white px-4 py-2 rounded-md flex items-center justify-center gap-1 transition-all mt-4 lg:mt-0"
+                    title="Remove Service"
+                  >
+                    Remove service
+                  </button>
                 </div>
-                <div className="flex w-full lg:w-max flex-col lg:flex-row gap-4 mt-4 lg:mt-0">
-                  <ButtonGroup variant="gradient" color="light-blue" size="sm">
-                    <Button onClick={() => handleQuantityChange(index, -1)}>
-                      -
-                    </Button>
-                    <div className="px-4 flex items-center">
-                      {product.quantity}
-                    </div>
-                    <Button onClick={() => handleQuantityChange(index, 1)}>
-                      +
-                    </Button>
-                  </ButtonGroup>
-                </div>
-                <div className="font-semibold mt-4 lg:mt-0">
-                  ₹{(product.price * product.quantity).toFixed(2)}
-                </div>
-                <button
-                  onClick={() => handleRemoveProduct(index)}
-                  className="bg-[#FA7070] hover:bg-[#FD5D5D] shadow-lg shadow-[#ffb6b69a] text-white px-4 py-2 rounded-md flex items-center justify-center gap-1 transition-all mt-4 lg:mt-0"
-                  title="Remove Service"
-                >
-                  Remove service
-                </button>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
         <div className="w-full lg:w-1/3 h-full bg-white p-6 shadow-lg rounded-lg">
@@ -161,11 +185,21 @@ const Cart = () => {
                 ).toFixed(2)}
               </span>
             </div>
-            <Link href={"/checkout"}>
-              <button className="w-full py-3 mt-3 flex items-center gap-1 hover:gap-2 justify-center hover:bg-gray-800 transition-all text-white rounded-lg bg-gray-700">
+            {products.length === 0 ? (
+              <button
+                disabled
+                className="w-full py-3 mt-3 flex items-center gap-1 justify-center bg-gray-500 text-white rounded-lg cursor-not-allowed"
+              >
                 Continue <VscDebugContinue />
               </button>
-            </Link>
+            ) : (
+              <Link
+                href="/checkout"
+                className="w-full py-3 mt-3 flex items-center gap-1 hover:gap-2 justify-center hover:bg-gray-800 transition-all text-white rounded-lg bg-gray-700"
+              >
+                Continue <VscDebugContinue />
+              </Link>
+            )}
             <div className="text-sm text-gray-500">
               <p className="text-base">About Service Providers</p>
               <p>

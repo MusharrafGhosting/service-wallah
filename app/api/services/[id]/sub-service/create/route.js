@@ -1,7 +1,7 @@
 import connectMongoDB from "@/libs/mongodb";
 import Service from "@/models/Service";
 import { NextResponse } from "next/server";
-import { v4 } from "uuid";
+import mongoose from "mongoose";
 
 function getCurrentDateFormatted() {
   const months = [
@@ -30,11 +30,13 @@ const formattedDate = getCurrentDateFormatted();
 export async function POST(request, { params }) {
   const { id } = params;
   const { name, status, price, icon } = await request.json();
+  
   // console.log(name, status, price, icon, id);
   await connectMongoDB();
   const service = await Service.findById(id);
   service.subServices.push({
-    _id: v4(),
+    _id: new mongoose.Types.ObjectId(),
+    serviceId: id,
     name,
     status,
     price,

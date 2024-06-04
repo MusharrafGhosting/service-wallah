@@ -23,6 +23,9 @@ import { FaCartArrowDown } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import Link from "next/link";
 import { VscDebugContinue } from "react-icons/vsc";
+import { IoBagRemove } from "react-icons/io5";
+import { IoIosStar, IoIosStarHalf, IoIosStarOutline } from "react-icons/io";
+import axios from "axios";
 
 const NextArrow = ({ onClick }) => {
   return (
@@ -74,54 +77,15 @@ const sliderSettings = {
   ],
 };
 
-const reviews = [
-  {
-    id: 1,
-    name: "Musharraf Jamal",
-    review: "Service provider were soo delicate to his work.",
-    rating: 4,
-    img: "/image/hero1.webp", // Replace with the path to your first image
-  },
-  {
-    id: 2,
-    name: "Angila",
-    review: "Good in work but behavior is not friendly at all.",
-    rating: 3,
-    img: "/image/hero1.webp", // Replace with the path to your second image
-  },
-  {
-    id: 3,
-    name: "Angila",
-    review: "Good in work but behavior is not friendly at all.",
-    rating: 3,
-    img: "/image/hero1.webp", // Replace with the path to your second image
-  },
-  {
-    id: 4,
-    name: "Musharraf Jamal",
-    review: "Service provider were soo delicate to his work.",
-    rating: 4,
-    img: "/image/hero1.webp", // Replace with the path to your first image
-  },
-  {
-    id: 5,
-    name: "Musharraf Jamal",
-    review: "Service provider were soo delicate to his work.",
-    rating: 4,
-    img: "/image/hero1.webp", // Replace with the path to your first image
-  },
-];
 
-const ReviewCard = ({ name, review, rating, img }) => (
+const ReviewCard = ({ name, review, rating, image }) => (
   <div className="w-full md:w-1/2 p-2 ">
-    <div className="bg-white p-4 h-52 shadow rounded-lg flex items-start space-x-4">
+    <div className="bg-white p-4 h-full shadow rounded-lg flex items-start space-x-4">
       <div className="relative w-12 h-12">
-        <Image
-          src={img}
+        <img
+          src={image?.url}
           alt={name}
-          layout="fill"
-          objectFit="cover"
-          className="rounded-full"
+          className="rounded-full object-cover"
         />
       </div>
       <div className="flex-1">
@@ -129,7 +93,7 @@ const ReviewCard = ({ name, review, rating, img }) => (
           <div>
             <h3 className="font-bold">{name}</h3>
             <div className="flex items-center">
-              <Rating value={4} />
+              <Rating value={rating} />
             </div>
           </div>
         </div>
@@ -142,58 +106,11 @@ const Service = () => {
   const { id } = useParams();
 
   const [service, setService] = useState({});
-  const [totalEarning, setTotalEarning] = useState(0);
-  const [formattedDate, setFormattedDate] = useState("");
-  const [newReview, setNewReview] = useState({
-    image: {
-      url: "",
-      name: "",
-    },
-    name: "",
-    review: "",
-    rating: 0,
-  });
-
   const getService = async () => {
     try {
       const res = await fetch(`/api/services/${id}`);
       const data = await res.json();
       setService(data);
-      setFormattedDate(new Date(data.createdAt).toLocaleDateString());
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const handleReviewSubmit = async (e) => {
-    e.preventDefault();
-    // Assuming you have an endpoint to submit a review
-    try {
-      const res = await fetch("/api/reviews", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...newReview,
-          serviceId: id,
-        }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        // Add the new review to the existing reviews
-        setService((prev) => ({
-          ...prev,
-          reviews: [...prev.reviews, data],
-        }));
-        // Reset the new review form
-        setNewReview({
-          name: "",
-          review: "",
-          rating: 0,
-        });
-      } else {
-        console.log(data.message);
-      }
     } catch (err) {
       console.log(err);
     }
@@ -230,7 +147,7 @@ const Service = () => {
       "cart",
       JSON.stringify(cartItems.filter((item) => item._id !== id))
     );
-    if ((cartItems.length == 1)) closeDrawer();
+    if (cartItems.length == 1) closeDrawer();
   };
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -238,6 +155,53 @@ const Service = () => {
     setLoading(false);
     setCartItems(JSON.parse(localStorage.getItem("cart")) || []);
   }, []);
+
+  const [review, setReview] = useState({
+    name: "",
+    image: {
+      url: "",
+      name: "",
+    },
+    review: "",
+    rating: 0,
+  });
+  const handleReviewSubmit = async (e) => {
+    e.preventDefault();
+    // Assuming you have an endpoint to submit a review
+    try {
+      const userId = localStorage.getItem("token");
+      const response = await axios.get(`/api/users/${userId}`);
+      const fetchedUser = await response.data;
+
+      const updatedReview = {
+        ...review,
+        name: fetchedUser.name,
+        image: fetchedUser.image,
+      };
+      const updatedService = {
+        ...service,
+        reviews: [...service.reviews, updatedReview],
+      };
+      const res = await axios.post(`/api/services/${id}/update`, updatedService);
+      if (res.status === 201) {
+        // Add the new review to the existing reviews
+        setService(updatedService);
+        // Reset the new review form
+        setReview({
+          image: {
+            url: "",
+            name: "",
+          },
+          name: "",
+          review: "",
+          rating: 0,
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
       <div
@@ -304,12 +268,12 @@ const Service = () => {
                     </Typography>
                     <Button
                       onClick={() => removingCartItem(item._id)}
-                      color="deep-orange"
+                      color="red"
                       variant="gradient"
                       size="sm"
                       className="rounded w-fit flex items-center gap-1"
                     >
-                      Remove <MdDelete />
+                      Remove <IoBagRemove />
                     </Button>
                   </div>
                 </div>
@@ -446,7 +410,7 @@ const Service = () => {
           </div>
           <div className="w-full flex flex-col justify-center items-center py-4 px-4">
             <h1 className="font-julius lg:text-5xl md:text-4xl sm:text-3xl text-3xl text-center text-gray-700 font-bold">
-              AC Service and Repair
+              {service.name}
             </h1>
           </div>
           <div className="container mx-auto">
@@ -494,24 +458,31 @@ const Service = () => {
                       </div>
                     </CardBody>
                     <CardFooter className="pt-0 flex flex-col gap-2">
-                      <Button
-                        size="lg"
-                        fullWidth={true}
-                        variant="gradient"
-                        color="indigo"
-                        className="flex gap-2 items-center justify-center"
-                        onClick={() => handleAddingCart(subService)}
-                        disabled={cartItems.some(
-                          (sub) => sub._id === subService._id
-                        )}
-                      >
-                        {cartItems.some((sub) => sub._id === subService._id) ? (
-                          <span>Item Added</span>
-                        ) : (
+                      {cartItems.some((sub) => sub._id === subService._id) ? (
+                        <Button
+                          size="lg"
+                          fullWidth={true}
+                          variant="gradient"
+                          color="red"
+                          className="flex gap-2 items-center justify-center"
+                          onClick={() => removingCartItem(subService._id)}
+                        >
+                          <span>Remove Service</span>
+                          <IoBagRemove size={20} />
+                        </Button>
+                      ) : (
+                        <Button
+                          size="lg"
+                          fullWidth={true}
+                          variant="gradient"
+                          color="indigo"
+                          className="flex gap-2 items-center justify-center"
+                          onClick={() => handleAddingCart(subService)}
+                        >
                           <span>Add to cart</span>
-                        )}
-                        <FaCartArrowDown size={20} />
-                      </Button>
+                          <FaCartArrowDown size={20} />
+                        </Button>
+                      )}
                     </CardFooter>
                   </Card>
                 </div>
@@ -530,21 +501,6 @@ const Service = () => {
                       </CardHeader>
                       <CardBody>
                         <div className="mb-1 flex flex-col justify-start gap-2">
-                          <div>
-                            <span
-                              className={`border ${
-                                subService.status === "active"
-                                  ? "bg-teal-100"
-                                  : "bg-red-100"
-                              } text-xs ${
-                                subService.status === "active"
-                                  ? "text-teal-700"
-                                  : "text-red-700"
-                              } px-2 py-1 rounded-full`}
-                            >
-                              {subService.status}
-                            </span>
-                          </div>
                           <Typography
                             variant="h6"
                             color="blue-gray"
@@ -558,27 +514,31 @@ const Service = () => {
                         </div>
                       </CardBody>
                       <CardFooter className="pt-0 flex flex-col gap-2">
-                        <Button
-                          size="lg"
-                          fullWidth={true}
-                          variant="gradient"
-                          color="indigo"
-                          className="flex gap-2 items-center justify-center"
-                          onClick={() => handleAddingCart(subService)}
-                          disabled={cartItems.some(
-                            (sub) => sub._id === subService._id
-                          )}
-                        >
-                          {cartItems.some(
-                            (sub) => sub._id === subService._id
-                          ) ? (
-                            <span>Item Added</span>
-                          ) : (
+                        {cartItems.some((sub) => sub._id === subService._id) ? (
+                          <Button
+                            size="lg"
+                            fullWidth={true}
+                            variant="gradient"
+                            color="red"
+                            className="flex gap-2 items-center justify-center"
+                            onClick={() => removingCartItem(subService._id)}
+                          >
+                            <span>Remove Service</span>
+                            <IoBagRemove size={20} />
+                          </Button>
+                        ) : (
+                          <Button
+                            size="lg"
+                            fullWidth={true}
+                            variant="gradient"
+                            color="indigo"
+                            className="flex gap-2 items-center justify-center"
+                            onClick={() => handleAddingCart(subService)}
+                          >
                             <span>Add to cart</span>
-                          )}
-
-                          <FaCartArrowDown size={20} />
-                        </Button>
+                            <FaCartArrowDown size={20} />
+                          </Button>
+                        )}
                       </CardFooter>
                     </Card>
                   </div>
@@ -592,14 +552,29 @@ const Service = () => {
             <h2 className="text-2xl font-bold mb-4">Reviews by users</h2>
             <div className="flex items-center mb-4">
               <div className="flex items-center">
-                <Rating value={4} />
+                <div className="flex">
+                  {Array.from({ length: 5 }, (e, index) => {
+                    let stars = 4;
+                    return (
+                      <span key={index} className="text-[#FFB800]">
+                        {stars >= index + 1 ? (
+                          <IoIosStar size={15} />
+                        ) : stars >= index + 0.5 ? (
+                          <IoIosStarHalf size={15} />
+                        ) : (
+                          <IoIosStarOutline size={15} />
+                        )}
+                      </span>
+                    );
+                  })}
+                </div>
               </div>
               <span className="ml-2 text-gray-700">(4 reviews)</span>
             </div>
           </div>
           <div className="overflow-auto h-96">
             <div className="flex flex-wrap m-2 ">
-              {reviews.map((review) => (
+              {service.reviews?.map((review) => (
                 <ReviewCard key={review.id} {...review} />
               ))}
             </div>
@@ -609,21 +584,24 @@ const Service = () => {
           <div className="w-9/12 mb-8">
             <div className="p-4 bg-white shadow rounded-lg space-x-4">
               <h3 className="text-2xl font-bold mb-4 text-center">
-                Submit Your Review
+                Give a Review
               </h3>
               <form onSubmit={handleReviewSubmit} className="space-y-4">
                 <div className="flex gap-2">
                   <label className="block text-lg font-medium text-gray-700">
                     Rating
                   </label>
-                  <Rating value={4} />
+                  <Rating
+                    value={review.rating}
+                    onChange={(e) => setReview({ ...review, rating: e })}
+                  />
                 </div>
                 <Textarea
                   label="Message"
-                  value={newReview.review}
                   color="blue-gray"
+                  value={review.review}
                   onChange={(e) =>
-                    setNewReview({ ...newReview, review: e.target.value })
+                    setReview({ ...review, review: e.target.value })
                   }
                   required
                   rows="5"
