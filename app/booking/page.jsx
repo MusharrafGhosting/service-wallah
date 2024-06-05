@@ -1,11 +1,10 @@
 "use client";
 import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
-import { GrFormView } from "react-icons/gr";
-import { TiTickOutline } from "react-icons/ti";
 import Image from "next/image";
-import { MdOutlineCancel } from "react-icons/md";
-import React, { useEffect, useState } from "react";
+import { FaRegEye } from "react-icons/fa";
+import { GiCancel } from "react-icons/gi";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Dialog,
   IconButton,
@@ -15,6 +14,7 @@ import {
 } from "@material-tailwind/react";
 import { ButtonGroup, Button } from "@material-tailwind/react";
 import { RxCross1 } from "react-icons/rx";
+import { SiTicktick } from "react-icons/si";
 
 const Booking = () => {
   const checkingAuthorization = async () => {
@@ -41,6 +41,33 @@ const Booking = () => {
 
   const [open, setOpen] = useState(false);
   const handleOpenDialog = () => setOpen(!open);
+
+  const inputRefs = useRef([]);
+  const [uploadedImage, setUploadedImage] = useState(null);
+
+  const handleInputChange = (e, index) => {
+    const { value } = e.target;
+    if (value.length >= 1 && index < inputRefs.current.length - 1) {
+      inputRefs.current[index + 1].focus();
+    }
+  };
+
+  const handleKeyDown = (e, index) => {
+    if (e.key === "Backspace" && index > 0 && !e.target.value) {
+      inputRefs.current[index - 1].focus();
+    }
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUploadedImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <div className="userpage-bg min-h-screen">
@@ -169,22 +196,23 @@ const Booking = () => {
                   <p className="text-gray-600">Price: $618</p>
                 </div>
               </div>
-              <div className="flex space-x-4 overflow-auto py-3">
-                <div className="flex w-max flex-col gap-4">
+              <div className="flex space-x-1 overflow-auto py-3">
+                <div className="flex w-max flex-col gap-1">
                   <ButtonGroup variant="outlined">
-                    <Button className="flex gap-2 items-center">
+                    <Button className="flex gap-2 items-center px-3">
                       Reject
-                      <MdOutlineCancel fontSize={23} />
+                      <GiCancel fontSize={23} />
                     </Button>
-                    <Button className="flex gap-2 items-center">
+                    <Button className="flex gap-2 items-center px-3">
                       Accept
-                      <TiTickOutline fontSize={23} />
+                      <SiTicktick fontSize={23} />
                     </Button>
                     <Button
-                      className="flex gap-2 items-center"
+                      className="flex gap-2 items-center px-3"
                       onClick={handleOpenDialog}
                     >
-                      View <GrFormView fontSize={23} />
+                      View
+                      <FaRegEye fontSize={23} />
                     </Button>
                   </ButtonGroup>
                 </div>
@@ -220,7 +248,10 @@ const Booking = () => {
                           </h3>
                         </div>
                         <div className="flex flex-col sm:flex-row justify-between mt-2">
-                          <div className="mb-4 sm:mb-0 leading-9">
+                          <div className="mb-4 mt-2 sm:mb-0 leading-9">
+                            <h3 className="font-bold text-gray-700 text-xl ">
+                              Customer Information
+                            </h3>
                             <p>
                               Full Name:{" "}
                               <strong className="text-gray-600">
@@ -249,16 +280,10 @@ const Booking = () => {
                                 02-29-2024
                               </strong>
                             </p>
-                            <p className="text-gray-800 font-bold flex items-center gap-2">
-                              Status:{" "}
-                              <span className="text-teal-500 rounded-md">
-                                Confirmed
-                              </span>
-                            </p>
                           </div>
-                          <div className="leading-9">
+                          <div className="leading-9 lg:mt-8 md:mt-8 sm:mt-8 mt-0">
                             <p>
-                              Available Date:{" "}
+                              Date:{" "}
                               <strong className="text-gray-600">
                                 Sunday 11. August, 2024
                               </strong>
@@ -272,6 +297,12 @@ const Booking = () => {
                             <p>
                               Quantity:{" "}
                               <strong className="text-gray-600">1</strong>
+                            </p>
+                            <p className="text-gray-800 font-bold flex items-center gap-2">
+                              Status:{" "}
+                              <span className="text-teal-500 rounded-md">
+                                Confirmed
+                              </span>
                             </p>
                           </div>
                         </div>
@@ -310,17 +341,63 @@ const Booking = () => {
                           </tbody>
                         </table>
                       </section>
-
-                      <section className="mb-8">
-                        <p className="font-medium text-red-600">
-                          Note: Order can be cancelled up to 10 minutes before
-                          the scheduled time.
-                        </p>
-                        <div className="flex justify-end">
-                          <button className="mt-4 bg-red-600 text-white py-2 px-4 rounded">
-                            Cancel Order
+                      <div className="flex flex-col items-center justify-center ">
+                        <div className="bg-gray-50 lg:flex md:flex items-center justify-between p-6 rounded-lg shadow-md lg:w-full md:w-10/12 sm:w-10/12 w-full  ">
+                          <h2 className="py-2 px-4 text-left font-julius lg:text-2xl md:text-xl sm:text-xl text-lg text-gray-700 font-bold">
+                            Verification Code
+                          </h2>
+                          <div className="flex justify-center space-x-2 mb-4">
+                            {[0, 1, 2, 3].map((_, index) => (
+                              <input
+                                key={index}
+                                type="text"
+                                maxLength="1"
+                                className="w-12 h-12 border border-gray-300 rounded-lg text-center text-xl sm:w-12 sm:h-12"
+                                onChange={(e) => handleInputChange(e, index)}
+                                onKeyDown={(e) => handleKeyDown(e, index)}
+                                ref={(el) => (inputRefs.current[index] = el)}
+                              />
+                            ))}
+                          </div>
+                          <button className=" p-3 bg-orange-500   text-white rounded-lg hover:bg-orange-600">
+                            Confirm
                           </button>
                         </div>
+                      </div>
+                      <div className="flex flex-col items-center justify-center mt-6 ">
+                        <div className="bg-gray-50  p-6 rounded-lg shadow-md lg:w-full md:w-10/12 sm:w-10/12 w-full  ">
+                          <div className=" lg:flex md:flex items-center">
+                            <h2 className="py-2 px-4 text-left font-julius lg:text-2xl md:text-xl sm:text-xl text-xl text-gray-700 font-bold">
+                              Upload Image
+                            </h2>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleImageUpload}
+                              className="block mx-auto mb-4"
+                            />
+                            {uploadedImage && (
+                              <div className="flex justify-center ">
+                                <img
+                                  src={uploadedImage}
+                                  alt="Uploaded"
+                                  className="w-32 h-32 rounded-lg"
+                                />
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <section className="mb-8 mt-4">
+                        <h3 className="text-xl font-bold text-red-600">
+                          Caution:
+                        </h3>
+                        <ol className="list-decimal ml-6 mt-2 text-gray-700">
+                          <li>Accept the booking as soon as possible.</li>
+                          <li>Rejection cannot be undone later.</li>
+                          <li>Verify OTP from the customer.</li>
+                          <li>Attach an image with the serving product.</li>
+                        </ol>
                       </section>
                     </div>
                   </DialogBody>
