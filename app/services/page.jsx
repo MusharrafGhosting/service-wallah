@@ -63,6 +63,7 @@ const AllServices = () => {
               title={service.name}
               services={service.subServices}
               link={service._id}
+              reviews={service.reviews}
             />
           ))}
         </div>

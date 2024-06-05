@@ -90,10 +90,23 @@ const ReviewCard = ({ name, review, rating, image }) => (
       <div className="flex-1">
         <div className="flex justify-between items-center">
           <div>
-            <h3 className="font-bold">{name}</h3>
-            <div className="flex items-center">
-              <Rating value={rating} />
+            <div className="flex">
+              {Array.from({ length: 5 }, (e, index) => {
+                let stars = rating;
+                return (
+                  <span key={index} className="text-[#FFB800]">
+                    {stars >= index + 1 ? (
+                      <IoIosStar size={15} />
+                    ) : stars >= index + 0.5 ? (
+                      <IoIosStarHalf size={15} />
+                    ) : (
+                      <IoIosStarOutline size={15} />
+                    )}
+                  </span>
+                );
+              })}
             </div>
+            <h3 className="font-bold">{name}</h3>
           </div>
         </div>
         <p className="text-gray-600">{review}</p>
@@ -151,8 +164,8 @@ const Service = () => {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     getService();
-    setLoading(false);
     setCartItems(JSON.parse(localStorage.getItem("cart")) || []);
+    setLoading(false);
   }, []);
 
   const [review, setReview] = useState({
@@ -203,6 +216,34 @@ const Service = () => {
       console.log(err);
     }
   };
+
+  const [ratingArray, setRatingArray] = useState([]);
+  const [rating, setRating] = useState(0);
+
+  useEffect(() => {
+    setRatingArray((prev) => {
+      return prev.concat(service?.reviews?.map((review) => review.rating));
+    });
+  }, [service]);
+  useEffect(() => {
+    const countRatings = ratingArray.reduce((acc, rating) => {
+      acc[rating] = (acc[rating] || 0) + 1;
+      return acc;
+    }, {});
+
+    const {
+      1: r1 = 0,
+      2: r2 = 0,
+      3: r3 = 0,
+      4: r4 = 0,
+      5: r5 = 0,
+    } = countRatings;
+
+    const result =
+      (5 * r5 + 4 * r4 + 3 * r3 + 2 * r2 + 1 * r1) / (r5 + r4 + r3 + r2 + r1);
+
+    setRating(result.toFixed(1));
+  }, [ratingArray]);
 
   return (
     <>
@@ -310,17 +351,41 @@ const Service = () => {
                 <img
                   src={service.icon?.url} // Replace with actual path
                   alt="Service Icon"
-                  className="w-20 h-20 object-cover"
+                  className="w-24 h-24 object-cover rounded-lg"
                 />
-                <div>
+                <div className="flex flex-col gap-2 justify-center">
                   <h2 className="lg:text-4xl md:text-5xl sm:text-5xl  text-4xl leading-tight text-gray-700 font-bold  ">
                     {service.name}
                   </h2>
+                  <div className="flex items-center">
+                    <div className="flex items-center">
+                      <div className="flex">
+                        {Array.from({ length: 5 }, (e, index) => {
+                          let stars = rating;
+                          return (
+                            <span key={index} className="text-[#FFB800]">
+                              {stars >= index + 1 ? (
+                                <IoIosStar size={15} />
+                              ) : stars >= index + 0.5 ? (
+                                <IoIosStarHalf size={15} />
+                              ) : (
+                                <IoIosStarOutline size={15} />
+                              )}
+                            </span>
+                          );
+                        })}
+                      </div>
+                      <span className="ml-1">{rating}</span>
+                    </div>
+                    <span className="ml-2 text-gray-700">
+                      | {service?.reviews?.length} reviews
+                    </span>
+                  </div>
                 </div>
               </div>
               <div className="flex gap-2 items-center  ">
                 <div className="whitespace-nowrap text-sm">
-                  Reviews & Ratings
+                  Reviews & Bookings
                 </div>
                 <div className="h-px bg-gray-300 w-full"></div>
               </div>
@@ -331,7 +396,9 @@ const Service = () => {
                     alt="Bookings Icon"
                     className="w-20 object-cover"
                   />
-                  <span className="text-gray-600 text-xl">8,000 Bookings</span>
+                  <span className="text-gray-600 text-xl">
+                    {service?.bookings?.length} Bookings
+                  </span>
                 </div>
                 <div className="flex flex-col w-full items-center gap-2 bg-white h-fit  shadow-lg rounded-lg p-4 cursor-pointer hover:scale-105 transition-all">
                   <img
@@ -340,7 +407,7 @@ const Service = () => {
                     className="w-20 object-cover"
                   />
                   <span className="text-gray-600 text-xl">
-                    4.3 | 120 reviews
+                    {rating} | {service?.reviews?.length} reviews
                   </span>
                 </div>
               </div>
@@ -416,15 +483,15 @@ const Service = () => {
             </h1>
           </div>
           <div className="container mx-auto">
-            {service.subServices?.length <= 5 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 place-items-center">
+            {service.subServices?.length <= 4 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 place-items-center">
                 {service.subServices?.map((subService, index) => (
                   <Card className="mb-3 max-w-72" key={index}>
                     <CardHeader floated={false}>
                       <img
                         src={subService.icon?.url}
                         alt="Service Icon"
-                        className="object-cover md:w-full h-48 shadow-lg "
+                        className="object-cover w-64 h-48 shadow-lg"
                       />
                     </CardHeader>
                     <CardBody>
@@ -489,13 +556,13 @@ const Service = () => {
             ) : (
               <Slider {...sliderSettings}>
                 {service.subServices?.map((subService, index) => (
-                  <div key={index} className="px-3 ">
+                  <div key={index} className="px-3">
                     <Card className="mb-3">
                       <CardHeader floated={false}>
                         <img
                           src={subService.icon.url}
                           alt="Service Icon"
-                          className="object-cover md:w-full h-48"
+                          className="object-cover w-64 h-48 shadow-lg"
                         />
                       </CardHeader>
                       <CardBody>
@@ -548,12 +615,14 @@ const Service = () => {
         </div>
         <div className="container mx-auto px-4 py-8 ">
           <div className="flex items-center md:flex-row flex-col justify-between mb-4">
-            <h2 className="text-2xl font-bold mb-4">Reviews by users</h2>
+            <h2 className="text-2xl font-julius font-bold mb-4">
+              Reviews by users
+            </h2>
             <div className="flex items-center mb-4">
               <div className="flex items-center">
                 <div className="flex">
                   {Array.from({ length: 5 }, (e, index) => {
-                    let stars = 4;
+                    let stars = rating;
                     return (
                       <span key={index} className="text-[#FFB800]">
                         {stars >= index + 1 ? (
@@ -567,8 +636,11 @@ const Service = () => {
                     );
                   })}
                 </div>
+                <span className="ml-1">{rating}</span>
               </div>
-              <span className="ml-2 text-gray-700">(4 reviews)</span>
+              <span className="ml-2 text-gray-700">
+                | {service?.reviews?.length} reviews
+              </span>
             </div>
           </div>
           <div className="overflow-auto h-96 no-scrollbar">

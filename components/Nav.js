@@ -38,21 +38,28 @@ import {
 } from "react-icons/fa";
 import { FaCartShopping, FaLocationDot, FaUsersGear } from "react-icons/fa6";
 import { IoIosInformationCircle, IoMdOpen } from "react-icons/io";
-import { AiFillHome } from "react-icons/ai";
+import { AiFillHome, AiFillQuestionCircle } from "react-icons/ai";
 import { BiLogIn } from "react-icons/bi";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import {
   MdDashboardCustomize,
+  MdLockPerson,
   MdManageAccounts,
   MdOutlineManageHistory,
   MdOutlinePayment,
 } from "react-icons/md";
-import { IoLogOut } from "react-icons/io5";
+import {
+  IoLogOut,
+  IoPersonCircleOutline,
+  IoSendSharp,
+  IoShieldCheckmark,
+} from "react-icons/io5";
 import { RxCross1 } from "react-icons/rx";
 import axios from "axios";
 import Fuse from "fuse.js";
 import Map from "./Map";
+import { RiLoginCircleFill } from "react-icons/ri";
 
 const services = [
   {
@@ -503,7 +510,6 @@ export default function Nav() {
     const country_code = "+91";
     const SID = "13608";
     const otp = generateOTP();
-    console.log(otp);
     setGeneratedOtp(otp);
     const url = `https://api.authkey.io/request?authkey=${authkey}&mobile=${mobile}&country_code=${country_code}&sid=${SID}&company=${name}&otp=${otp}`;
     await axios.get(url);
@@ -584,6 +590,32 @@ export default function Nav() {
     );
   }, []);
   const handleOpen3 = () => setOpen3(!open3);
+
+  const [openForgotPassword, setOpenForgotPassword] = useState(false);
+  const handleOpenForgotPassword = () =>
+    setOpenForgotPassword(!openForgotPassword);
+
+  const [forgotPasswordGneratedOTP, setForgotPasswordGeneratedOtp] = useState(0);
+  const [otpSended, setOtpSended] = useState(false);
+  const [forgotPasswordOtpVerified, setForgotPasswordOtpVerified] = useState(false);
+  const handleThrowingOtp = async () => {
+    const authkey = "15d7c1359e59f369";
+    const name = "service wallah account";
+    const mobile = registerData.phoneNumber;
+    const country_code = "+91";
+    const SID = "13608";
+    const otp = generateOTP();
+    setForgotPasswordGeneratedOtp(otp);
+    const url = `https://api.authkey.io/request?authkey=${authkey}&mobile=${mobile}&country_code=${country_code}&sid=${SID}&company=${name}&otp=${otp}`;
+    await axios.get(url);
+    setOtpSended(true)
+  };
+
+  const verifyingOtp = async (otp) => {
+    if(otp === forgotPasswordGneratedOTP){
+      setForgotPasswordOtpVerified(true)
+    }
+  }
 
   return (
     <div className="mx-auto max-w-full px-4 py-2 rounded-none shadow-none bprder-none bg-transparent z-50">
@@ -732,7 +764,6 @@ export default function Nav() {
           <Dialog
             open={open3}
             handler={handleOpen3}
-            dismiss={{ enabled: false }}
             size="sm"
             animate={{
               mount: { scale: 1, y: 0 },
@@ -742,14 +773,16 @@ export default function Nav() {
             <CardBody>
               <Tabs value={type} className="">
                 <div className="flex justify-between items-center mb-4">
-                  <h1 className="text-md text-center text-gray-800">
-                    Login / Register
+                  <h1 className="text-md text-center flex gap-1 items-center text-gray-800">
+                    Login / Register <IoPersonCircleOutline size={24} />
                   </h1>
-                  <RxCross1
-                    size={20}
+                  <IconButton
+                    variant="text"
                     onClick={handleOpen3}
                     className="cursor-pointer"
-                  />
+                  >
+                    <RxCross1 size={20} />
+                  </IconButton>
                 </div>
 
                 <TabsHeader className="relative z-0 ">
@@ -783,6 +816,8 @@ export default function Nav() {
                         <Input
                           type="tel"
                           label="Phone Number"
+                          minLength={10}
+                          maxLength={10}
                           value={loginData.phoneNumber}
                           onChange={(e) =>
                             setLoginData({
@@ -796,6 +831,7 @@ export default function Nav() {
                         <Input
                           type="password"
                           label="Password"
+                          required
                           value={loginData.password}
                           onChange={(e) =>
                             setLoginData({
@@ -822,8 +858,8 @@ export default function Nav() {
                                 clipRule="evenodd"
                               />
                             </svg>
-                            Use at least 8 characters, one uppercase, one
-                            lowercase and one number.
+                            Password should be more than 10 characters long
+                            including letters and numbers
                           </span>
                           {errorMessage && (
                             <span className="text-red-500 flex gap-1 items-center">
@@ -845,23 +881,71 @@ export default function Nav() {
                         </Typography>
                       </div>
                       <div className="flex gap-2 justify-center">
-                        {/* <Button
+                        <Button
+                          fullWidth
+                          size="lg"
+                          type="submit"
+                          variant="outlined"
+                          color="blue-gray"
+                          onClick={handleOpenForgotPassword}
+                        >
+                          Forgot Password?
+                        </Button>
+                        <Dialog
+                          size="xs"
+                          className="p-6 h-60"
+                          dismiss={{ enabled: false }}
+                          handler={handleOpenForgotPassword}
+                          open={openForgotPassword}
+                        >
+                          <div className="flex justify-between items-center mb-4">
+                            <h1 className="text-md text-center flex gap-1 items-center text-blue-800">
+                              Forgot password
+                              <AiFillQuestionCircle size={20} />
+                            </h1>
+                            <IconButton
+                              variant="text"
+                              onClick={handleOpenForgotPassword}
+                              className="cursor-pointer"
+                            >
+                              <RxCross1 size={20} />
+                            </IconButton>
+                          </div>
+                          <div className="flex flex-col gap-2">
+                            <Input
+                              label="Enter Your Phone Number"
+                              minLength={10}
+                              maxLength={10}
+                            />
+                            <Input
+                              label="Enter OTP"
+                              disabled={!otpSended}
+                              minLength={4}
+                              maxLength={4}
+                              onChange={(e) =>
+                                verifyingOtp(e.target.value)
+                              }
+                            />
+                            <Button
+                              onClick={handleThrowingOtp}
                               variant="gradient"
-                              color="red"
-                              onClick={handleOpen3}
-                              className="mr-1"
+                              color="blue"
+                              className="flex gap-2 items-center justify-center"
                               fullWidth
                             >
-                              <span>Cancel</span>
-                            </Button> */}
+                              Send OTP <IoSendSharp />
+                            </Button>
+                          </div>
+                        </Dialog>
                         <Button
                           fullWidth
                           size="lg"
                           type="submit"
                           variant="gradient"
                           color="blue"
+                          className="flex gap-1 items-center justify-center"
                         >
-                          Login
+                          Login <RiLoginCircleFill size={20} />
                         </Button>
                       </div>
                     </form>
@@ -872,6 +956,8 @@ export default function Nav() {
                         <Input
                           label="Fullname"
                           value={registerData.name}
+                          minLength={4}
+                          maxLength={30}
                           onChange={(e) =>
                             setRegisterData({
                               ...registerData,
@@ -884,6 +970,8 @@ export default function Nav() {
                         <Input
                           type="tel"
                           label="Phone Number"
+                          minLength={10}
+                          maxLength={10}
                           value={registerData.phoneNumber}
                           onChange={(e) =>
                             setRegisterData({
@@ -897,6 +985,7 @@ export default function Nav() {
                         <Input
                           type="email"
                           label="Email Address"
+                          required
                           value={registerData.email}
                           onChange={(e) =>
                             setRegisterData({
@@ -914,6 +1003,7 @@ export default function Nav() {
                         <Input
                           type="password"
                           label="Password"
+                          required
                           value={registerData.password}
                           onChange={(e) =>
                             setRegisterData({
@@ -940,8 +1030,8 @@ export default function Nav() {
                                 clipRule="evenodd"
                               />
                             </svg>
-                            Use at least 8 characters, one uppercase, one
-                            lowercase and one number.
+                            Password should be more than 10 characters long
+                            including letters and numbers
                           </span>
                           {registerError && (
                             <span className="text-red-500 flex gap-1 items-center">
@@ -969,8 +1059,9 @@ export default function Nav() {
                         fullWidth
                         size="lg"
                         color="blue"
+                        className="flex gap-1 items-center justify-center"
                       >
-                        Verify Number
+                        Verify Number <IoShieldCheckmark size={20} />
                       </Button>
                     </div>
                   </TabPanel>

@@ -12,6 +12,10 @@ import Video from "../components/Video";
 import Testimonials from "../components/Testimonials";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 
 export default function Home() {
   const [topServices, setTopServices] = useState([]);
@@ -46,6 +50,33 @@ export default function Home() {
   useEffect(() => {
     gettingServices();
   }, []);
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
+  };
   return (
     <>
       <div
@@ -255,7 +286,16 @@ export default function Home() {
             Best Services
           </h2>
         </div>
-        <ServiceShow topServices={topServices} />
+        <div className="container mx-auto py-8">
+          <Slider {...settings}>
+            {topServices.map((service) => (
+              <div key={service._id} className="px-2">
+                <ServiceShow service={service} />
+              </div>
+            ))}
+          </Slider>
+        </div>
+
         <div className="w-full flex flex-col justify-center items-center py-4 px-4">
           <h1 className="font-julius lg:text-5xl md:text-4xl sm:text-3xl text-3xl text-center text-gray-700">
             COMPLETE THE TASK WITH
@@ -281,7 +321,10 @@ export default function Home() {
           <ServiceSection />
         </div>
         <div className="flex flex-col items-center justify-center bg-gray-100 py-10 px-4 sm:px-6 lg:px-8 mx-auto max-w-3xl">
-          <Link href={"/services"} className="lg:w-full md:w-full sm:w-full w-full bg-blue-500 flex justify-center text-white font-semibold py-3 px-6 rounded-md mb-6">
+          <Link
+            href={"/services"}
+            className="lg:w-full md:w-full sm:w-full w-full bg-blue-500 flex justify-center text-white font-semibold py-3 px-6 rounded-md mb-6"
+          >
             Book a Service »
           </Link>
           <div className="flex items-center lg:w-full md:w-full sm:w-full w-full mb-6">
@@ -289,7 +332,10 @@ export default function Home() {
             <span className="px-4 text-gray-500 font-medium">or</span>
             <hr className="flex-grow border-gray-300" />
           </div>
-          <Link href={"/service-provider/create"} className="lg:w-full md:w-full sm:w-full w-full border border-blue-500 text-blue-500 font-semibold py-3 px-6 rounded-md flex items-center justify-center">
+          <Link
+            href={"/service-provider/create"}
+            className="lg:w-full md:w-full sm:w-full w-full border border-blue-500 text-blue-500 font-semibold py-3 px-6 rounded-md flex items-center justify-center"
+          >
             Become a service provider{" "}
             <span className="ml-2">
               <FaUserPlus />
@@ -310,3 +356,25 @@ export default function Home() {
     </>
   );
 }
+
+const NextArrow = ({ onClick }) => {
+  return (
+    <div
+      className="absolute top-1/2 transform -translate-y-1/2 right-2 bg-gray-700 text-white rounded-full p-2 cursor-pointer z-10"
+      onClick={onClick}
+    >
+      <MdChevronRight className="w-6 h-6" />
+    </div>
+  );
+};
+
+const PrevArrow = ({ onClick }) => {
+  return (
+    <div
+      className="absolute top-1/2 transform -translate-y-1/2 left-2 bg-gray-700 text-white rounded-full p-2 cursor-pointer z-10"
+      onClick={onClick}
+    >
+      <MdChevronLeft className="w-6 h-6" />
+    </div>
+  );
+};
