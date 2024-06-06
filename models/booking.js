@@ -24,8 +24,14 @@ const bookingSchema = new Schema(
     profileImage: {
       type: Object,
     },
-    complain: {
+    feedback: {
       type: String,
+    },
+    sendedToServiceProvider: {
+      type: Boolean,
+    },
+    cashCollected: {
+      type: Boolean,
     },
     date: {
       type: String,
@@ -53,6 +59,7 @@ const bookingSchema = new Schema(
   }
 );
 
-const Booking = mongoose.models.Booking || mongoose.model("Booking", bookingSchema);
+const Booking =
+  mongoose.models.Booking || mongoose.model("Booking", bookingSchema);
 
 export default Booking;

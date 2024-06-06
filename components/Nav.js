@@ -37,7 +37,11 @@ import {
   FaUser,
 } from "react-icons/fa";
 import { FaCartShopping, FaLocationDot, FaUsersGear } from "react-icons/fa6";
-import { IoIosInformationCircle, IoMdOpen } from "react-icons/io";
+import {
+  IoIosCheckmarkCircle,
+  IoIosInformationCircle,
+  IoMdOpen,
+} from "react-icons/io";
 import { AiFillHome, AiFillQuestionCircle } from "react-icons/ai";
 import { BiLogIn } from "react-icons/bi";
 import Link from "next/link";
@@ -595,27 +599,54 @@ export default function Nav() {
   const handleOpenForgotPassword = () =>
     setOpenForgotPassword(!openForgotPassword);
 
-  const [forgotPasswordGneratedOTP, setForgotPasswordGeneratedOtp] = useState(0);
+  const [forgotPasswordGneratedOTP, setForgotPasswordGeneratedOtp] =
+    useState(0);
+  const [forgetPasswordNumber, setForgetPasswordNumber] = useState("");
   const [otpSended, setOtpSended] = useState(false);
-  const [forgotPasswordOtpVerified, setForgotPasswordOtpVerified] = useState(false);
+  const [forgotPasswordOtpVerified, setForgotPasswordOtpVerified] =
+    useState(false);
   const handleThrowingOtp = async () => {
+    if (forgetPasswordNumber.length != 10) return;
     const authkey = "15d7c1359e59f369";
     const name = "service wallah account";
-    const mobile = registerData.phoneNumber;
+    const mobile = forgetPasswordNumber;
     const country_code = "+91";
     const SID = "13608";
     const otp = generateOTP();
     setForgotPasswordGeneratedOtp(otp);
     const url = `https://api.authkey.io/request?authkey=${authkey}&mobile=${mobile}&country_code=${country_code}&sid=${SID}&company=${name}&otp=${otp}`;
     await axios.get(url);
-    setOtpSended(true)
+    setOtpSended(true);
   };
-
+  const [updatedPassword, setUpdatedPassword] = useState("");
+  const [updatedPasswordError, setUpdatedPasswordError] = useState(false);
   const verifyingOtp = async (otp) => {
-    if(otp === forgotPasswordGneratedOTP){
-      setForgotPasswordOtpVerified(true)
+    if (otp === forgotPasswordGneratedOTP) {
+      setForgotPasswordOtpVerified(true);
     }
-  }
+  };
+  const handleUpdatePassword = async () => {
+    try {
+      const response = await axios.put("/api/users/update", {
+        password: updatedPassword,
+        phoneNumber: forgetPasswordNumber,
+      });
+
+      if (response.status === 201) {
+        setOpenForgotPassword(false);
+        setLoginData({...loginData, phoneNumber: forgetPasswordNumber})
+        setForgotPasswordGeneratedOtp(0);
+        setForgotPasswordOtpVerified(false);
+        setOtpSended(false);
+        setUpdatedPassword("");
+        setUpdatedPasswordError(false);
+      } else {
+        throw new Error("Failed to update password");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="mx-auto max-w-full px-4 py-2 rounded-none shadow-none bprder-none bg-transparent z-50">
@@ -893,7 +924,7 @@ export default function Nav() {
                         </Button>
                         <Dialog
                           size="xs"
-                          className="p-6 h-60"
+                          className="p-6 h-60 overflow-hidden"
                           dismiss={{ enabled: false }}
                           handler={handleOpenForgotPassword}
                           open={openForgotPassword}
@@ -911,30 +942,88 @@ export default function Nav() {
                               <RxCross1 size={20} />
                             </IconButton>
                           </div>
-                          <div className="flex flex-col gap-2">
-                            <Input
-                              label="Enter Your Phone Number"
-                              minLength={10}
-                              maxLength={10}
-                            />
-                            <Input
-                              label="Enter OTP"
-                              disabled={!otpSended}
-                              minLength={4}
-                              maxLength={4}
-                              onChange={(e) =>
-                                verifyingOtp(e.target.value)
-                              }
-                            />
-                            <Button
-                              onClick={handleThrowingOtp}
-                              variant="gradient"
-                              color="blue"
-                              className="flex gap-2 items-center justify-center"
-                              fullWidth
+                          <div className="relative">
+                            <div
+                              className={`w-full flex flex-col gap-2 transition-all duration-500 absolute ${
+                                forgotPasswordOtpVerified
+                                  ? "-translate-x-[26rem]"
+                                  : "-translate-x-0"
+                              }`}
                             >
-                              Send OTP <IoSendSharp />
-                            </Button>
+                              <Input
+                                onChange={(e) =>
+                                  setForgetPasswordNumber(e.target.value)
+                                }
+                                label="Enter Your Phone Number"
+                                required
+                                minLength={10}
+                                maxLength={10}
+                              />
+                              <Input
+                                label="Enter OTP"
+                                required
+                                disabled={!otpSended}
+                                minLength={4}
+                                maxLength={4}
+                                onChange={(e) => verifyingOtp(e.target.value)}
+                              />
+                              <Button
+                                onClick={handleThrowingOtp}
+                                variant="gradient"
+                                disabled={otpSended}
+                                color="blue"
+                                className="flex gap-2 items-center justify-center"
+                                fullWidth
+                              >
+                                Send OTP <IoSendSharp />
+                              </Button>
+                            </div>
+                            <div
+                              className={`flex flex-col items-center gap-2 transition-all duration-500 w-full absolute ${
+                                forgotPasswordOtpVerified
+                                  ? "translate-x-0"
+                                  : "translate-x-[26rem]"
+                              }`}
+                            >
+                              <Input
+                                label="Enter New Password"
+                                minLength={10}
+                                type="password"
+                                maxLength={25}
+                                required
+                                color="blue"
+                                onChange={(e) =>
+                                  setUpdatedPassword(e.target.value)
+                                }
+                              />
+                              <Input
+                                label="Enter Password again"
+                                minLength={10}
+                                type="password"
+                                maxLength={25}
+                                required
+                                color="blue"
+                                error={updatedPasswordError}
+                                onChange={(e) => {
+                                  if (e.target.value !== updatedPassword) {
+                                    setUpdatedPasswordError(true);
+                                  } else {
+                                    setUpdatedPasswordError(false);
+                                  }
+                                }}
+                              />
+                              <Button
+                                onClick={handleUpdatePassword}
+                                variant="gradient"
+                                disabled={updatedPasswordError}
+                                color="blue"
+                                className="flex gap-2 items-center justify-center"
+                                fullWidth
+                              >
+                                Update Password
+                                <IoIosCheckmarkCircle size={20} />
+                              </Button>
+                            </div>
                           </div>
                         </Dialog>
                         <Button
