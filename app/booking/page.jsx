@@ -2,8 +2,6 @@
 import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
 import Image from "next/image";
-import { FaRegEye } from "react-icons/fa";
-import { GiCancel } from "react-icons/gi";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Dialog,
@@ -12,9 +10,7 @@ import {
   DialogBody,
   DialogFooter,
 } from "@material-tailwind/react";
-import { ButtonGroup, Button } from "@material-tailwind/react";
 import { RxCross1 } from "react-icons/rx";
-import { SiTicktick } from "react-icons/si";
 
 const Booking = () => {
   const checkingAuthorization = async () => {
@@ -187,51 +183,51 @@ const Booking = () => {
 </div>     */}
 
       {/* Service provider Booking Section */}
-      {services.map((service, index) => (
-        <div
-          key={index}
-          className="max-w-5xl bg-opacity-25 shadow-lg shadow-gray-400 backdrop-blur-sm backdrop-filter backdrop-opacity-1 rounded-lg border border-opacity-20 mx-auto my-8"
-        >
-          <div className="rounded-lg overflow-hidden">
-            <div className="px-6 py-8 lg:flex md:flex items-center justify-between">
-              <div className="flex items-center">
-                <div className="mr-4">
+      <div className="container mx-auto py-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {services.map((service, index) => (
+            <div
+              key={index}
+              className="bg-white shadow-md rounded-lg w-full  p-4 max-w-md mx-auto my-4"
+            >
+              <div className="flex items-center space-x-4">
+                <div className="flex-shrink-0">
                   <img
+                    className="w-12 h-12 rounded-full object-cover"
                     src={service.image}
-                    alt={service.image}
-                    className="w-16 h-16 rounded-full"
+                    alt={service.name}
                   />
                 </div>
-                <div>
-                  <h2 className="text-2xl font-semibold">{service.name}</h2>
-                  <p className="text-gray-600">Price: ${service.price}</p>
+                <div className="flex-grow">
+                  <h2 className="text-xl font-semibold text-gray-800">
+                    {service.name}
+                  </h2>
+                  <p className="text-lg font-bold text-teal-600">
+                    ${service.price}
+                  </p>
                 </div>
               </div>
-              <div className="flex space-x-1 overflow-auto py-3">
-                <div className="flex w-max flex-col gap-1">
-                  <ButtonGroup variant="outlined">
-                    <Button className="flex gap-2 items-center px-3">
-                      Reject
-                      <GiCancel fontSize={23} />
-                    </Button>
-                    <Button className="flex gap-2 items-center px-3">
-                      Accept
-                      <SiTicktick fontSize={23} />
-                    </Button>
-                    <Button
-                      className="flex gap-2 items-center px-3"
-                      onClick={handleOpenDialog}
-                    >
-                      View
-                      <FaRegEye fontSize={23} />
-                    </Button>
-                  </ButtonGroup>
+              <div className="mt-4 flex justify-between items-center">
+                <div className="flex gap-2">
+                  <button className="px-4 py-2 bg-red-500 text-white rounded-md text-sm font-medium hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                    Reject
+                  </button>
+                  <button className="px-4 py-2 bg-teal-500 text-white rounded-md text-sm font-medium hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2">
+                    Accept
+                  </button>
                 </div>
+                <button
+                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
+                  onClick={handleOpenDialog}
+                >
+                  View
+                </button>
               </div>
             </div>
-          </div>
+          ))}
         </div>
-      ))}
+      </div>
+
       <Dialog
         open={open}
         handler={handleOpenDialog}
@@ -257,7 +253,7 @@ const Booking = () => {
                   height={96}
                 />
                 <h3 className="font-julius lg:text-3xl md:text-2xl sm:text-2xl text-3xl text-gray-700 font-bold">
-                  {services.name}
+                  AC Installer
                 </h3>
               </div>
               <div className="flex flex-col sm:flex-row justify-between mt-2">
@@ -333,9 +329,9 @@ const Booking = () => {
                 </tbody>
               </table>
             </section>
-            <div className="flex flex-col items-center justify-center ">
-              <div className="bg-gray-50 lg:flex md:flex items-center justify-between p-6 rounded-lg shadow-md lg:w-full md:w-10/12 sm:w-10/12 w-full">
-                <h2 className="py-2 px-4 text-left font-julius lg:text-2xl md:text-xl sm:text-xl text-lg text-gray-700 font-bold">
+            <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
+              <div className="bg-gray-50 p-6 rounded-lg shadow-md lg:w-full md:w-10/12 sm:w-10/12 w-full">
+                <h2 className="py-2 px-4 text-center font-julius lg:text-2xl md:text-xl sm:text-xl text-lg text-gray-700 font-bold">
                   Verification Code
                 </h2>
                 <div className="flex justify-center space-x-2 mb-4">
@@ -351,15 +347,13 @@ const Booking = () => {
                     />
                   ))}
                 </div>
-                <button className="p-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
+                <button className="p-3 bg-orange-500 text-white rounded-lg w-full hover:bg-orange-600">
                   Confirm
                 </button>
               </div>
-            </div>
-            <div className="flex flex-col items-center justify-center mt-6 ">
               <div className="bg-gray-50 p-6 rounded-lg shadow-md lg:w-full md:w-10/12 sm:w-10/12 w-full">
-                <div className="lg:flex md:flex items-center">
-                  <h2 className="py-2 px-4 text-left font-julius lg:text-2xl md:text-xl sm:text-xl text-xl text-gray-700 font-bold">
+                <div>
+                  <h2 className="py-2 px-4 text-center font-julius lg:text-2xl md:text-xl sm:text-xl text-lg text-gray-700 font-bold">
                     Upload Image
                   </h2>
                   <input
@@ -369,7 +363,7 @@ const Booking = () => {
                     className="block mx-auto mb-4"
                   />
                   {uploadedImage && (
-                    <div className="flex justify-center ">
+                    <div className="flex justify-center">
                       <img
                         src={uploadedImage}
                         alt="Uploaded"
@@ -380,6 +374,7 @@ const Booking = () => {
                 </div>
               </div>
             </div>
+
             <section className="mb-8 mt-4">
               <h3 className="text-xl font-bold text-red-600">Caution:</h3>
               <ol className="list-decimal ml-6 mt-2 text-gray-700">
@@ -389,6 +384,16 @@ const Booking = () => {
                 <li>Attach an image with the serving product.</li>
               </ol>
             </section>
+            <div className="mt-4 flex justify-end">
+              <div className="flex gap-2 ">
+                <button className="px-4 py-2 bg-red-500 text-white rounded-md text-sm font-medium hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                  Reject
+                </button>
+                <button className="px-4 py-2  bg-teal-500 text-white rounded-md text-sm font-medium hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2">
+                  Accept
+                </button>
+              </div>
+            </div>
           </div>
         </DialogBody>
       </Dialog>

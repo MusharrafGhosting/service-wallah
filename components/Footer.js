@@ -5,7 +5,6 @@ import { PiTwitterLogoLight } from "react-icons/pi";
 import { IoLogoInstagram } from "react-icons/io";
 import { SlSocialLinkedin } from "react-icons/sl";
 import { PiTelegramLogoLight } from "react-icons/pi";
-import { RiMenuUnfold3Line2 } from "react-icons/ri";
 import { Input, Textarea } from "@material-tailwind/react";
 
 const Footer = () => {
