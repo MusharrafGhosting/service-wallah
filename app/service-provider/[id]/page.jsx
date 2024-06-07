@@ -127,7 +127,6 @@ const ReviewCard = ({ name, review, rating, img }) => (
   </div>
 );
 
-
 const ServiceProvider = () => {
   const { id } = useParams();
   const [user, setUser] = useState({
@@ -506,22 +505,22 @@ const ServiceProvider = () => {
                             </div>
                           )}
 
-                          <figcaption className="absolute bottom-4 left-2/4 flex w-[calc(100%-4rem)] -translate-x-2/4 justify-between rounded-lg text-gray-700 font-medium border border-white bg-white/75 py-4 px-6 shadow-lg shadow-black/5 saturate-200 backdrop-blur-sm">
-                            <label
-                              className="w-full h-full text-center cursor-pointer"
-                              htmlFor="profile"
-                            >
+                          <label
+                            className="w-full h-full text-center cursor-pointer"
+                            htmlFor="profile"
+                          >
+                            <figcaption className="absolute bottom-4 left-2/4 flex w-[calc(100%-4rem)] -translate-x-2/4 justify-center rounded-lg text-gray-700 font-medium border border-white bg-white/75 py-4 px-6 shadow-lg shadow-black/5 saturate-200 backdrop-blur-sm">
                               Change Profile Image
-                            </label>
-                            <input
-                              type="file"
-                              className="hidden"
-                              id="profile"
-                              onChange={(e) => {
-                                handleUploadProfile(e.target.files[0]);
-                              }}
-                            />
-                          </figcaption>
+                              <input
+                                type="file"
+                                className="hidden"
+                                id="profile"
+                                onChange={(e) => {
+                                  handleUploadProfile(e.target.files[0]);
+                                }}
+                              />
+                            </figcaption>
+                          </label>
                         </figure>
                       </div>
                       <DialogFooter>
@@ -595,7 +594,7 @@ const ServiceProvider = () => {
                       All Services
                     </h2>
                     <div className="p-6 flex gap-4 items-center h-full">
-                      <div className="grid grid-cols-3">
+                      <div className="grid grid-cols-3 gap-4">
                         {allServices.map((service, index) => {
                           return (
                             <ListItem className="p-0" key={index}>
