@@ -84,7 +84,7 @@ const ReviewCard = ({ name, review, rating, image }) => (
         <img
           src={image?.url}
           alt={name}
-          className="rounded-full object-cover"
+          className="rounded-full object-cover w-12 h-12"
         />
       </div>
       <div className="flex-1">
@@ -109,7 +109,7 @@ const ReviewCard = ({ name, review, rating, image }) => (
             <h3 className="font-bold">{name}</h3>
           </div>
         </div>
-        <p className="text-gray-600">{review}</p>
+        <p className="text-gray-600 leading-tight text-sm text-justify">{review}</p>
       </div>
     </div>
   </div>
@@ -656,7 +656,7 @@ const Service = () => {
                   </div>
                 </div>
               ) : (
-                <div className="w-full grid grid-cols-2 gap-4">
+                <div className="w-full grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 gap-4">
                   {service.reviews?.map((review, index) => (
                     <div key={index} className="w-full h-full">
                       <ReviewCard key={review.id} {...review} />
