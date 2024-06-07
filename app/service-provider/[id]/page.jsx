@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useRef } from "react";
 import Nav from "@/components/Nav";
 import { useState, useEffect } from "react";
 import { FaArrowLeft, FaHistory } from "react-icons/fa";
@@ -32,6 +32,7 @@ import { storage } from "@/firebase";
 import { IoSettings } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import Footer from "@/components/Footer";
+import ServiceProviderLocation from "@/components/ServiceProviderLocation";
 
 const reviews = [
   {
@@ -125,11 +126,6 @@ const ReviewCard = ({ name, review, rating, img }) => (
     </div>
   </div>
 );
-const locations = [
-  "Panch shiv mandir, doctor colony, Kankarbagh, 800020",
-  "Another location, another address, Another city, 123456",
-  "Yet another location, yet another address, Yet another city, 654321",
-];
 
 const ServiceProvider = () => {
   const { id } = useParams();
@@ -352,6 +348,7 @@ const ServiceProvider = () => {
   useEffect(() => {
     loadingFunction();
   }, []);
+
   return (
     <>
       {loading ? (
@@ -508,22 +505,22 @@ const ServiceProvider = () => {
                             </div>
                           )}
 
-                          <figcaption className="absolute bottom-4 left-2/4 flex w-[calc(100%-4rem)] -translate-x-2/4 justify-between rounded-lg text-gray-700 font-medium border border-white bg-white/75 py-4 px-6 shadow-lg shadow-black/5 saturate-200 backdrop-blur-sm">
-                            <label
-                              className="w-full h-full text-center cursor-pointer"
-                              htmlFor="profile"
-                            >
+                          <label
+                            className="w-full h-full text-center cursor-pointer"
+                            htmlFor="profile"
+                          >
+                            <figcaption className="absolute bottom-4 left-2/4 flex w-[calc(100%-4rem)] -translate-x-2/4 justify-center rounded-lg text-gray-700 font-medium border border-white bg-white/75 py-4 px-6 shadow-lg shadow-black/5 saturate-200 backdrop-blur-sm">
                               Change Profile Image
-                            </label>
-                            <input
-                              type="file"
-                              className="hidden"
-                              id="profile"
-                              onChange={(e) => {
-                                handleUploadProfile(e.target.files[0]);
-                              }}
-                            />
-                          </figcaption>
+                              <input
+                                type="file"
+                                className="hidden"
+                                id="profile"
+                                onChange={(e) => {
+                                  handleUploadProfile(e.target.files[0]);
+                                }}
+                              />
+                            </figcaption>
+                          </label>
                         </figure>
                       </div>
                       <DialogFooter>
@@ -597,7 +594,7 @@ const ServiceProvider = () => {
                       All Services
                     </h2>
                     <div className="p-6 flex gap-4 items-center h-full">
-                      <div className="grid grid-cols-3">
+                      <div className="grid grid-cols-3 gap-4">
                         {allServices.map((service, index) => {
                           return (
                             <ListItem className="p-0" key={index}>
@@ -671,7 +668,7 @@ const ServiceProvider = () => {
                   </Dialog>
                 </div>
                 <div className="p-4 bg-white rounded-lg shadow-lg">
-                  {UpdatedServices?.map((service,index) => {
+                  {UpdatedServices?.map((service, index) => {
                     return (
                       <ListItem
                         key={index}
@@ -699,30 +696,7 @@ const ServiceProvider = () => {
                     );
                   })}
                 </div>
-                <div className="bg-gray-200 p-4 py-6 rounded shadow-md">
-                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
-                    <h2 className="text-2xl font-bold text-gray-700 mb-4 md:mb-0">
-                      Your available locations
-                    </h2>
-                    <button className="px-4 py-2 whitespace-nowrap bg-gray-800 text-white font-bold rounded shadow">
-                      Add new location
-                    </button>
-                  </div>
-                  {locations.map((location, index) => (
-                    <div
-                      key={index}
-                      className="flex flex-col md:flex-row justify-between items-start md:items-center mt-4 md:mt-2 bg-gray-300 p-4 rounded shadow"
-                    >
-                      <p className="mb-2 md:mb-0 w-full md:w-auto">
-                        {location}
-                      </p>
-                      <button className="bg-red-500 text-white flex justify-center gap-1.5 px-4  w-fit py-2 rounded-lg items-center">
-                        delete
-                        <MdDelete size={20} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
+                <ServiceProviderLocation />
                 <div className="container mx-auto px-4 py-8 ">
                   <div className="flex items-center md:flex-row flex-col justify-between mb-4">
                     <h2 className="text-2xl font-bold mb-4">

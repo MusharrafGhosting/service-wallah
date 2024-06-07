@@ -64,8 +64,8 @@ const Cart = () => {
         <title>Shopping Cart</title>
       </Head>
       <Nav />
-      <div className="flex flex-col lg:flex-row px-4 lg:px-10 h-full justify-between gap-6 lg:gap-10 my-6 lg:my-10">
-        <div className="w-full lg:w-2/3 min-h-auto max-h-[78vh] overflow-auto bg-white pb-6 shadow-lg rounded-lg">
+      <div className="flex flex-col lg:flex-row px-4 lg:px-10 h-full justify-between gap-6 lg:gap-10 my-6 lg:my-10 ">
+        <div className="w-full lg:w-2/3 min-h-auto max-h-[78vh] overflow-auto bg-white pb-6 shadow-lg rounded-lg no-scrollbar">
           <div className="flex items-center justify-between gap-9 sticky px-6 py-4 top-0 bg-white z-10">
             <div
               className="flex items-center gap-1 cursor-pointer text-gray-700"
@@ -85,13 +85,13 @@ const Cart = () => {
             {products.length === 0 ? (
               <div className="flex flex-col gap-4 items-center h-full md:pt-24">
                 <div className="text-2xl font-julius text-center">
-                  Uh oh, There is no Service in Your Cart
+                  🫠Uh oh, There is no Service in Your Cart
                 </div>
                 <div className="flex gap-4 items-center flex-col md:flex-row">
                   <div>Please Choose a Service First</div>
                   <Link href={"/services"}>
                     <Button
-                      color="indigo"
+                      color="blue"
                       variant="gradient"
                       className="rounded whitespace-nowrap"
                     >
